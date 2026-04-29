@@ -3,6 +3,21 @@
  * Handles page transitions without reloading the navbar and background.
  */
 
+// --- Initial Redirect Logic ---
+// Ensure the URL reflects index.html without triggering a reload (prevents loop with 'serve')
+(function() {
+    const path = window.location.pathname;
+    if (path === '/' || path === '' || path.endsWith('/')) {
+        // Use replaceState to update URL in address bar without a network request
+        // this avoids the infinite loop where 'serve' redirects .html back to /
+        try {
+            history.replaceState(null, '', path + 'index.html');
+        } catch (e) {
+            console.warn("SPA: Could not update URL state", e);
+        }
+    }
+})();
+
 // --- Global Page Handlers ---
 
 const PageHandlers = {
@@ -128,7 +143,9 @@ async function navigate(url, addHistory = true) {
 
         if (isSamePage && targetHash) {
             console.log("SPA: Internal hash link");
-            if (addHistory) history.pushState({}, '', url);
+            // Update history without the hash for a clean URL
+            if (addHistory) history.pushState({}, '', urlObj.pathname);
+            
             const target = document.querySelector(targetHash);
             if (target) {
                 target.scrollIntoView({ behavior: 'smooth' });
@@ -138,15 +155,23 @@ async function navigate(url, addHistory = true) {
             return;
         }
 
-        // If it's exactly the same URL, do nothing
-        if (url === window.location.href && addHistory) return;
+        // If it's exactly the same URL, scroll to top
+        if (url === window.location.href && addHistory) {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            return;
+        }
 
         // Start transition
         document.body.classList.add('page-transitioning');
 
         // Fetch using the pathname (safest for same-origin)
-        console.log("SPA: Fetching", urlObj.pathname);
-        const response = await fetch(urlObj.pathname);
+        let fetchPath = urlObj.pathname;
+        if (fetchPath === '/' || fetchPath.endsWith('/')) {
+            fetchPath += 'index.html';
+        }
+
+        console.log("SPA: Fetching", fetchPath);
+        const response = await fetch(fetchPath);
         if (!response.ok) throw new Error("Fetch failed");
         
         const html = await response.text();
@@ -165,7 +190,13 @@ async function navigate(url, addHistory = true) {
             document.title = newTitle;
             document.body.classList.remove('page-transitioning');
 
-            if (addHistory) history.pushState({}, '', url);
+            // Ensure history reflects the clean path without hashes
+            let historyUrl = urlObj.pathname;
+            if (historyUrl === '/' || historyUrl.endsWith('/')) {
+                historyUrl += 'index.html';
+            }
+
+            if (addHistory) history.pushState({}, '', historyUrl);
 
             // Re-initialize based on the new path
             const currentPath = window.location.pathname;
