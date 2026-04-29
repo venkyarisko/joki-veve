@@ -103,12 +103,19 @@ const PageHandlers = {
 /**
  * Enhanced navigation that handles hashes and scrolls to target elements
  */
+// --- SPA Router Logic ---
+
+/**
+ * Enhanced navigation that handles hashes and scrolls to target elements
+ */
 async function navigate(url, addHistory = true) {
+    console.log("SPA: Navigating to", url);
     const urlObj = new URL(url, window.location.href);
     const targetHash = urlObj.hash;
+    const fetchUrl = url.split('#')[0];
     
     // Normalize paths for comparison (remove trailing slashes and index.html)
-    const normalize = (p) => p.replace(/\/index\.html$/, '/').replace(/\/$/, '');
+    const normalize = (p) => p.replace(/index\.html$/, '').replace(/\/$/, '');
     const cleanPathname = normalize(urlObj.pathname);
     const currentPathname = normalize(window.location.pathname);
 
@@ -120,6 +127,7 @@ async function navigate(url, addHistory = true) {
 
     // If it's just a hash on the current page, handle it locally
     if (cleanPathname === currentPathname && targetHash) {
+        console.log("SPA: Same page hash detected");
         if (addHistory) history.pushState({}, '', url);
         const target = document.querySelector(targetHash);
         if (target) {
@@ -130,11 +138,12 @@ async function navigate(url, addHistory = true) {
         return;
     }
 
-    // Don't navigate if it's the exact same URL
+    // Don't navigate if it's the exact same URL and path
     if (url === window.location.href && addHistory) return;
 
     const main = document.getElementById('main-content');
     if (!main) {
+        console.warn("SPA: No #main-content found, falling back to full reload");
         window.location.href = url;
         return;
     }
@@ -142,8 +151,7 @@ async function navigate(url, addHistory = true) {
     document.body.classList.add('page-transitioning');
 
     try {
-        // Fetch only the base URL without hash
-        const fetchUrl = url.split('#')[0];
+        console.log("SPA: Fetching content from", fetchUrl);
         const response = await fetch(fetchUrl);
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         
@@ -153,6 +161,7 @@ async function navigate(url, addHistory = true) {
 
         const newMain = doc.getElementById('main-content');
         if (!newMain) {
+            console.error("SPA: No #main-content found in the fetched page");
             window.location.href = url; // Fallback
             return;
         }
@@ -170,6 +179,8 @@ async function navigate(url, addHistory = true) {
 
             // Re-initialize scripts based on the new page
             const path = window.location.pathname;
+            console.log("SPA: Content swapped, path is now", path);
+            
             if (path.includes('testimoni.html')) {
                 PageHandlers.initTestimonials();
             } else {
@@ -194,7 +205,7 @@ async function navigate(url, addHistory = true) {
             }
         }, 300);
     } catch (err) {
-        console.error("Navigation failed:", err);
+        console.error("SPA Navigation failed:", err);
         window.location.href = url; // Fallback
     }
 }
@@ -223,11 +234,9 @@ document.addEventListener('click', e => {
     const link = e.target.closest('a');
     if (!link) return;
 
-    // Browser properties of the <a> tag
+    // Use standard anchor properties
     const url = link.href;
     const origin = link.origin;
-    const pathname = link.pathname;
-    const hash = link.hash;
     const hrefAttr = link.getAttribute('href');
 
     // Skip if different origin
@@ -240,10 +249,10 @@ document.addEventListener('click', e => {
     if (hrefAttr && (hrefAttr.startsWith('mailto:') || hrefAttr.startsWith('tel:'))) return;
 
     // If it's just a hash on the current page (e.g. href="#about")
-    // Let the smooth scroll handler or browser handle it
     if (hrefAttr && hrefAttr.startsWith('#')) return;
 
     // For everything else that is local, handle with SPA
+    console.log("SPA: Intercepted click on", hrefAttr);
     e.preventDefault();
     navigate(url);
 });
@@ -287,6 +296,7 @@ function initNavbar() {
 
 // Initial run
 document.addEventListener('DOMContentLoaded', () => {
+    console.log("SPA: DOMContentLoaded");
     initNavbar();
     const path = window.location.pathname;
     
