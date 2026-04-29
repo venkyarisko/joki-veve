@@ -106,7 +106,11 @@ const PageHandlers = {
 async function navigate(url, addHistory = true) {
     const urlObj = new URL(url, window.location.href);
     const targetHash = urlObj.hash;
-    const cleanUrl = url.split('#')[0];
+    
+    // Normalize paths for comparison (remove trailing slashes and index.html)
+    const normalize = (p) => p.replace(/\/index\.html$/, '/').replace(/\/$/, '');
+    const cleanPathname = normalize(urlObj.pathname);
+    const currentPathname = normalize(window.location.pathname);
 
     // Fallback for file:// protocol (CORS restriction)
     if (window.location.protocol === 'file:') {
@@ -114,17 +118,19 @@ async function navigate(url, addHistory = true) {
         return;
     }
 
-    // If it's just a hash on the current page, let the smooth scroll handler or browser handle it
-    const currentCleanUrl = window.location.href.split('#')[0];
-    if (cleanUrl === currentCleanUrl && targetHash) {
+    // If it's just a hash on the current page, handle it locally
+    if (cleanPathname === currentPathname && targetHash) {
         if (addHistory) history.pushState({}, '', url);
         const target = document.querySelector(targetHash);
         if (target) {
             target.scrollIntoView({ behavior: 'smooth' });
+        } else {
+             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
         return;
     }
 
+    // Don't navigate if it's the exact same URL
     if (url === window.location.href && addHistory) return;
 
     const main = document.getElementById('main-content');
@@ -136,8 +142,10 @@ async function navigate(url, addHistory = true) {
     document.body.classList.add('page-transitioning');
 
     try {
-        const response = await fetch(cleanUrl);
-        if (!response.ok) throw new Error('Network response was not ok');
+        // Fetch only the base URL without hash
+        const fetchUrl = url.split('#')[0];
+        const response = await fetch(fetchUrl);
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         
         const html = await response.text();
         const parser = new DOMParser();
@@ -145,7 +153,7 @@ async function navigate(url, addHistory = true) {
 
         const newMain = doc.getElementById('main-content');
         if (!newMain) {
-            window.location.href = url; // Fallback if not an SPA-ready page
+            window.location.href = url; // Fallback
             return;
         }
 
@@ -175,17 +183,16 @@ async function navigate(url, addHistory = true) {
             if (targetHash) {
                 const target = document.querySelector(targetHash);
                 if (target) {
-                    // Give a tiny bit of time for DOM to settle
                     setTimeout(() => {
                         target.scrollIntoView({ behavior: 'smooth' });
-                    }, 50);
+                    }, 100);
                 } else {
                     window.scrollTo({ top: 0, behavior: 'instant' });
                 }
             } else {
                 window.scrollTo({ top: 0, behavior: 'instant' });
             }
-        }, 400);
+        }, 300);
     } catch (err) {
         console.error("Navigation failed:", err);
         window.location.href = url; // Fallback
@@ -207,8 +214,6 @@ function updateNavbarActive(path) {
         if (isTestimonialsPage && linkIsTestimonials) {
             link.classList.add('active');
             link.style.color = 'var(--primary)';
-        } else if (!isTestimonialsPage && (href === 'index.html' || href === '#' || href.startsWith('#'))) {
-            // Home/Index links
         }
     });
 }
@@ -218,19 +223,29 @@ document.addEventListener('click', e => {
     const link = e.target.closest('a');
     if (!link) return;
 
-    const href = link.getAttribute('href');
-    if (!href) return;
+    // Browser properties of the <a> tag
+    const url = link.href;
+    const origin = link.origin;
+    const pathname = link.pathname;
+    const hash = link.hash;
+    const hrefAttr = link.getAttribute('href');
 
-    const url = link.href; // Absolute URL
-    const isLocal = url.startsWith(window.location.origin);
-    const isAnchor = href.startsWith('#');
-    const isTargetBlank = link.target === '_blank';
+    // Skip if different origin
+    if (origin !== window.location.origin) return;
 
-    // Only intercept local, non-anchor, non-new-tab links
-    if (isLocal && !isAnchor && !isTargetBlank) {
-        e.preventDefault();
-        navigate(url);
-    }
+    // Skip if target="_blank"
+    if (link.target === '_blank') return;
+
+    // Skip special protocols
+    if (hrefAttr && (hrefAttr.startsWith('mailto:') || hrefAttr.startsWith('tel:'))) return;
+
+    // If it's just a hash on the current page (e.g. href="#about")
+    // Let the smooth scroll handler or browser handle it
+    if (hrefAttr && hrefAttr.startsWith('#')) return;
+
+    // For everything else that is local, handle with SPA
+    e.preventDefault();
+    navigate(url);
 });
 
 // Handle Back/Forward buttons
@@ -245,26 +260,28 @@ function initNavbar() {
     const navLinks = document.getElementById('nav-links');
 
     if (mobileMenuToggle && navLinks) {
-        mobileMenuToggle.addEventListener('click', () => {
+        // Toggle mobile menu
+        mobileMenuToggle.onclick = (e) => {
+            e.stopPropagation();
             mobileMenuToggle.classList.toggle('active');
             navLinks.classList.toggle('active');
-        });
+        };
 
         // Close menu when clicking a link
-        navLinks.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', () => {
+        navLinks.onclick = (e) => {
+            if (e.target.closest('a')) {
                 mobileMenuToggle.classList.remove('active');
-                navLinks.classList.toggle('active');
-            });
-        });
+                navLinks.classList.remove('active');
+            }
+        };
 
         // Close menu when clicking outside
-        document.addEventListener('click', (e) => {
+        document.onclick = (e) => {
             if (!navLinks.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
                 mobileMenuToggle.classList.remove('active');
                 navLinks.classList.remove('active');
             }
-        });
+        };
     }
 }
 
@@ -284,11 +301,9 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Check if there is an initial hash to scroll to
     if (window.location.hash) {
-        const target = document.querySelector(window.location.hash);
-        if (target) {
-            setTimeout(() => {
-                target.scrollIntoView({ behavior: 'smooth' });
-            }, 500);
-        }
+        setTimeout(() => {
+            const target = document.querySelector(window.location.hash);
+            if (target) target.scrollIntoView({ behavior: 'smooth' });
+        }, 600);
     }
 });
