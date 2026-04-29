@@ -161,15 +161,18 @@ function closeLightbox() {
     document.body.style.overflow = 'auto';
 }
 
-// Global window listeners for the lightbox
-window.addEventListener('click', (event) => {
-    const lightbox = document.getElementById('lightbox');
-    if (event.target == lightbox) closeLightbox();
-});
+// Global window listeners for the lightbox - Added once
+if (!window._testiListenersAdded) {
+    window.addEventListener('click', (event) => {
+        const lightbox = document.getElementById('lightbox');
+        if (event.target == lightbox) closeLightbox();
+    });
 
-window.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeLightbox();
-});
+    window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeLightbox();
+    });
+    window._testiListenersAdded = true;
+}
 
 function setupAnimations() {
     const observerOptions = { threshold: 0.1 };

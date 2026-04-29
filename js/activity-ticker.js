@@ -4,6 +4,13 @@
  */
 
 (function () {
+    // Prevent multiple initializations
+    if (window._activityTickerInitialized) {
+        console.log("Activity Ticker already initialized, skipping...");
+        return;
+    }
+    window._activityTickerInitialized = true;
+
     const CONFIG = {
         minInterval: 15000, // 15 seconds
         maxInterval: 30000, // 30 seconds

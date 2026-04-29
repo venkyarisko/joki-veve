@@ -6,6 +6,9 @@
 (function () {
     'use strict';
 
+    if (window._securityInitialized) return;
+    window._securityInitialized = true;
+
     const protectImages = () => {
         // Prevent context menu on all images
         document.addEventListener('contextmenu', (e) => {

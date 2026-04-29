@@ -13,8 +13,7 @@
     }
 
     if (cleanPath.endsWith('/index')) {
-        cleanPath = cleanPath.slice(0, -6);
-        if (cleanPath === '') cleanPath = '/';
+        cleanPath = cleanPath.slice(0, -5); // Keep the trailing slash
     }
 
     if (cleanPath !== path || window.location.hash) {
@@ -219,7 +218,15 @@ async function navigate(url, addHistory = true) {
             const scriptPromises = [];
             doc.querySelectorAll('script').forEach(oldScript => {
                 const src = oldScript.getAttribute('src');
-                if (src && (src.includes('navbar.js') || src.includes('router.js') || src.includes('background-animation.js'))) {
+                if (src && (
+                    src.includes('navbar.js') || 
+                    src.includes('router.js') || 
+                    src.includes('background-animation.js') ||
+                    src.includes('activity-ticker.js') ||
+                    src.includes('footer.js') ||
+                    src.includes('floating-buttons.js') ||
+                    src.includes('security.js')
+                )) {
                     return; // Skip global scripts
                 }
 
@@ -274,8 +281,8 @@ async function navigate(url, addHistory = true) {
 
             // Use clean URLs in history
             let historyUrl = urlObj.pathname.replace(/\.html$/, '');
-            if (historyUrl.endsWith('/index')) historyUrl = historyUrl.slice(0, -6) || '/';
-            if (addHistory) history.pushState({}, '', historyUrl);
+            if (historyUrl.endsWith('/index')) historyUrl = historyUrl.slice(0, -5);
+            if (addHistory) history.pushState({}, '', historyUrl + urlObj.search + urlObj.hash);
 
             // Re-initialize based on the new path
             const currentPath = window.location.pathname;
