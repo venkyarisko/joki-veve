@@ -100,20 +100,45 @@ const PageHandlers = {
 
 // --- SPA Router Logic ---
 
+/**
+ * Enhanced navigation that handles hashes and scrolls to target elements
+ */
 async function navigate(url, addHistory = true) {
+    const urlObj = new URL(url, window.location.href);
+    const targetHash = urlObj.hash;
+    const cleanUrl = url.split('#')[0];
+
     // Fallback for file:// protocol (CORS restriction)
     if (window.location.protocol === 'file:') {
         window.location.href = url;
         return;
     }
 
+    // If it's just a hash on the current page, let the smooth scroll handler or browser handle it
+    const currentCleanUrl = window.location.href.split('#')[0];
+    if (cleanUrl === currentCleanUrl && targetHash) {
+        if (addHistory) history.pushState({}, '', url);
+        const target = document.querySelector(targetHash);
+        if (target) {
+            target.scrollIntoView({ behavior: 'smooth' });
+        }
+        return;
+    }
+
     if (url === window.location.href && addHistory) return;
 
     const main = document.getElementById('main-content');
+    if (!main) {
+        window.location.href = url;
+        return;
+    }
+
     document.body.classList.add('page-transitioning');
 
     try {
-        const response = await fetch(url);
+        const response = await fetch(cleanUrl);
+        if (!response.ok) throw new Error('Network response was not ok');
+        
         const html = await response.text();
         const parser = new DOMParser();
         const doc = parser.parseFromString(html, 'text/html');
@@ -146,7 +171,20 @@ async function navigate(url, addHistory = true) {
             // Update Navbar Active State
             updateNavbarActive(path);
 
-            window.scrollTo({ top: 0, behavior: 'instant' });
+            // Scroll logic: to hash or top
+            if (targetHash) {
+                const target = document.querySelector(targetHash);
+                if (target) {
+                    // Give a tiny bit of time for DOM to settle
+                    setTimeout(() => {
+                        target.scrollIntoView({ behavior: 'smooth' });
+                    }, 50);
+                } else {
+                    window.scrollTo({ top: 0, behavior: 'instant' });
+                }
+            } else {
+                window.scrollTo({ top: 0, behavior: 'instant' });
+            }
         }, 400);
     } catch (err) {
         console.error("Navigation failed:", err);
@@ -157,15 +195,20 @@ async function navigate(url, addHistory = true) {
 function updateNavbarActive(path) {
     const navLinks = document.querySelectorAll('.nav-links a');
     navLinks.forEach(link => {
-        const linkPath = link.getAttribute('href');
+        const href = link.getAttribute('href');
+        if (!href) return;
+        
         link.classList.remove('active');
         link.removeAttribute('style');
 
-        if (path.includes('testimoni.html') && linkPath && linkPath.includes('testimoni.html')) {
+        const isTestimonialsPage = path.includes('testimoni.html');
+        const linkIsTestimonials = href.includes('testimoni.html');
+        
+        if (isTestimonialsPage && linkIsTestimonials) {
             link.classList.add('active');
             link.style.color = 'var(--primary)';
-        } else if (!path.includes('testimoni.html') && linkPath && (linkPath === 'index.html' || linkPath.startsWith('#'))) {
-            // Index or home anchors
+        } else if (!isTestimonialsPage && (href === 'index.html' || href === '#' || href.startsWith('#'))) {
+            // Home/Index links
         }
     });
 }
@@ -175,11 +218,15 @@ document.addEventListener('click', e => {
     const link = e.target.closest('a');
     if (!link) return;
 
-    const url = link.href;
+    const href = link.getAttribute('href');
+    if (!href) return;
+
+    const url = link.href; // Absolute URL
     const isLocal = url.startsWith(window.location.origin);
-    const isAnchor = link.getAttribute('href').startsWith('#');
+    const isAnchor = href.startsWith('#');
     const isTargetBlank = link.target === '_blank';
 
+    // Only intercept local, non-anchor, non-new-tab links
     if (isLocal && !isAnchor && !isTargetBlank) {
         e.preventDefault();
         navigate(url);
@@ -207,7 +254,7 @@ function initNavbar() {
         navLinks.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', () => {
                 mobileMenuToggle.classList.remove('active');
-                navLinks.classList.remove('active');
+                navLinks.classList.toggle('active');
             });
         });
 
@@ -225,9 +272,23 @@ function initNavbar() {
 document.addEventListener('DOMContentLoaded', () => {
     initNavbar();
     const path = window.location.pathname;
+    
+    // Update active state on load
+    updateNavbarActive(path);
+    
     if (path.includes('testimoni.html')) {
         PageHandlers.initTestimonials();
     } else {
         PageHandlers.initHome();
+    }
+    
+    // Check if there is an initial hash to scroll to
+    if (window.location.hash) {
+        const target = document.querySelector(window.location.hash);
+        if (target) {
+            setTimeout(() => {
+                target.scrollIntoView({ behavior: 'smooth' });
+            }, 500);
+        }
     }
 });
