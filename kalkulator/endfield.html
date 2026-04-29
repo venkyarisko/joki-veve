@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Endfield Calculator - Veve Services</title>
+
+    <link rel="stylesheet" href="../css/index.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@400;600;800&display=swap"
+        rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" type="image/svg+xml" href="../assets/favicon-baru.svg">
+</head>
+
+<body>
+    <canvas id="bg-canvas"></canvas>
+
+    <div id="navbar-placeholder"></div>
+
+
+    <main id="main-content">
+        <section class="section" style="padding-top: 150px;">
+            <div class="container">
+                <div class="calc-container">
+                    <a href="../kalkulator.html" class="back-link">
+                        <i class="fas fa-arrow-left"></i> Kembali Pilih Game
+                    </a>
+                    <div class="calc-header">
+                        <img src="../assets/arknight_endfield.png" alt="Endfield">
+                        <div>
+                            <h2 style="margin:0;">Kalkulator Harga Endfield</h2>
+                            <p style="margin:5px 0 0; color: var(--text-muted);">Estimasi Biaya Joki Arknights: Endfield
+                            </p>
+                            <div class="calc-notice">
+                                <i class="fas fa-exclamation-triangle"></i> Peringatan: Joki Explorasi Dan Rawat Pabric
+                                Wajib Sudah Story Akhir
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tiles will be injected here -->
+                    <div class="calc-grid" id="services-grid"></div>
+
+                    <div class="total-section">
+                        <span class="total-label">Total Estimasi:</span>
+                        <span class="total-price" id="total-display">Rp 0</span>
+                    </div>
+
+                    <div class="calc-actions">
+                        <button onclick="copyOrderMessage()" class="btn btn-primary order-btn" id="order-btn">
+                            <i class="fab fa-discord"></i> <span id="btn-text">Salin & Pesan via Discord</span>
+                        </button>
+                        <button onclick="generateInvoice()" class="btn btn-invoice-trigger" id="invoice-btn">
+                            <i class="fas fa-file-invoice"></i> Lihat Invoice Digital
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Modals moved inside main-content for SPA compatibility -->
+        <div class="modal-overlay" id="confirm-modal">
+            <div class="custom-modal">
+                <div class="modal-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h3>Pesan Disalin!</h3>
+                <p>Rincian pesanan sudah tersimpan di clipboard. Ingin lanjut ke Discord untuk mengirimnya ke Veve?</p>
+                <div class="modal-btns">
+                    <button class="modal-btn modal-btn-cancel" onclick="closeModal()">Nanti Saja</button>
+                    <button class="modal-btn modal-btn-confirm" onclick="redirectToDiscord()">Gas ke Discord!</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cyberpunk Invoice Modal -->
+        <div class="invoice-modal-overlay" id="invoice-modal">
+            <div class="cyberpunk-invoice">
+                <div class="invoice-header">
+                    <div class="invoice-logo">Veve Services</div>
+                </div>
+
+                <div class="invoice-body" id="invoice-content">
+                    <!-- Dynamic content here -->
+                </div>
+
+                <div class="invoice-footer">
+                    <p>Terima kasih telah menggunakan jasa Veve Services!</p>
+                </div>
+
+                <div class="invoice-btns">
+                    <button class="btn-invoice" onclick="closeInvoice()">Kembali</button>
+                    <button class="btn-invoice btn-invoice-primary" onclick="copyOrderMessage()">Salin & Pesan</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Custom Warning Modal -->
+        <div class="modal-overlay" id="warning-modal">
+            <div class="custom-modal warning-theme">
+                <div class="modal-icon" style="color: #ffc107; filter: drop-shadow(0 0 15px rgba(255, 193, 7, 0.4));">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <h3>Pilih Layanan!</h3>
+                <p id="warning-message">Silakan pilih minimal satu layanan terlebih dahulu sebelum melanjutkan.</p>
+                <div class="modal-btns">
+                    <button class="modal-btn modal-btn-confirm" style="background: #ffc107;"
+                        onclick="closeWarning()">Oke, Mengerti</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="footer-placeholder"></div>
+
+
+    <script src="../joki/endfield/data.js"></script>
+
+    <script>
+        // Interactive Dynamic Calculator Logic
+        function renderServices() {
+            const grid = document.getElementById('services-grid');
+
+            if (!grid || typeof jokiServices === 'undefined') return;
+
+            grid.innerHTML = '';
+
+            // Group by category
+            const categories = {};
+            jokiServices.forEach(service => {
+                const cat = service.category || 'Lainnya';
+                if (!categories[cat]) {
+                    categories[cat] = [];
+                }
+                categories[cat].push(service);
+            });
+
+            // Render categories
+            for (const category in categories) {
+                // Add Category Title
+                const title = document.createElement('h3');
+                title.className = 'calc-category-title';
+                title.textContent = category;
+                grid.appendChild(title);
+
+                // Add Services in this category
+                categories[category].forEach(service => {
+                    const isComingSoon = service.isComingSoon || false;
+                    const item = document.createElement('div');
+                    item.className = `calc-item ${isComingSoon ? 'disabled-item' : ''}`;
+                    item.setAttribute('data-category', service.category || 'Lainnya');
+                    item.setAttribute('data-id', service.id);
+                    if (!isComingSoon) {
+                        item.setAttribute('data-price', service.price);
+                    }
+
+                    const priceDisplay = isComingSoon ?
+                        `<span class="price-tag coming-soon">Coming Soon</span>` :
+                        `<div style="display: flex; flex-direction: column; align-items: flex-end;">
+                            <span class="price-tag">${service.displayPrice || (service.price === 0 ? 'Info Harga ' + service.title : 'Rp ' + service.price.toLocaleString('id-ID'))}</span>
+                            ${service.displayPrice ? '<div class="price-note">DM untuk info<br>lebih lanjut</div>' : ''}
+                        </div>`;
+
+                    const qtyHtml = service.hasQuantity ? `
+                        <div class="qty-controls">
+                            <button class="qty-btn minus" onclick="event.stopPropagation(); updateQty('${service.id}', -1)">-</button>
+                            <span class="qty-value" id="qty-${service.id}">1</span>
+                            <button class="qty-btn plus" onclick="event.stopPropagation(); updateQty('${service.id}', 1)">+</button>
+                        </div>
+                    ` : '';
+
+                    item.innerHTML = `
+                        <div class="item-info">
+                            <h4>${service.title}</h4>
+                            <p>${service.description}</p>
+                            ${qtyHtml}
+                        </div>
+                        ${priceDisplay}
+                    `;
+
+                    if (!isComingSoon) {
+                        item.addEventListener('click', () => {
+                            // Single choice logic for specific categories (e.g., Rawat)
+                            if (service.category === 'Rawat') {
+                                const alreadySelected = item.classList.contains('selected');
+                                const sameCategoryItems = grid.querySelectorAll(`.calc-item[data-category="${service.category}"]`);
+                                sameCategoryItems.forEach(i => i.classList.remove('selected'));
+                                if (!alreadySelected) {
+                                    item.classList.add('selected');
+                                }
+                            } else {
+                                item.classList.toggle('selected');
+                            }
+                            updateTotal();
+                        });
+                    }
+
+                    grid.appendChild(item);
+                });
+            }
+        }
+
+        function updateQty(id, delta) {
+            const qtySpan = document.getElementById(`qty-${id}`);
+            const item = qtySpan.closest('.calc-item');
+            let current = parseInt(qtySpan.textContent);
+            let next = current + delta;
+
+            if (next < 1) next = 1;
+            qtySpan.textContent = next;
+
+            if (!item.classList.contains('selected')) {
+                item.classList.add('selected');
+            }
+
+            updateTotal();
+        }
+
+        function updateTotal() {
+            const items = document.querySelectorAll('.calc-item');
+            const totalDisplay = document.getElementById('total-display');
+            let total = 0;
+
+            items.forEach(item => {
+                if (item.classList.contains('selected')) {
+                    const price = parseInt(item.getAttribute('data-price'));
+                    const qtySpan = item.querySelector('.qty-value');
+                    const qty = qtySpan ? parseInt(qtySpan.textContent) : 1;
+                    total += price * qty;
+                }
+            });
+
+            totalDisplay.textContent = 'Rp ' + total.toLocaleString('id-ID');
+
+            totalDisplay.style.transform = 'scale(1.1)';
+            setTimeout(() => {
+                totalDisplay.style.transform = 'scale(1)';
+            }, 100);
+        }
+
+        function copyOrderMessage() {
+            const selectedItems = document.querySelectorAll('.calc-item.selected');
+            const totalDisplay = document.getElementById('total-display');
+
+            if (selectedItems.length === 0) {
+                showWarning('Silakan pilih layanan terlebih dahulu sebelum menyalin pesan!');
+                return;
+            }
+
+            let message = "Halo Veve Services, saya ingin memesan joki:\n\n";
+
+            selectedItems.forEach(item => {
+                const title = item.querySelector('h4').textContent;
+                const price = parseInt(item.getAttribute('data-price'));
+                const qtySpan = item.querySelector('.qty-value');
+                const qty = qtySpan ? parseInt(qtySpan.textContent) : 1;
+
+                let priceText = "";
+                if (price === 0) {
+                    priceText = `Info Harga ${title}`;
+                } else if (qty > 1) {
+                    priceText = `Rp ${(price * qty).toLocaleString('id-ID')}`;
+                } else {
+                    priceText = `Rp ${price.toLocaleString('id-ID')}`;
+                }
+
+                if (qty > 1 && price !== 0) {
+                    message += `- ${title} (x${qty}) : ${priceText}\n`;
+                } else {
+                    message += `- ${title} : ${priceText}\n`;
+                }
+            });
+
+            message += `\n-----------------------\n`;
+            message += `Total Estimasi: ${totalDisplay.textContent}\n\n`;
+            message += `Game: Arknights: Endfield`;
+
+            navigator.clipboard.writeText(message).then(() => {
+                const btnText = document.getElementById('btn-text');
+                const originalText = btnText.textContent;
+                btnText.textContent = "Berhasil Disalin!";
+                setTimeout(() => {
+                    btnText.textContent = originalText;
+                    openModal();
+                }, 500);
+            }).catch(err => {
+                openModal();
+            });
+        }
+
+        function openModal() {
+            document.getElementById('confirm-modal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('confirm-modal').classList.remove('active');
+        }
+
+        function showWarning(msg) {
+            document.getElementById('warning-message').textContent = msg;
+            document.getElementById('warning-modal').classList.add('active');
+        }
+
+        function closeWarning() {
+            document.getElementById('warning-modal').classList.remove('active');
+        }
+
+        function generateInvoice() {
+            const selectedItems = document.querySelectorAll('.calc-item.selected');
+            const totalDisplay = document.getElementById('total-display');
+            const content = document.getElementById('invoice-content');
+
+            if (selectedItems.length === 0) {
+                showWarning('Silakan pilih layanan terlebih dahulu sebelum melihat invoice!');
+                return;
+            }
+
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' });
+
+            let itemsHtml = '';
+            selectedItems.forEach(item => {
+                const title = item.querySelector('h4').textContent;
+                const price = parseInt(item.getAttribute('data-price'));
+                const qtySpan = item.querySelector('.qty-value');
+                const qty = qtySpan ? parseInt(qtySpan.textContent) : 1;
+
+                let priceText = price === 0 ? "Info Harga" : `Rp ${(price * qty).toLocaleString('id-ID')}`;
+
+                itemsHtml += `
+                    <div class="invoice-item">
+                        <span>${title} ${qty > 1 ? 'x' + qty : ''}</span>
+                        <span>${priceText}</span>
+                    </div>
+                `;
+            });
+
+            content.innerHTML = `
+                <div style="background: #fff9db; border: 1px solid #ffec99; padding: 10px; border-radius: 6px; font-size: 0.75rem; color: #856404; margin-bottom: 20px; text-align: center; font-weight: 600;">
+                    <i class="fas fa-camera"></i> PENTING: Silakan screenshot invoice ini sebagai bukti pesanan Anda.
+                </div>
+
+                <div class="invoice-row">
+                    <span class="invoice-label">TANGGAL:</span>
+                    <span class="invoice-value">${dateStr}</span>
+                </div>
+                <div class="invoice-row">
+                    <span class="invoice-label">GAME:</span>
+                    <span class="invoice-value">ARKNIGHTS: ENDFIELD</span>
+                </div>
+                
+                <div class="invoice-items">
+                    <div style="font-weight: bold; margin-bottom: 10px; color: #000;">DETAIL LAYANAN:</div>
+                    ${itemsHtml}
+                </div>
+
+                <div class="invoice-total">
+                    <span>TOTAL:</span>
+                    <span>${totalDisplay.textContent}</span>
+                </div>
+            `;
+
+            document.getElementById('invoice-modal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeInvoice() {
+            document.getElementById('invoice-modal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        function redirectToDiscord() {
+            window.open('https://discord.com/users/vevego', '_blank');
+            closeModal();
+        }
+
+        function initCalculator() {
+            if (typeof jokiServices === 'undefined') {
+                setTimeout(initCalculator, 100);
+                return;
+            }
+            renderServices();
+        }
+
+        document.addEventListener('DOMContentLoaded', initCalculator);
+        if (document.readyState !== 'loading') initCalculator();
+    </script>
+    <script src="../js/navbar.js"></script>
+    <script src="../js/footer.js"></script>
+    <script src="../js/floating-buttons.js"></script>
+    <script src="../js/router.js"></script>
+    <script src="../js/background-animation.js"></script>
+</body>
+
+</html>

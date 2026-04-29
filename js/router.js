@@ -4,14 +4,23 @@
  */
 
 // --- Initial Redirect Logic ---
-// Ensure the URL reflects index.html without triggering a reload (prevents loop with 'serve')
 (function() {
     const path = window.location.pathname;
-    if (path === '/' || path === '' || path.endsWith('/')) {
-        // Use replaceState to update URL in address bar without a network request
-        // this avoids the infinite loop where 'serve' redirects .html back to /
+    let cleanPath = path;
+
+    if (cleanPath.endsWith('.html')) {
+        cleanPath = cleanPath.replace('.html', '');
+    }
+
+    if (cleanPath.endsWith('/index')) {
+        cleanPath = cleanPath.slice(0, -6);
+        if (cleanPath === '') cleanPath = '/';
+    }
+
+    if (cleanPath !== path || window.location.hash) {
         try {
-            history.replaceState(null, '', path + 'index.html');
+            window._pendingHash = window.location.hash;
+            history.replaceState(null, '', cleanPath + window.location.search);
         } catch (e) {
             console.warn("SPA: Could not update URL state", e);
         }
@@ -26,19 +35,6 @@ const PageHandlers = {
 
         // Sync order stats if the function exists (from orders.js)
         if (typeof syncOrderStats === 'function') syncOrderStats();
-
-        // Smooth scrolling for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                const targetId = this.getAttribute('href');
-                if (targetId === '#' || !targetId) return;
-                const target = document.querySelector(targetId);
-                if (target) {
-                    e.preventDefault();
-                    target.scrollIntoView({ behavior: 'smooth' });
-                }
-            });
-        });
 
         // Reveal animations on scroll
         const observerOptions = { threshold: 0.1 };
@@ -110,6 +106,13 @@ const PageHandlers = {
         if (typeof renderTestimonials === 'function') {
             renderTestimonials();
         }
+    },
+
+    initKalkulator: () => {
+        console.log("Initializing Kalkulator Page...");
+        if (typeof renderGames === 'function') {
+            renderGames();
+        }
     }
 };
 
@@ -138,13 +141,13 @@ async function navigate(url, addHistory = true) {
         }
 
         // Normalize paths to compare if we are staying on the same page
-        const norm = p => p.replace(/index\.html$/, '').replace(/\/$/, '');
+        const norm = p => p.replace(/index(\.html)?$/, '').replace(/\/$/, '');
         const isSamePage = norm(urlObj.pathname) === norm(window.location.pathname);
 
         if (isSamePage && targetHash) {
             console.log("SPA: Internal hash link");
-            // Update history without the hash for a clean URL
-            if (addHistory) history.pushState({}, '', urlObj.pathname);
+            // Keep URL clean and avoid reload
+            if (addHistory) history.pushState({}, '', window.location.pathname);
             
             const target = document.querySelector(targetHash);
             if (target) {
@@ -152,12 +155,18 @@ async function navigate(url, addHistory = true) {
             } else {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }
+            
+            // Update navbar active state
+            if (typeof Navbar !== 'undefined') Navbar.render();
+            
             return;
         }
 
-        // If it's exactly the same URL, scroll to top
-        if (url === window.location.href && addHistory) {
+        // If it's the same page, just scroll to top
+        if (isSamePage) {
             window.scrollTo({ top: 0, behavior: 'smooth' });
+            if (addHistory) history.pushState({}, '', window.location.pathname);
+            if (typeof Navbar !== 'undefined') Navbar.render();
             return;
         }
 
@@ -168,6 +177,8 @@ async function navigate(url, addHistory = true) {
         let fetchPath = urlObj.pathname;
         if (fetchPath === '/' || fetchPath.endsWith('/')) {
             fetchPath += 'index.html';
+        } else if (!fetchPath.endsWith('.html')) {
+            fetchPath += '.html';
         }
 
         console.log("SPA: Fetching", fetchPath);
@@ -178,24 +189,92 @@ async function navigate(url, addHistory = true) {
         const parser = new DOMParser();
         const doc = parser.parseFromString(html, 'text/html');
         const newMain = doc.getElementById('main-content');
-
         if (!newMain) throw new Error("No #main-content found");
+
+        // Fix relative paths in the new content before swapping
+        const baseDir = fetchPath.substring(0, fetchPath.lastIndexOf('/') + 1);
+        
+        newMain.querySelectorAll('img, a, source').forEach(el => {
+            const attr = el.tagName === 'A' ? 'href' : 'src';
+            const val = el.getAttribute(attr);
+            
+            if (val && !val.startsWith('http') && !val.startsWith('/') && !val.startsWith('#') && !val.startsWith('javascript:')) {
+                el.setAttribute(attr, baseDir + val);
+            }
+        });
 
         const newContent = newMain.innerHTML;
         const newTitle = doc.title;
 
         // Content swap with a small delay for animation if any
-        setTimeout(() => {
+        setTimeout(async () => {
             main.innerHTML = newContent;
             document.title = newTitle;
             document.body.classList.remove('page-transitioning');
 
-            // Ensure history reflects the clean path without hashes
-            let historyUrl = urlObj.pathname;
-            if (historyUrl === '/' || historyUrl.endsWith('/')) {
-                historyUrl += 'index.html';
+            // Clear page-specific data to prevent stale data from previous pages
+            if (typeof jokiServices !== 'undefined') jokiServices = undefined;
+
+            // Execute scripts found in the fetched content, skipping global ones already loaded
+            const scriptPromises = [];
+            doc.querySelectorAll('script').forEach(oldScript => {
+                const src = oldScript.getAttribute('src');
+                if (src && (src.includes('navbar.js') || src.includes('router.js') || src.includes('background-animation.js'))) {
+                    return; // Skip global scripts
+                }
+
+                // For page-specific scripts, we want to re-execute them if they are already in the DOM.
+                // This ensures data.js for different games is correctly re-loaded.
+                if (src) {
+                    const absoluteSrc = src.startsWith('http') || src.startsWith('/') ? src : baseDir + src;
+                    const fullUrl = new URL(absoluteSrc, window.location.href).href;
+                    
+                    // Find any existing script with the same absolute URL and remove it
+                    const existingScripts = document.querySelectorAll('script[src]');
+                    existingScripts.forEach(s => {
+                        if (s.src === fullUrl) {
+                            console.log("SPA: Refreshing script:", fullUrl);
+                            s.remove();
+                        }
+                    });
+                }
+
+                const newScript = document.createElement('script');
+                Array.from(oldScript.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
+                
+                // Fix relative paths for fetched scripts
+                if (src && !src.startsWith('http') && !src.startsWith('/')) {
+                    newScript.src = baseDir + src;
+                }
+
+                if (newScript.src) {
+                    const promise = new Promise((resolve) => {
+                        newScript.onload = () => {
+                            console.log("SPA: Script loaded:", newScript.src);
+                            resolve();
+                        };
+                        newScript.onerror = () => {
+                            console.warn("SPA: Script failed to load:", newScript.src);
+                            resolve(); // Continue anyway
+                        };
+                    });
+                    scriptPromises.push(promise);
+                }
+
+                newScript.appendChild(document.createTextNode(oldScript.innerHTML));
+                document.body.appendChild(newScript);
+                if (!newScript.src) newScript.remove();
+            });
+
+            // Wait for all scripts to load before initializing the page
+            if (scriptPromises.length > 0) {
+                console.log("SPA: Waiting for", scriptPromises.length, "scripts...");
+                await Promise.all(scriptPromises);
             }
 
+            // Use clean URLs in history
+            let historyUrl = urlObj.pathname.replace(/\.html$/, '');
+            if (historyUrl.endsWith('/index')) historyUrl = historyUrl.slice(0, -6) || '/';
             if (addHistory) history.pushState({}, '', historyUrl);
 
             // Re-initialize based on the new path
@@ -205,11 +284,14 @@ async function navigate(url, addHistory = true) {
             // Support both /testimoni.html and clean /testimoni URLs
             if (currentPath.includes('testimoni')) {
                 if (typeof PageHandlers !== 'undefined') PageHandlers.initTestimonials();
+            } else if (currentPath.includes('kalkulator')) {
+                if (typeof PageHandlers !== 'undefined') PageHandlers.initKalkulator();
             } else {
                 if (typeof PageHandlers !== 'undefined') PageHandlers.initHome();
             }
 
-            updateNavbarActive(currentPath);
+            if (typeof Navbar !== 'undefined') Navbar.render();
+            else updateNavbarActive(currentPath);
 
             // Handle scroll after content swap
             if (targetHash) {
@@ -228,25 +310,6 @@ async function navigate(url, addHistory = true) {
     }
 }
 
-function updateNavbarActive(path) {
-    const navLinks = document.querySelectorAll('.nav-links a');
-    navLinks.forEach(link => {
-        const href = link.getAttribute('href');
-        if (!href) return;
-        
-        link.classList.remove('active');
-        link.removeAttribute('style');
-
-        const isTestimonialsPage = path.includes('testimoni');
-        const linkIsTestimonials = href.includes('testimoni');
-        
-        if (isTestimonialsPage && linkIsTestimonials) {
-            link.classList.add('active');
-            link.style.color = 'var(--primary)';
-        }
-    });
-}
-
 // Intercept all clicks
 document.addEventListener('click', e => {
     const link = e.target.closest('a');
@@ -257,9 +320,6 @@ document.addEventListener('click', e => {
 
     // Skip external links, target=_blank, and special protocols
     if (link.origin !== window.location.origin || link.target === '_blank' || hrefAttr.includes(':')) return;
-
-    // Skip simple anchors on the same page
-    if (hrefAttr.startsWith('#')) return;
 
     // Everything else is a candidate for SPA navigation
     console.log("SPA: Intercepting click on", hrefAttr);
@@ -272,54 +332,25 @@ window.addEventListener('popstate', () => {
     navigate(window.location.href, false);
 });
 
-// --- Global UI Logic (Navbar, etc.) ---
-
-function initNavbar() {
-    const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
-    const navLinks = document.getElementById('nav-links');
-
-    if (mobileMenuToggle && navLinks) {
-        mobileMenuToggle.onclick = (e) => {
-            e.stopPropagation();
-            mobileMenuToggle.classList.toggle('active');
-            navLinks.classList.toggle('active');
-        };
-
-        navLinks.onclick = (e) => {
-            if (e.target.closest('a')) {
-                mobileMenuToggle.classList.remove('active');
-                navLinks.classList.remove('active');
-            }
-        };
-
-        document.onclick = (e) => {
-            if (!navLinks.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
-                mobileMenuToggle.classList.remove('active');
-                navLinks.classList.remove('active');
-            }
-        };
-    }
-}
-
 // Initial run
 document.addEventListener('DOMContentLoaded', () => {
     console.log("SPA: DOMContentLoaded");
-    initNavbar();
     const path = window.location.pathname;
-    
-    updateNavbarActive(path);
     
     // Support both /testimoni.html and clean /testimoni URLs
     if (path.includes('testimoni')) {
         PageHandlers.initTestimonials();
+    } else if (path.includes('kalkulator')) {
+        PageHandlers.initKalkulator();
     } else {
         PageHandlers.initHome();
     }
     
-    if (window.location.hash) {
+    if (window._pendingHash) {
         setTimeout(() => {
-            const target = document.querySelector(window.location.hash);
+            const target = document.querySelector(window._pendingHash);
             if (target) target.scrollIntoView({ behavior: 'smooth' });
+            window._pendingHash = null; // Clear it
         }, 600);
     }
 });

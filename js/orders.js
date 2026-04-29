@@ -3,12 +3,14 @@
  * Edit angka di bawah ini untuk mengupdate tampilan di website secara otomatis.
  */
 
-const orderConfig = {
+if (!window.orderConfig) {
+window.orderConfig = {
     ordersDone: 0,      // Jumlah total order selesai
     happyClients: 0,    // Jumlah client puas
     manualProcess: 100,   // Persentase pengerjaan manual
     fastResponse: "24/7"  // Status response
 };
+}
 
 // Script untuk mengupdate tampilan (Jangan diubah kecuali paham JS)
 function syncOrderStats() {

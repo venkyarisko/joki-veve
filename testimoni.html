@@ -12,7 +12,7 @@
         content="joki game, testimoni, boosting service, arknights endfield, wuthering waves, NTE, joki terpercaya, veve services">
     <meta name="author" content="Veve Services">
 
-    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="css/index.css">
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -56,27 +56,8 @@
 <body>
     <canvas id="bg-canvas"></canvas>
 
-    <nav>
-        <div class="container">
-            <a href="index.html" class="logo">VEVE<span class="logo-dot">.</span>SERVICES <i
-                    class="fas fa-bolt bolt-icon"></i></a>
+    <div id="navbar-placeholder"></div>
 
-            <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Toggle Menu">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
-            </button>
-
-            <ul class="nav-links" id="nav-links">
-                <li><a href="index.html#services" class="nav-service">Services <span class="ready-indicator"></span></a>
-                </li>
-                <li><a href="index.html#about">About</a></li>
-                <li><a href="testimoni.html" class="active" style="color: var(--primary);">Testimonials</a></li>
-                <li><a href="index.html#faq">QNA</a></li>
-                <li><a href="index.html#contact">Contact</a></li>
-            </ul>
-        </div>
-    </nav>
 
     <main id="main-content">
         <header class="section" style="padding-top: 150px; padding-bottom: 50px;">
@@ -117,18 +98,21 @@
         </div>
     </main>
 
-    <footer style="padding: 40px 0; text-align: center; border-top: 1px solid var(--glass-border);">
-        <p style="color: var(--text-muted);">&copy; 2026 Veve Services. Built for performance.</p>
-    </footer>
+    <div id="footer-placeholder"></div>
 
     <a href="https://discord.com/users/vevego" target="_blank" class="floating-contact" title="Chat via Discord">
         <i class="fab fa-discord"></i>
     </a>
 
     <!-- Load Testimonial Data & Logic -->
-    <script src="testimonials.js"></script>
-    <script src="router.js"></script>
-    <script src="background-animation.js"></script>
+    <script src="js/navbar.js"></script>
+    <script src="js/footer.js"></script>
+    <script src="js/floating-buttons.js"></script>
+    <script src="js/testimonials.js"></script>
+    <script src="js/activity-ticker.js"></script>
+    <script src="js/router.js"></script>
+    <script src="js/background-animation.js"></script>
+    <script src="js/security.js"></script>
 </body>
 
 </html>

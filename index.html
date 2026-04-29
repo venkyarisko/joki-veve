@@ -10,7 +10,7 @@
     <meta name="keywords"
         content="joki game, boosting service, arknights endfield, wuthering waves, NTE, joki terpercaya, veve services, jasa joki murah">
     <meta name="author" content="Veve Services">
-    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="css/index.css">
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -51,27 +51,8 @@
 <body>
     <canvas id="bg-canvas"></canvas>
 
-    <nav>
-        <div class="container">
-            <a href="index.html" class="logo">VEVE<span class="logo-dot">.</span>SERVICES <i
-                    class="fas fa-bolt bolt-icon"></i></a>
+    <div id="navbar-placeholder"></div>
 
-            <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Toggle Menu">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
-            </button>
-
-            <ul class="nav-links" id="nav-links">
-                <li><a href="index.html#services" class="nav-service">Services <span class="ready-indicator"></span></a>
-                </li>
-                <li><a href="index.html#about">About</a></li>
-                <li><a href="testimoni.html">Testimonials</a></li>
-                <li><a href="index.html#faq">Q&A</a></li>
-                <li><a href="index.html#contact">Contact</a></li>
-            </ul>
-        </div>
-    </nav>
 
     <main id="main-content">
         <header class="hero">
@@ -206,33 +187,65 @@
             </div>
         </section>
 
-        <!-- Idea 2: Workflow Section -->
+        <!-- Workflow Section -->
         <section class="section workflow-section">
             <div class="container">
                 <div class="section-title">
-                    <h2>Cara Kerja</h2>
-                    <p style="color: var(--text-muted);">Proses pengerjaan yang transparan dan profesional</p>
+                    <span class="hero-badge">Step-by-Step</span>
+                    <h2>Cara <span>Order</span> Layanan</h2>
+                    <p style="color: var(--text-muted); max-width: 600px; margin: 0 auto;">Proses pengerjaan yang transparan, aman, dan profesional mulai dari konsultasi hingga serah terima.</p>
                 </div>
                 <div class="workflow-grid">
+                    <!-- Step 1 -->
                     <div class="workflow-item">
-                        <div class="step-number"><i class="fas fa-comments"></i></div>
-                        <h4>1. Konsultasi</h4>
-                        <p>Diskusi request, target pengerjaan, dan kesepakatan harga via Discord.</p>
+                        <div class="step-card">
+                            <div class="step-number-container">
+                                <div class="step-number-bg"></div>
+                                <span class="step-count">01</span>
+                                <i class="fas fa-calculator"></i>
+                            </div>
+                            <h4>Pilih Layanan</h4>
+                            <p>Pilih game dan tentukan paket joki yang diinginkan lewat Kalkulator Harga yang transparan.</p>
+                        </div>
                     </div>
+
+                    <!-- Step 2 -->
                     <div class="workflow-item">
-                        <div class="step-number"><i class="fas fa-file-invoice-dollar"></i></div>
-                        <h4>2. Pembayaran</h4>
-                        <p>Pembayaran dilakukan di awal sesuai dengan nominal yang disepakati.</p>
+                        <div class="step-card">
+                            <div class="step-number-container">
+                                <div class="step-number-bg"></div>
+                                <span class="step-count">02</span>
+                                <i class="fas fa-file-invoice"></i>
+                            </div>
+                            <h4>Salin Rincian</h4>
+                            <p>Salin format pesanan otomatis dan lihat Invoice Digital sebagai bukti rincian belanja Anda.</p>
+                        </div>
                     </div>
+
+                    <!-- Step 3 -->
                     <div class="workflow-item">
-                        <div class="step-number"><i class="fas fa-gamepad"></i></div>
-                        <h4>3. Pengerjaan</h4>
-                        <p>Akun dikerjakan dengan aman (100% Manual) dan update progres berkala.</p>
+                        <div class="step-card">
+                            <div class="step-number-container">
+                                <div class="step-number-bg"></div>
+                                <span class="step-count">03</span>
+                                <i class="fab fa-discord"></i>
+                            </div>
+                            <h4>Hubungi Veve</h4>
+                            <p>Kirim hasil salinan pesanan ke Discord Veve untuk verifikasi cepat dan detail pembayaran.</p>
+                        </div>
                     </div>
+
+                    <!-- Step 4 -->
                     <div class="workflow-item">
-                        <div class="step-number"><i class="fas fa-check-double"></i></div>
-                        <h4>4. Selesai</h4>
-                        <p>Serah terima akun kembali. Jangan lupa beri ulasan/testimoni ya!</p>
+                        <div class="step-card">
+                            <div class="step-number-container">
+                                <div class="step-number-bg"></div>
+                                <span class="step-count">04</span>
+                                <i class="fas fa-user-check"></i>
+                            </div>
+                            <h4>Joki Diproses</h4>
+                            <p>Akun dikerjakan 100% manual (Tanpa Cheat/Bot) dengan update progres rutin sampai selesai.</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -320,7 +333,30 @@
                         </button>
                         <div class="faq-answer">
                             <p>Sebaiknya hindari login selama proses pengerjaan untuk menghindari tabrakan sesi. Jika
-                                mendesak, silakan konfirmasi terlebih dahulu via Discord.</p>
+                                mendesak, silakan konfirmasi terlebih dahulu via Discord agar saya bisa logout sebentar.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            Bagaimana jika saya ingin request joki yang tidak ada di list?
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="faq-answer">
+                            <p>Sangat bisa. List yang ada di website hanya paket umum. Kamu bisa konsultasikan kebutuhan
+                                khususmu via Discord, dan saya akan berikan harga spesial untuk custom request tersebut.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            Apakah data akun saya akan aman?
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="faq-answer">
+                            <p>Data login kamu hanya digunakan untuk proses joki dan tidak akan disebarluaskan. Setelah
+                                proses joki selesai, saya sangat menyarankan kamu untuk mengganti password demi keamanan
+                                ekstra dan ketenangan pikiran kamu.</p>
                         </div>
                     </div>
                 </div>
@@ -332,6 +368,9 @@
                 <h2>Siap buat Gacor?</h2>
                 <p>Gas langsung aja diskusiin request dan harganya!</p>
                 <div style="display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;">
+                    <a href="kalkulator.html" class="btn btn-primary">
+                        <i class="fas fa-calculator"></i> Cek Harga Joki
+                    </a>
                     <a href="https://discord.com/users/vevego" target="_blank" class="btn"
                         style="background: #5865F2; color: white;">
                         <i class="fab fa-discord"></i> Discord: vevego
@@ -342,18 +381,18 @@
         </section>
     </main>
 
-    <footer style="padding: 40px 0; text-align: center; border-top: 1px solid var(--glass-border);">
-        <p style="color: var(--text-muted);">&copy; 2026 Veve Services. Built for performance.</p>
-    </footer>
-
-    <a href="https://discord.com/users/vevego" target="_blank" class="floating-contact" title="Chat via Discord">
-        <i class="fab fa-discord"></i>
-    </a>
-
-    <script src="testimonials.js"></script>
-    <script src="orders.js"></script>
-    <script src="router.js"></script>
-    <script src="background-animation.js"></script>
-</body>
+    <div id="footer-placeholder"></div>
+ 
+     <script src="js/navbar.js"></script>
+     <script src="js/footer.js"></script>
+     <script src="js/floating-buttons.js"></script>
+     <script src="js/testimonials.js"></script>
+     <script src="js/activity-ticker.js"></script>
+     <script src="js/games-data.js"></script>
+     <script src="js/orders.js"></script>
+     <script src="js/router.js"></script>
+     <script src="js/background-animation.js"></script>
+     <script src="js/security.js"></script>
+ </body>
 
 </html>
