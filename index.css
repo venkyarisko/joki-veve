@@ -83,12 +83,10 @@ nav .container {
     gap: 12px;
     font-size: 1.8rem;
     font-weight: 800;
-    background: linear-gradient(
-        90deg, 
-        var(--primary) 0%, 
-        var(--secondary) 50%, 
-        var(--primary) 100%
-    );
+    background: linear-gradient(90deg,
+            var(--primary) 0%,
+            var(--secondary) 50%,
+            var(--primary) 100%);
     background-size: 200% auto;
     -webkit-background-clip: text;
     background-clip: text;
@@ -117,11 +115,14 @@ nav .container {
 }
 
 @keyframes logoDotPulse {
-    0%, 100% {
+
+    0%,
+    100% {
         transform: scale(1);
         opacity: 1;
         text-shadow: 0 0 10px var(--primary);
     }
+
     50% {
         transform: scale(1.5);
         opacity: 0.7;
@@ -188,16 +189,20 @@ nav .container {
 
 .bolt-icon {
     color: #ffcc00;
-    -webkit-text-fill-color: #ffcc00; /* Override logo transparency */
+    -webkit-text-fill-color: #ffcc00;
+    /* Override logo transparency */
     font-size: 1.2rem;
     filter: drop-shadow(0 0 8px rgba(255, 204, 0, 0.8));
     animation: floatingBolt 2s ease-in-out infinite;
 }
 
 @keyframes floatingBolt {
-    0%, 100% {
+
+    0%,
+    100% {
         transform: translateY(0) rotate(0deg);
     }
+
     50% {
         transform: translateY(-4px) rotate(10deg);
     }
@@ -208,6 +213,7 @@ nav .container {
         transform: scale(1);
         opacity: 1;
     }
+
     100% {
         transform: scale(2.5);
         opacity: 0;
@@ -266,7 +272,7 @@ nav .container {
 .hero-visual {
     position: absolute;
     right: 0;
-    top: 0;
+    top: 80px;
     width: 50%;
     height: 100%;
     z-index: 1;
@@ -275,22 +281,15 @@ nav .container {
     -webkit-mask-image: linear-gradient(to left, black 60%, transparent);
 }
 
-@keyframes pulse {
+@keyframes heroGlow {
 
     0%,
     100% {
-        transform: scale(1) translate(0, 0);
-        opacity: 0.4;
+        filter: drop-shadow(0 0 20px rgba(0, 242, 255, 0.1));
     }
 
-    33% {
-        transform: scale(1.1) translate(30px, -50px);
-        opacity: 0.5;
-    }
-
-    66% {
-        transform: scale(0.9) translate(-20px, 40px);
-        opacity: 0.3;
+    50% {
+        filter: drop-shadow(0 0 40px rgba(0, 242, 255, 0.3));
     }
 }
 
@@ -335,8 +334,9 @@ nav .container {
 .hero-visual img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    opacity: 0.8;
+    object-fit: contain;
+    opacity: 0.9;
+    filter: drop-shadow(0 0 30px rgba(0, 242, 255, 0.2));
 }
 
 .hero-content h1 {
@@ -464,6 +464,7 @@ nav .container {
         gap: 30px;
         padding: 30px;
     }
+
     .stat-divider {
         width: 50px;
         height: 1px;
@@ -565,7 +566,8 @@ nav .container {
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(0, 242, 255, 0.1);
 }
 
-.game-card i, .game-icon {
+.game-card i,
+.game-icon {
     font-size: 2.5rem;
     color: var(--primary);
     margin-bottom: 1.5rem;
@@ -858,13 +860,14 @@ nav .container {
     .hero h1 {
         font-size: 3.5rem;
     }
-    
+
     .nav-links {
         gap: 1.5rem;
     }
 }
 
 @media (max-width: 768px) {
+
     /* Navbar Mobile */
     .mobile-menu-toggle {
         display: flex;
@@ -895,9 +898,11 @@ nav .container {
     .mobile-menu-toggle.active .bar:nth-child(1) {
         transform: translateY(9px) rotate(45deg);
     }
+
     .mobile-menu-toggle.active .bar:nth-child(2) {
         opacity: 0;
     }
+
     .mobile-menu-toggle.active .bar:nth-child(3) {
         transform: translateY(-9px) rotate(-45deg);
     }
@@ -905,8 +910,12 @@ nav .container {
     /* Hero Mobile */
     .hero {
         height: auto;
-        padding-top: 120px;
-        padding-bottom: 60px;
+        min-height: 80vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding-top: 100px;
+        padding-bottom: 40px;
         text-align: center;
     }
 
@@ -943,15 +952,24 @@ nav .container {
     .hero-visual {
         position: relative;
         width: 100%;
-        height: 350px;
-        margin-top: 40px;
-        mask-image: linear-gradient(to bottom, black 70%, transparent);
-        -webkit-mask-image: linear-gradient(to bottom, black 70%, transparent);
+        height: auto;
+        margin-top: 20px;
+        padding-bottom: 40px;
+        top: 0;
+        mask-image: none;
+        -webkit-mask-image: none;
         right: auto;
+        display: block;
+        overflow: hidden;
     }
 
     .hero-visual img {
-        opacity: 0.7;
+        width: 100%;
+        height: auto;
+        display: block;
+        object-fit: contain;
+        filter: drop-shadow(0 0 20px rgba(0, 242, 255, 0.3));
+        opacity: 1;
     }
 
     /* Stats Grid Mobile */
@@ -995,7 +1013,7 @@ nav .container {
     .cta h2 {
         font-size: 2.2rem;
     }
-    
+
     .floating-contact {
         bottom: 20px;
         right: 20px;
@@ -1009,7 +1027,7 @@ nav .container {
     .hero h1 {
         font-size: 2.2rem;
     }
-    
+
     .payment-badge {
         min-width: 100%;
     }
@@ -1256,6 +1274,7 @@ nav .container {
         opacity: 0;
         transform: scale(0.9);
     }
+
     to {
         opacity: 1;
         transform: scale(1);
@@ -1276,6 +1295,7 @@ nav .container {
         opacity: 0;
         transform: translateY(20px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -1426,7 +1446,8 @@ nav .container {
 }
 
 .faq-item.active .faq-answer {
-    max-height: 200px; /* Adjust based on content */
+    max-height: 200px;
+    /* Adjust based on content */
     padding: 0 30px 25px;
 }
 
