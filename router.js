@@ -98,78 +98,68 @@ const PageHandlers = {
     }
 };
 
-// --- SPA Router Logic ---
+/// --- SPA Router Logic ---
 
 /**
- * Enhanced navigation that handles hashes and scrolls to target elements
- */
-// --- SPA Router Logic ---
-
-/**
- * Enhanced navigation that handles hashes and scrolls to target elements
+ * Simplified & Robust Navigation
  */
 async function navigate(url, addHistory = true) {
-    console.log("SPA: Navigating to", url);
-    const urlObj = new URL(url, window.location.href);
-    const targetHash = urlObj.hash;
-    const fetchUrl = url.split('#')[0];
+    console.log("SPA: Starting navigation to", url);
     
-    // Normalize paths for comparison (remove trailing slashes and index.html)
-    const normalize = (p) => p.replace(/index\.html$/, '').replace(/\/$/, '');
-    const cleanPathname = normalize(urlObj.pathname);
-    const currentPathname = normalize(window.location.pathname);
-
-    // Fallback for file:// protocol (CORS restriction)
-    if (window.location.protocol === 'file:') {
-        window.location.href = url;
-        return;
-    }
-
-    // If it's just a hash on the current page, handle it locally
-    if (cleanPathname === currentPathname && targetHash) {
-        console.log("SPA: Same page hash detected");
-        if (addHistory) history.pushState({}, '', url);
-        const target = document.querySelector(targetHash);
-        if (target) {
-            target.scrollIntoView({ behavior: 'smooth' });
-        } else {
-             window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-        return;
-    }
-
-    // Don't navigate if it's the exact same URL and path
-    if (url === window.location.href && addHistory) return;
-
-    const main = document.getElementById('main-content');
-    if (!main) {
-        console.warn("SPA: No #main-content found, falling back to full reload");
-        window.location.href = url;
-        return;
-    }
-
-    document.body.classList.add('page-transitioning');
-
     try {
-        console.log("SPA: Fetching content from", fetchUrl);
-        const response = await fetch(fetchUrl);
-        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        const urlObj = new URL(url, window.location.href);
+        const targetHash = urlObj.hash;
+        
+        // Fallback for file protocol or different origin
+        if (window.location.protocol === 'file:' || urlObj.origin !== window.location.origin) {
+            window.location.href = url;
+            return;
+        }
+
+        const main = document.getElementById('main-content');
+        if (!main) {
+            window.location.href = url;
+            return;
+        }
+
+        // Normalize paths to compare if we are staying on the same page
+        const norm = p => p.replace(/index\.html$/, '').replace(/\/$/, '');
+        const isSamePage = norm(urlObj.pathname) === norm(window.location.pathname);
+
+        if (isSamePage && targetHash) {
+            console.log("SPA: Internal hash link");
+            if (addHistory) history.pushState({}, '', url);
+            const target = document.querySelector(targetHash);
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth' });
+            } else {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+            return;
+        }
+
+        // If it's exactly the same URL, do nothing
+        if (url === window.location.href && addHistory) return;
+
+        // Start transition
+        document.body.classList.add('page-transitioning');
+
+        // Fetch using the pathname (safest for same-origin)
+        console.log("SPA: Fetching", urlObj.pathname);
+        const response = await fetch(urlObj.pathname);
+        if (!response.ok) throw new Error("Fetch failed");
         
         const html = await response.text();
         const parser = new DOMParser();
         const doc = parser.parseFromString(html, 'text/html');
-
         const newMain = doc.getElementById('main-content');
-        if (!newMain) {
-            console.error("SPA: No #main-content found in the fetched page");
-            window.location.href = url; // Fallback
-            return;
-        }
+
+        if (!newMain) throw new Error("No #main-content found");
 
         const newContent = newMain.innerHTML;
         const newTitle = doc.title;
 
-        // Small delay for fade out effect
+        // Content swap with a small delay for animation if any
         setTimeout(() => {
             main.innerHTML = newContent;
             document.title = newTitle;
@@ -177,36 +167,33 @@ async function navigate(url, addHistory = true) {
 
             if (addHistory) history.pushState({}, '', url);
 
-            // Re-initialize scripts based on the new page
-            const path = window.location.pathname;
-            console.log("SPA: Content swapped, path is now", path);
+            // Re-initialize based on the new path
+            const currentPath = window.location.pathname;
+            console.log("SPA: Navigated to", currentPath);
             
-            if (path.includes('testimoni.html')) {
-                PageHandlers.initTestimonials();
+            // Support both /testimoni.html and clean /testimoni URLs
+            if (currentPath.includes('testimoni')) {
+                if (typeof PageHandlers !== 'undefined') PageHandlers.initTestimonials();
             } else {
-                PageHandlers.initHome();
+                if (typeof PageHandlers !== 'undefined') PageHandlers.initHome();
             }
 
-            // Update Navbar Active State
-            updateNavbarActive(path);
+            updateNavbarActive(currentPath);
 
-            // Scroll logic: to hash or top
+            // Handle scroll after content swap
             if (targetHash) {
                 const target = document.querySelector(targetHash);
                 if (target) {
-                    setTimeout(() => {
-                        target.scrollIntoView({ behavior: 'smooth' });
-                    }, 100);
-                } else {
-                    window.scrollTo({ top: 0, behavior: 'instant' });
+                    setTimeout(() => target.scrollIntoView({ behavior: 'smooth' }), 100);
                 }
             } else {
-                window.scrollTo({ top: 0, behavior: 'instant' });
+                window.scrollTo(0, 0);
             }
         }, 300);
+
     } catch (err) {
-        console.error("SPA Navigation failed:", err);
-        window.location.href = url; // Fallback
+        console.error("SPA ERROR:", err);
+        window.location.href = url; // Hard fallback
     }
 }
 
@@ -219,8 +206,8 @@ function updateNavbarActive(path) {
         link.classList.remove('active');
         link.removeAttribute('style');
 
-        const isTestimonialsPage = path.includes('testimoni.html');
-        const linkIsTestimonials = href.includes('testimoni.html');
+        const isTestimonialsPage = path.includes('testimoni');
+        const linkIsTestimonials = href.includes('testimoni');
         
         if (isTestimonialsPage && linkIsTestimonials) {
             link.classList.add('active');
@@ -234,27 +221,19 @@ document.addEventListener('click', e => {
     const link = e.target.closest('a');
     if (!link) return;
 
-    // Use standard anchor properties
-    const url = link.href;
-    const origin = link.origin;
     const hrefAttr = link.getAttribute('href');
+    if (!hrefAttr) return;
 
-    // Skip if different origin
-    if (origin !== window.location.origin) return;
+    // Skip external links, target=_blank, and special protocols
+    if (link.origin !== window.location.origin || link.target === '_blank' || hrefAttr.includes(':')) return;
 
-    // Skip if target="_blank"
-    if (link.target === '_blank') return;
+    // Skip simple anchors on the same page
+    if (hrefAttr.startsWith('#')) return;
 
-    // Skip special protocols
-    if (hrefAttr && (hrefAttr.startsWith('mailto:') || hrefAttr.startsWith('tel:'))) return;
-
-    // If it's just a hash on the current page (e.g. href="#about")
-    if (hrefAttr && hrefAttr.startsWith('#')) return;
-
-    // For everything else that is local, handle with SPA
-    console.log("SPA: Intercepted click on", hrefAttr);
+    // Everything else is a candidate for SPA navigation
+    console.log("SPA: Intercepting click on", hrefAttr);
     e.preventDefault();
-    navigate(url);
+    navigate(link.href);
 });
 
 // Handle Back/Forward buttons
@@ -269,14 +248,12 @@ function initNavbar() {
     const navLinks = document.getElementById('nav-links');
 
     if (mobileMenuToggle && navLinks) {
-        // Toggle mobile menu
         mobileMenuToggle.onclick = (e) => {
             e.stopPropagation();
             mobileMenuToggle.classList.toggle('active');
             navLinks.classList.toggle('active');
         };
 
-        // Close menu when clicking a link
         navLinks.onclick = (e) => {
             if (e.target.closest('a')) {
                 mobileMenuToggle.classList.remove('active');
@@ -284,7 +261,6 @@ function initNavbar() {
             }
         };
 
-        // Close menu when clicking outside
         document.onclick = (e) => {
             if (!navLinks.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
                 mobileMenuToggle.classList.remove('active');
@@ -300,16 +276,15 @@ document.addEventListener('DOMContentLoaded', () => {
     initNavbar();
     const path = window.location.pathname;
     
-    // Update active state on load
     updateNavbarActive(path);
     
-    if (path.includes('testimoni.html')) {
+    // Support both /testimoni.html and clean /testimoni URLs
+    if (path.includes('testimoni')) {
         PageHandlers.initTestimonials();
     } else {
         PageHandlers.initHome();
     }
     
-    // Check if there is an initial hash to scroll to
     if (window.location.hash) {
         setTimeout(() => {
             const target = document.querySelector(window.location.hash);
