@@ -56,8 +56,9 @@ window.Navbar = {
 
         const currentPath = window.location.pathname;
         const root = this.getRoot();
+        const rootPathname = new URL(root, window.location.href).pathname;
         const cleanCurrentPath = currentPath.replace('.html', '');
-        const isHome = cleanCurrentPath === '/' || cleanCurrentPath.endsWith('/') || cleanCurrentPath.endsWith('/index');
+        const isHome = cleanCurrentPath === '/' || cleanCurrentPath === rootPathname || cleanCurrentPath === rootPathname.slice(0, -1) || cleanCurrentPath.endsWith('/') || cleanCurrentPath.endsWith('/index');
         
         const logoHref = isHome ? '#' : root + 'index.html';
 
@@ -76,7 +77,7 @@ window.Navbar = {
                         ${this.links.map(link => {
                             const isAnchor = link.path.includes('#');
                             const cleanCurrentPath = currentPath.replace('.html', '');
-                            const isHome = cleanCurrentPath === '/' || cleanCurrentPath.endsWith('/') || cleanCurrentPath.endsWith('/index');
+                            const isHome = cleanCurrentPath === '/' || cleanCurrentPath === rootPathname || cleanCurrentPath === rootPathname.slice(0, -1) || cleanCurrentPath.endsWith('/') || cleanCurrentPath.endsWith('/index');
                             
                             let fullPath;
                             if (isAnchor && isHome) {

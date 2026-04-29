@@ -8,12 +8,27 @@
     const path = window.location.pathname;
     let cleanPath = path;
 
+    // Detect base path from the router script itself
+    let base = '/';
+    const script = document.querySelector('script[src*="router.js"]');
+    if (script) {
+        try {
+            const scriptUrl = new URL(script.src, window.location.href);
+            base = scriptUrl.pathname.replace('js/router.js', '');
+        } catch(e) {}
+    }
+
     if (cleanPath.endsWith('.html')) {
         cleanPath = cleanPath.replace('.html', '');
     }
 
     if (cleanPath.endsWith('/index')) {
         cleanPath = cleanPath.slice(0, -5); // Keep the trailing slash
+    }
+    
+    // Ensure the root path has a trailing slash
+    if (base !== '/' && cleanPath === base.slice(0, -1)) {
+        cleanPath = base;
     }
 
     if (cleanPath !== path || window.location.hash) {
@@ -164,7 +179,11 @@ async function navigate(url, addHistory = true) {
         // If it's the same page, just scroll to top
         if (isSamePage) {
             window.scrollTo({ top: 0, behavior: 'smooth' });
-            if (addHistory) history.pushState({}, '', window.location.pathname);
+            
+            let historyUrl = urlObj.pathname.replace(/\.html$/, '');
+            if (historyUrl.endsWith('/index')) historyUrl = historyUrl.slice(0, -5);
+            
+            if (addHistory) history.pushState({}, '', historyUrl + urlObj.search + urlObj.hash);
             if (typeof Navbar !== 'undefined') Navbar.render();
             return;
         }
