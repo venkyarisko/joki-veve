@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veve Game Services - Joki Terpercaya & Aman</title>
+    <meta name="description"
+        content="Layanan jasa joki game profesional (Arknights Endfield, WuWa, NTE) terpercaya, 100% manual, aman, dan cepat. Tingkatkan rank akunmu bersama Veve Services.">
+    <meta name="keywords"
+        content="joki game, boosting service, arknights endfield, wuthering waves, NTE, joki terpercaya, veve services, jasa joki murah">
+    <meta name="author" content="Veve Services">
+    <link rel="stylesheet" href="index.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@400;600;800&display=swap"
+        rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" type="image/svg+xml" href="assets/favicon-baru.svg">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://vevego.github.io/">
+    <meta property="og:title" content="Veve Game Services - Professional Game Boosting">
+    <meta property="og:description" content="Jasa joki game terpercaya, aman, dan 100% manual. Ready Gas!">
+    <meta property="og:image" content="assets/preview.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://vevego.github.io/">
+    <meta property="twitter:title" content="Veve Game Services - Professional Game Boosting">
+    <meta property="twitter:description" content="Jasa joki game terpercaya, aman, dan 100% manual. Ready Gas!">
+    <meta property="twitter:image" content="assets/preview.png">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        h1,
+        h2,
+        h3,
+        .logo {
+            font-family: 'Outfit', sans-serif;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="bg-canvas"></canvas>
+
+    <nav>
+        <div class="container">
+            <a href="#" class="logo">VEVE<span class="logo-dot">.</span>SERVICES <i
+                    class="fas fa-bolt bolt-icon"></i></a>
+
+            <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Toggle Menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+
+            <ul class="nav-links" id="nav-links">
+                <li><a href="#services" class="nav-service">Services <span class="ready-indicator"></span></a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="testimoni.html">Testimonials</a></li>
+                <li><a href="#faq">Q&A</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main id="main-content">
+        <header class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <div class="status-indicator-wrapper">
+                        <span class="hero-badge">Available Now</span>
+                        <div class="live-status">
+                            <span class="status-dot"></span>
+                            <span class="status-text">Status: <b>Open Order</b></span>
+                        </div>
+                    </div>
+                    <h1>Professional <span>Game Boosting</span> Services</h1>
+                    <p>Sibuk kerja, kuliah, atau capek grinding? Biar aku yang urus akun kamu. Aman, cepat, dan
+                        terpercaya.</p>
+                    <div class="hero-btns">
+                        <a href="#services" class="btn btn-primary">Lihat Layanan <i class="fas fa-arrow-right"></i></a>
+                        <a href="https://discord.com/users/vevego" target="_blank" class="btn"
+                            style="color: white; border: 1px solid var(--glass-border); margin-left: 10px;">DM
+                            Discord</a>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <img src="assets/hero.png" alt="Veve Game Services Banner">
+            </div>
+        </header>
+
+        <section class="stats-section">
+            <div class="container">
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-number" id="stat-orders" data-target="500">500+</span>
+                        <span class="stat-label">Orders Done</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="stat-clients" data-target="150">150+</span>
+                        <span class="stat-label">Happy Clients</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="stat-manual" data-target="100">100%</span>
+                        <span class="stat-label">Manual Process</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="stat-response">24/7</span>
+                        <span class="stat-label">Fast Response</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section features" id="about">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Halo semuanya! Aku Veve.</h2>
+                    <p style="color: var(--text-muted); max-width: 600px; margin: 0 auto;">Aku membantu kalian menjaga
+                        akun tetap up-to-date dan makin gacor tanpa harus pusing grinding sendiri.</p>
+                </div>
+                <div class="features-grid">
+                    <div class="feature-item">
+                        <i class="fas fa-keyboard" style="font-size: 2rem; color: var(--primary);"></i>
+                        <h4>100% Manual</h4>
+                        <p>Pengerjaan murni dilakukan secara manual tanpa bantuan cheat, bot, atau script ilegal. Akun
+                            Anda 100% aman.</p>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-user-shield" style="font-size: 2rem; color: var(--primary);"></i>
+                        <h4>Privasi Terjamin</h4>
+                        <p>Keamanan data dan privasi akun Anda adalah prioritas utama kami. Proses pengerjaan sangat
+                            transparan.</p>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-running" style="font-size: 2rem; color: var(--primary);"></i>
+                        <h4>Proses Cepat</h4>
+                        <p>Waktu pengerjaan yang efisien dan disiplin sesuai dengan jadwal yang telah kita sepakati
+                            bersama.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="services">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Layanan Game</h2>
+                    <p style="color: var(--text-muted);">Pilih game yang ingin kamu joki</p>
+                </div>
+
+                <div class="game-grid">
+                    <!-- Arknights Endfield -->
+                    <div class="game-card">
+                        <img src="assets/arknight_endfield.png" alt="Arknights Endfield Icon" class="game-icon">
+                        <h3>ARKNIGHTS: ENDFIELD</h3>
+                        <ul>
+                            <li>Rawat Akun Harian/Mingguan</li>
+                            <li>Paket 1 Patch Penuh</li>
+                            <li>Clear Story & Boss</li>
+                            <li>Eksplorasi Map (100%)</li>
+                            <li>Jasa Tarik Kabel / Manajemen Base</li>
+                            <li>Custom Request lainnya</li>
+                        </ul>
+                    </div>
+
+                    <!-- Wuthering Waves -->
+                    <div class="game-card">
+                        <img src="assets/wuwa.webp" alt="Wuthering Waves Icon" class="game-icon">
+                        <h3>WUTHERING WAVES</h3>
+                        <ul>
+                            <li>Eksplorasi Map (100%)</li>
+                            <li>Rawat Akun (Daily/Waveplates)</li>
+                            <li>Farming material, Echo, dll</li>
+                            <li>Custom Request</li>
+                        </ul>
+                    </div>
+
+                    <!-- NTE -->
+                    <div class="game-card">
+                        <img src="assets/NTE.webp" alt="Neverness to Everness Icon" class="game-icon">
+                        <h3>NEVERNESS TO EVERNESS</h3>
+                        <ul>
+                            <li>Eksplorasi Map (100%)</li>
+                            <li>Rawat Akun 1 Patch Penuh</li>
+                            <li>Clear Story & Side Story</li>
+                            <li>Urban Exploration</li>
+                            <li>Custom Request lainnya</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Idea 2: Workflow Section -->
+        <section class="section workflow-section">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Cara Kerja</h2>
+                    <p style="color: var(--text-muted);">Proses pengerjaan yang transparan dan profesional</p>
+                </div>
+                <div class="workflow-grid">
+                    <div class="workflow-item">
+                        <div class="step-number"><i class="fas fa-comments"></i></div>
+                        <h4>1. Konsultasi</h4>
+                        <p>Diskusi request, target pengerjaan, dan kesepakatan harga via Discord.</p>
+                    </div>
+                    <div class="workflow-item">
+                        <div class="step-number"><i class="fas fa-file-invoice-dollar"></i></div>
+                        <h4>2. Pembayaran</h4>
+                        <p>Pembayaran dilakukan di awal sesuai dengan nominal yang disepakati.</p>
+                    </div>
+                    <div class="workflow-item">
+                        <div class="step-number"><i class="fas fa-gamepad"></i></div>
+                        <h4>3. Pengerjaan</h4>
+                        <p>Akun dikerjakan dengan aman (100% Manual) dan update progres berkala.</p>
+                    </div>
+                    <div class="workflow-item">
+                        <div class="step-number"><i class="fas fa-check-double"></i></div>
+                        <h4>4. Selesai</h4>
+                        <p>Serah terima akun kembali. Jangan lupa beri ulasan/testimoni ya!</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" style="padding-top: 0;">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Metode Pembayaran</h2>
+                    <p style="color: var(--text-muted);">Menerima pembayaran via e-wallet dan bank transfer</p>
+                </div>
+                <div class="payment-grid">
+                    <div class="payment-badge dana">
+                        <i class="fas fa-wallet"></i>
+                        <span>DANA</span>
+                    </div>
+                    <div class="payment-badge jago">
+                        <i class="fas fa-university"></i>
+                        <span>BANK JAGO</span>
+                    </div>
+                </div>
+                <div style="text-align: center; margin-top: 30px; opacity: 0.6; font-size: 0.85rem;">
+                    <i class="fas fa-shield-alt"></i> Pembayaran aman & terverifikasi
+                </div>
+            </div>
+        </section>
+
+        <section class="section" style="padding-top: 0; text-align: center;">
+            <div class="container">
+                <div class="testimonial-cta">
+                    <i class="fas fa-quote-left"
+                        style="font-size: 2rem; color: var(--primary); margin-bottom: 20px;"></i>
+                    <h2>Ragu? Cek Testimoni</h2>
+                    <p style="color: var(--text-muted); margin-bottom: 30px;">Lihat bukti kepuasan pelanggan yang sudah
+                        menggunakan jasa Veve Services.</p>
+                    <a href="testimoni.html" class="btn btn-primary">
+                        <i class="fas fa-star"></i> Lihat Testimoni Pelanggan
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Idea 3: FAQ Section -->
+        <section class="section faq-section" id="faq">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Frequently Asked Questions</h2>
+                    <p style="color: var(--text-muted);">Pertanyaan yang sering ditanyakan pelanggan</p>
+                </div>
+                <div class="faq-container">
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            Apakah jasa joki ini aman?
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="faq-answer">
+                            <p>Sangat aman! Semua pengerjaan dilakukan 100% manual tanpa cheat, bot, atau script ilegal.
+                                Keamanan akun dan data Anda adalah prioritas utama kami.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            Berapa lama waktu pengerjaannya?
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="faq-answer">
+                            <p>Waktu pengerjaan bervariasi tergantung jenis request dan antrian. Kami akan memberikan
+                                estimasi waktu sebelum pengerjaan dimulai.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            Apa saja metode pembayaran yang diterima?
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="faq-answer">
+                            <p>Saat ini kami menerima pembayaran melalui DANA dan Bank Jago. Detail nomor pembayaran
+                                akan diberikan saat proses konsultasi.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            Bisakah saya login saat proses joki?
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="faq-answer">
+                            <p>Sebaiknya hindari login selama proses pengerjaan untuk menghindari tabrakan sesi. Jika
+                                mendesak, silakan konfirmasi terlebih dahulu via Discord.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="container" id="contact">
+            <div class="cta">
+                <h2>Siap buat Gacor?</h2>
+                <p>Gas langsung aja diskusiin request dan harganya!</p>
+                <div style="display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;">
+                    <a href="https://discord.com/users/vevego" target="_blank" class="btn"
+                        style="background: #5865F2; color: white;">
+                        <i class="fab fa-discord"></i> Discord: vevego
+                    </a>
+                </div>
+                <p style="margin-top: 20px; font-size: 0.9rem; opacity: 0.8;">Ditunggu orderannya ya! 🚀</p>
+            </div>
+        </section>
+    </main>
+
+    <footer style="padding: 40px 0; text-align: center; border-top: 1px solid var(--glass-border);">
+        <p style="color: var(--text-muted);">&copy; 2026 Veve Services. Built for performance.</p>
+    </footer>
+
+    <a href="https://discord.com/users/vevego" target="_blank" class="floating-contact" title="Chat via Discord">
+        <i class="fab fa-discord"></i>
+    </a>
+
+    <script src="testimonials.js"></script>
+    <script src="orders.js"></script>
+    <script src="router.js"></script>
+    <script src="background-animation.js"></script>
+</body>
+
+</html>
