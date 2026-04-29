@@ -8,7 +8,7 @@
   </p>
 
   <p align="center">
-    <a href="https://vevego.github.io/joki-page/"><strong>Explore Website »</strong></a>
+    <a href="https://vevego.github.io/joki-veve/"><strong>Explore Website »</strong></a>
     <br />
     <br />
     <a href="#-features">Features</a> ·
