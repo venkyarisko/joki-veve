@@ -823,6 +823,7 @@ nav .container {
     color: #FF9100;
     border-color: rgba(255, 145, 0, 0.2);
 }
+
 @media (hover: hover) {
     .payment-badge.dana:hover {
         border-color: #008CFF;
@@ -898,36 +899,13 @@ nav .container {
     color: white;
 }
 
+
 .discord-float.shift-up {
     bottom: 105px;
 }
 
-.install-float {
-    bottom: 30px;
-    background: var(--accent-gradient);
-    color: white;
-    display: none; /* Hidden by default */
-}
-
-.install-float.visible {
-    display: flex;
-}
-
-.install-float.shift-up {
-    bottom: 105px;
-}
-
-.install-float.shift-up-more {
-    bottom: 180px;
-}
-
-.install-float:hover {
-    transform: scale(1.1);
-    box-shadow: 0 15px 35px rgba(0, 242, 255, 0.5);
-}
-
-
 .back-to-top {
+
     bottom: 30px;
     background: var(--primary);
     color: #000;
@@ -1440,11 +1418,14 @@ nav .container {
     position: relative;
     z-index: 1;
     perspective: 1000px;
-    transform: translate3d(0, 0, 0); /* Initial GPU acceleration */
+    transform: translate3d(0, 0, 0);
+    /* Initial GPU acceleration */
 }
 
 @media (max-width: 768px) {
-    .workflow-item, .step-card {
+
+    .workflow-item,
+    .step-card {
         will-change: auto !important;
         transform: translate3d(0, 0, 0) !important;
         transition: transform 0.4s ease-out, opacity 0.4s ease-out !important;
@@ -1464,7 +1445,8 @@ nav .container {
 
 @media (max-width: 768px) {
     .step-card {
-        backdrop-filter: none; /* Disable expensive blur on mobile */
+        backdrop-filter: none;
+        /* Disable expensive blur on mobile */
         background: rgba(20, 20, 25, 0.8);
     }
 }
@@ -1505,7 +1487,8 @@ nav .container {
 
 @media (max-width: 768px) {
     .step-number-bg {
-        animation: none; /* Disable morph on mobile */
+        animation: none;
+        /* Disable morph on mobile */
         border-radius: 40% 60% 60% 40% / 40% 40% 60% 60%;
     }
 }

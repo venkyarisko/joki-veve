@@ -8,9 +8,6 @@
     const container = document.createElement('div');
     container.className = 'floating-btns-container';
     container.innerHTML = `
-        <button class="floating-btn install-float" id="pwa-install" title="Install App">
-            <i class="fas fa-download"></i>
-        </button>
         <a href="https://discord.com/users/vevego" target="_blank" class="floating-btn discord-float" id="discord-float" title="Chat via Discord">
             <i class="fab fa-discord"></i>
         </a>
@@ -19,36 +16,62 @@
         </button>
     `;
 
+    // Create PWA Modal HTML
+    const pwaModal = document.createElement('div');
+    pwaModal.className = 'modal-overlay';
+    pwaModal.id = 'pwa-modal';
+    pwaModal.innerHTML = `
+        <div class="custom-modal">
+            <div class="modal-icon"><i class="fas fa-mobile-alt"></i></div>
+            <h3>Pasang Aplikasi Veve</h3>
+            <p>Install aplikasi di HP kamu untuk akses joki lebih cepat, aman, dan lancar tanpa ribet buka browser!</p>
+            <div class="modal-btns">
+                <button class="modal-btn modal-btn-cancel" id="pwa-later">Nanti Saja</button>
+                <button class="modal-btn modal-btn-confirm" id="pwa-install-now">Install Sekarang</button>
+            </div>
+        </div>
+    `;
+
     // Append to body once DOM is ready
     const init = () => {
         if (!document.getElementById('discord-float')) {
             document.body.appendChild(container);
+            document.body.appendChild(pwaModal);
             
             const backToTop = document.getElementById('back-to-top');
             const discordFloat = document.getElementById('discord-float');
-            const installBtn = document.getElementById('pwa-install');
+            const pwaInstallBtn = document.getElementById('pwa-install-now');
+            const pwaLaterBtn = document.getElementById('pwa-later');
 
-            // --- PWA Install Logic ---
+            // --- PWA Pop-up Logic ---
             let deferredPrompt;
             window.addEventListener('beforeinstallprompt', (e) => {
                 e.preventDefault();
                 deferredPrompt = e;
-                installBtn.classList.add('visible');
-                console.log("PWA: Install prompt available");
+                
+                // Cek apakah user pernah nolak modal ini sebelumnya di session ini
+                if (!sessionStorage.getItem('pwa-modal-dismissed')) {
+                    setTimeout(() => {
+                        pwaModal.classList.add('active');
+                    }, 3000); // Tampilkan setelah 3 detik stay di web
+                }
             });
 
-            installBtn.onclick = async () => {
+            pwaInstallBtn.onclick = async () => {
+                pwaModal.classList.remove('active');
                 if (!deferredPrompt) return;
                 deferredPrompt.prompt();
                 const { outcome } = await deferredPrompt.userChoice;
-                console.log(`PWA: Install choice: ${outcome}`);
                 deferredPrompt = null;
-                installBtn.classList.remove('visible');
+            };
+
+            pwaLaterBtn.onclick = () => {
+                pwaModal.classList.remove('active');
+                sessionStorage.setItem('pwa-modal-dismissed', 'true');
             };
 
             window.addEventListener('appinstalled', () => {
-                installBtn.classList.remove('visible');
-                console.log('PWA: App installed');
+                pwaModal.classList.remove('active');
             });
 
             // --- Scroll Logic ---
@@ -56,11 +79,9 @@
                 if (window.scrollY > 300) {
                     backToTop.classList.add('visible');
                     discordFloat.classList.add('shift-up');
-                    installBtn.classList.add('shift-up-more');
                 } else {
                     backToTop.classList.remove('visible');
                     discordFloat.classList.remove('shift-up');
-                    installBtn.classList.remove('shift-up-more');
                 }
             }, { passive: true });
 
@@ -71,6 +92,8 @@
                 });
             };
         }
+
+
 
     };
 
