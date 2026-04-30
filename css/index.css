@@ -1415,6 +1415,15 @@ nav .container {
     position: relative;
     z-index: 1;
     perspective: 1000px;
+    transform: translate3d(0, 0, 0); /* Initial GPU acceleration */
+}
+
+@media (max-width: 768px) {
+    .workflow-item, .step-card {
+        will-change: auto !important;
+        transform: translate3d(0, 0, 0) !important;
+        transition: transform 0.4s ease-out, opacity 0.4s ease-out !important;
+    }
 }
 
 .step-card {

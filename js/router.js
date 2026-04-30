@@ -57,10 +57,12 @@ const PageHandlers = {
                 if (entry.isIntersecting) {
                     entry.target.style.opacity = '1';
                     entry.target.style.transform = 'translateY(0)';
-                    // Remove will-change after animation
+                    
+                    // Instant finish for mobile to avoid frozen state
+                    const isMobile = window.innerWidth <= 768;
                     setTimeout(() => {
                         entry.target.style.willChange = 'auto';
-                    }, 600);
+                    }, isMobile ? 300 : 600);
                 }
             });
         }, observerOptions);
