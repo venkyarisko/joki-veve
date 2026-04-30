@@ -902,6 +902,31 @@ nav .container {
     bottom: 105px;
 }
 
+.install-float {
+    bottom: 30px;
+    background: var(--accent-gradient);
+    color: white;
+    display: none; /* Hidden by default */
+}
+
+.install-float.visible {
+    display: flex;
+}
+
+.install-float.shift-up {
+    bottom: 105px;
+}
+
+.install-float.shift-up-more {
+    bottom: 180px;
+}
+
+.install-float:hover {
+    transform: scale(1.1);
+    box-shadow: 0 15px 35px rgba(0, 242, 255, 0.5);
+}
+
+
 .back-to-top {
     bottom: 30px;
     background: var(--primary);
