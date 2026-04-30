@@ -1045,12 +1045,16 @@ nav .container {
         font-size: 2.2rem;
     }
 
-    .floating-contact {
+    .floating-btn {
         bottom: 20px;
         right: 20px;
         width: 50px;
         height: 50px;
         font-size: 1.2rem;
+    }
+
+    .discord-float.shift-up {
+        bottom: 85px;
     }
 }
 
@@ -1697,6 +1701,31 @@ nav .container {
     backdrop-filter: blur(20px);
 }
 
+@media (max-width: 768px) {
+    .calc-container {
+        padding: 25px 20px;
+        margin: 30px 10px;
+        border-radius: 20px;
+    }
+
+    .calc-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 15px;
+    }
+
+    .calc-header img {
+        width: 80px;
+        height: 80px;
+    }
+
+    .calc-notice {
+        margin: 15px auto 0;
+        text-align: center;
+        justify-content: center;
+    }
+}
+
 .calc-header {
     display: flex;
     align-items: center;
@@ -1714,8 +1743,14 @@ nav .container {
 
 .calc-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     gap: 15px;
+}
+
+@media (max-width: 400px) {
+    .calc-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 .calc-item {
@@ -1854,6 +1889,20 @@ nav .container {
     flex-shrink: 0;
 }
 
+@media (max-width: 480px) {
+    .calc-item {
+        padding: 12px 15px;
+    }
+
+    .item-info h4 {
+        font-size: 0.95rem;
+    }
+
+    .price-tag {
+        font-size: 1rem;
+    }
+}
+
 .calc-category-title {
     font-size: 0.9rem;
     font-weight: 700;
@@ -1865,7 +1914,13 @@ nav .container {
     text-transform: uppercase;
     letter-spacing: 2px;
     grid-column: 1 / -1;
-    /* Ensure title spans all columns */
+}
+
+@media (max-width: 768px) {
+    .calc-category-title {
+        margin: 20px 0 10px;
+        font-size: 0.8rem;
+    }
 }
 
 .calc-category-title::before {
@@ -1885,6 +1940,19 @@ nav .container {
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+@media (max-width: 480px) {
+    .total-section {
+        flex-direction: column;
+        gap: 5px;
+        text-align: center;
+        padding: 15px;
+    }
+
+    .total-price {
+        font-size: 1.5rem;
+    }
 }
 
 .total-label {
@@ -1964,6 +2032,7 @@ nav .container {
     gap: 10px;
     font-weight: 600;
     width: fit-content;
+    max-width: 100%;
     animation: fadeIn 0.5s ease-out;
 }
 
