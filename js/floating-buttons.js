@@ -32,7 +32,7 @@
                     backToTop.classList.remove('visible');
                     discordFloat.classList.remove('shift-up');
                 }
-            });
+            }, { passive: true });
 
             backToTop.onclick = () => {
                 window.scrollTo({

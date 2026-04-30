@@ -435,6 +435,13 @@ nav .container {
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
 }
 
+@media (max-width: 768px) {
+    .stats-grid {
+        backdrop-filter: none;
+        background: rgba(20, 20, 25, 0.9);
+    }
+}
+
 .stat-item {
     text-align: center;
     flex: 1;
@@ -719,6 +726,13 @@ nav .container {
     transition: var(--transition);
 }
 
+@media (max-width: 768px) {
+    .cta {
+        backdrop-filter: none;
+        background: rgba(20, 20, 25, 0.9);
+    }
+}
+
 .cta:hover {
     border-color: var(--primary);
     background: rgba(0, 242, 255, 0.02);
@@ -763,6 +777,13 @@ nav .container {
     min-width: 180px;
     position: relative;
     overflow: hidden;
+}
+
+@media (max-width: 768px) {
+    .payment-badge {
+        backdrop-filter: none;
+        background: rgba(20, 20, 25, 0.8);
+    }
 }
 
 .payment-badge::before {
@@ -1446,6 +1467,13 @@ nav .container {
     transition: var(--transition);
     will-change: border-radius;
     transform: translateZ(0);
+}
+
+@media (max-width: 768px) {
+    .step-number-bg {
+        animation: none; /* Disable morph on mobile */
+        border-radius: 40% 60% 60% 40% / 40% 40% 60% 60%;
+    }
 }
 
 @keyframes morph {

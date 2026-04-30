@@ -22,19 +22,11 @@ class ParticleSystem {
 
         window.addEventListener('resize', () => this.resize());
         
-        const moveEvent = this.isMobile ? 'touchmove' : 'mousemove';
-        window.addEventListener(moveEvent, (e) => {
-            const clientX = this.isMobile ? e.touches[0].clientX : e.clientX;
-            const clientY = this.isMobile ? e.touches[0].clientY : e.clientY;
-            this.mouse.x = clientX;
-            this.mouse.y = clientY;
-        });
-
-        if (this.isMobile) {
-            window.addEventListener('touchend', () => {
-                this.mouse.x = null;
-                this.mouse.y = null;
-            });
+        if (!this.isMobile) {
+            window.addEventListener('mousemove', (e) => {
+                this.mouse.x = e.clientX;
+                this.mouse.y = e.clientY;
+            }, { passive: true });
         }
 
         // Optimized scroll handling
