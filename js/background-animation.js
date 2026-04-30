@@ -12,37 +12,53 @@ class ParticleSystem {
         this.particles = [];
         this.mouse = { x: null, y: null, radius: 150 };
         this.scrollOffset = 0;
+        this.targetScrollOffset = 0;
         this.lastScrollY = window.scrollY;
+        this.isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
         this.resize();
         this.init();
         this.animate();
 
         window.addEventListener('resize', () => this.resize());
-        window.addEventListener('mousemove', (e) => {
-            this.mouse.x = e.x;
-            this.mouse.y = e.y;
+        
+        const moveEvent = this.isMobile ? 'touchmove' : 'mousemove';
+        window.addEventListener(moveEvent, (e) => {
+            const clientX = this.isMobile ? e.touches[0].clientX : e.clientX;
+            const clientY = this.isMobile ? e.touches[0].clientY : e.clientY;
+            this.mouse.x = clientX;
+            this.mouse.y = clientY;
         });
+
+        if (this.isMobile) {
+            window.addEventListener('touchend', () => {
+                this.mouse.x = null;
+                this.mouse.y = null;
+            });
+        }
+
+        // Optimized scroll handling
         window.addEventListener('scroll', () => {
             const currentScroll = window.scrollY;
-            this.scrollOffset = (currentScroll - this.lastScrollY) * 0.5;
+            this.targetScrollOffset = (currentScroll - this.lastScrollY) * 0.5;
             this.lastScrollY = currentScroll;
-        });
+        }, { passive: true });
     }
 
     resize() {
         this.canvas.width = window.innerWidth;
         this.canvas.height = window.innerHeight;
-        this.init(); // Re-init on resize to adjust density
+        this.init(); 
     }
 
     init() {
         this.particles = [];
-        // Lower density for better performance
-        const numberOfParticles = (this.canvas.width * this.canvas.height) / 25000;
+        // Lower density for better performance, especially on mobile
+        const density = this.isMobile ? 40000 : 25000;
+        const numberOfParticles = Math.min((this.canvas.width * this.canvas.height) / density, this.isMobile ? 40 : 100);
         
         for (let i = 0; i < numberOfParticles; i++) {
-            const size = Math.random() * 2 + 0.5;
+            const size = Math.random() * (this.isMobile ? 1.5 : 2) + 0.5;
             const x = Math.random() * this.canvas.width;
             const y = Math.random() * this.canvas.height;
             const directionX = (Math.random() * 0.4) - 0.2;
@@ -57,26 +73,34 @@ class ParticleSystem {
         requestAnimationFrame(() => this.animate());
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
+        // Smoothly interpolate scroll offset
+        this.scrollOffset += (this.targetScrollOffset - this.scrollOffset) * 0.1;
+
         for (let i = 0; i < this.particles.length; i++) {
             this.particles[i].update(this.canvas, this.mouse, this.scrollOffset);
             this.particles[i].draw(this.ctx);
         }
+        
+        // Skip connections on low-end mobile if needed, but let's try optimized first
         this.connect();
         
-        // Decay scroll offset
-        this.scrollOffset *= 0.9;
+        // Decay target scroll offset
+        this.targetScrollOffset *= 0.9;
     }
 
     connect() {
         let opacityValue = 1;
+        const maxDistance = this.isMobile ? 10000 : 15000;
+        
         for (let a = 0; a < this.particles.length; a++) {
-            for (let b = a; b < this.particles.length; b++) {
-                let distance = ((this.particles[a].x - this.particles[b].x) * (this.particles[a].x - this.particles[b].x))
-                    + ((this.particles[a].y - this.particles[b].y) * (this.particles[a].y - this.particles[b].y));
+            for (let b = a + 1; b < this.particles.length; b++) {
+                let dx = this.particles[a].x - this.particles[b].x;
+                let dy = this.particles[a].y - this.particles[b].y;
+                let distance = dx * dx + dy * dy;
                 
-                if (distance < 15000) { // Fixed small distance for better performance
-                    opacityValue = 1 - (distance / 15000);
-                    this.ctx.strokeStyle = 'rgba(0, 242, 255,' + opacityValue * 0.15 + ')';
+                if (distance < maxDistance) {
+                    opacityValue = 1 - (distance / maxDistance);
+                    this.ctx.strokeStyle = 'rgba(0, 242, 255,' + opacityValue * (this.isMobile ? 0.1 : 0.15) + ')';
                     this.ctx.lineWidth = 1;
                     this.ctx.beginPath();
                     this.ctx.moveTo(this.particles[a].x, this.particles[a].y);
@@ -110,33 +134,25 @@ class Particle {
         this.x += this.directionX;
         this.y += this.directionY - (scrollOffset * 0.2);
 
-        // Bounce off walls
-        if (this.x > canvas.width || this.x < 0) {
-            this.directionX = -this.directionX;
-        }
-        if (this.y > canvas.height) {
-            this.y = 0; // Wrap around for scroll effect
-        } else if (this.y < 0) {
-            this.y = canvas.height;
-        }
-
-        // Mouse interaction
-        let dx = mouse.x - this.x;
-        let dy = mouse.y - this.y;
-        let distance = Math.sqrt(dx * dx + dy * dy);
+        // Wrap around
+        if (this.x > canvas.width) this.x = 0;
+        else if (this.x < 0) this.x = canvas.width;
         
-        if (distance < mouse.radius) {
-            if (mouse.x < this.x && this.x < canvas.width - this.size * 10) {
-                this.x += 2;
-            }
-            if (mouse.x > this.x && this.x > this.size * 10) {
-                this.x -= 2;
-            }
-            if (mouse.y < this.y && this.y < canvas.height - this.size * 10) {
-                this.y += 2;
-            }
-            if (mouse.y > this.y && this.y > this.size * 10) {
-                this.y -= 2;
+        if (this.y > canvas.height) this.y = 0;
+        else if (this.y < 0) this.y = canvas.height;
+
+        // Mouse interaction (only if mouse is active)
+        if (mouse.x !== null && mouse.y !== null) {
+            let dx = mouse.x - this.x;
+            let dy = mouse.y - this.y;
+            let distance = Math.sqrt(dx * dx + dy * dy);
+            
+            if (distance < mouse.radius) {
+                const force = (mouse.radius - distance) / mouse.radius;
+                const moveX = (dx / distance) * force * 2;
+                const moveY = (dy / distance) * force * 2;
+                this.x -= moveX;
+                this.y -= moveY;
             }
         }
     }

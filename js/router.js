@@ -57,6 +57,10 @@ const PageHandlers = {
                 if (entry.isIntersecting) {
                     entry.target.style.opacity = '1';
                     entry.target.style.transform = 'translateY(0)';
+                    // Remove will-change after animation
+                    setTimeout(() => {
+                        entry.target.style.willChange = 'auto';
+                    }, 600);
                 }
             });
         }, observerOptions);
@@ -64,7 +68,8 @@ const PageHandlers = {
         document.querySelectorAll('.game-card, .feature-item, .testimonial-cta, .workflow-item, .faq-item').forEach(el => {
             el.style.opacity = '0';
             el.style.transform = 'translateY(30px)';
-            el.style.transition = 'all 0.6s ease-out';
+            el.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+            el.style.willChange = 'opacity, transform';
             observer.observe(el);
         });
 

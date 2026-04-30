@@ -33,6 +33,8 @@ body {
     height: 100%;
     z-index: -1;
     pointer-events: none;
+    will-change: transform;
+    transform: translateZ(0);
 }
 
 /* Custom Scrollbar */
@@ -97,9 +99,12 @@ nav .container {
     text-decoration: none;
 }
 
-.logo:hover {
-    transform: scale(1.05);
-    filter: drop-shadow(0 0 15px rgba(0, 242, 255, 0.3));
+@media (hover: hover) {
+    .logo:hover {
+        transform: scale(1.05);
+        filter: drop-shadow(0 0 15px rgba(0, 242, 255, 0.3));
+        will-change: transform;
+    }
 }
 
 .logo-dot {
@@ -337,6 +342,8 @@ nav .container {
     object-fit: contain;
     opacity: 0.9;
     filter: drop-shadow(0 0 30px rgba(0, 242, 255, 0.2));
+    will-change: transform, filter;
+    transform: translateZ(0);
 }
 
 .hero-content h1 {
@@ -559,11 +566,13 @@ nav .container {
     overflow: hidden;
 }
 
-.game-card:hover {
-    border-color: var(--primary);
-    transform: translateY(-10px);
-    background: rgba(0, 242, 255, 0.05);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(0, 242, 255, 0.1);
+@media (hover: hover) {
+    .game-card:hover {
+        border-color: var(--primary);
+        transform: translateY(-10px);
+        background: rgba(0, 242, 255, 0.05);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(0, 242, 255, 0.1);
+    }
 }
 
 .game-card i,
@@ -660,11 +669,13 @@ nav .container {
     transition: var(--transition);
 }
 
-.feature-item:hover {
-    transform: translateY(-10px);
-    border-color: var(--primary);
-    background: rgba(255, 255, 255, 0.05);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(0, 242, 255, 0.1);
+@media (hover: hover) {
+    .feature-item:hover {
+        transform: translateY(-10px);
+        border-color: var(--primary);
+        background: rgba(255, 255, 255, 0.05);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(0, 242, 255, 0.1);
+    }
 }
 
 .feature-item:hover::before {
@@ -787,26 +798,29 @@ nav .container {
     border-color: rgba(0, 140, 255, 0.2);
 }
 
-.payment-badge.dana:hover {
-    border-color: #008CFF;
-    box-shadow: 0 0 30px rgba(0, 140, 255, 0.2);
-    transform: translateY(-5px) scale(1.05);
-}
-
 .payment-badge.jago {
     color: #FF9100;
     border-color: rgba(255, 145, 0, 0.2);
 }
+@media (hover: hover) {
+    .payment-badge.dana:hover {
+        border-color: #008CFF;
+        box-shadow: 0 0 30px rgba(0, 140, 255, 0.2);
+        transform: translateY(-5px) scale(1.05);
+    }
 
-.payment-badge.jago:hover {
-    border-color: #FF9100;
-    box-shadow: 0 0 30px rgba(255, 145, 0, 0.2);
-    transform: translateY(-5px) scale(1.05);
+    .payment-badge.jago:hover {
+        border-color: #FF9100;
+        box-shadow: 0 0 30px rgba(255, 145, 0, 0.2);
+        transform: translateY(-5px) scale(1.05);
+    }
 }
 
-.payment-badge:hover i {
-    transform: scale(1.2);
-    filter: drop-shadow(0 0 10px currentColor);
+@media (hover: hover) {
+    .payment-badge:hover i {
+        transform: scale(1.2);
+        filter: drop-shadow(0 0 10px currentColor);
+    }
 }
 
 /* Mobile Menu Toggle */
@@ -1390,13 +1404,23 @@ nav .container {
     transition: var(--transition);
     height: 100%;
     backdrop-filter: blur(10px);
+    will-change: transform;
 }
 
-.workflow-item:hover .step-card {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: var(--primary);
-    transform: translateY(-10px) rotateX(5deg);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(0, 242, 255, 0.1);
+@media (max-width: 768px) {
+    .step-card {
+        backdrop-filter: none; /* Disable expensive blur on mobile */
+        background: rgba(20, 20, 25, 0.8);
+    }
+}
+
+@media (hover: hover) {
+    .workflow-item:hover .step-card {
+        background: rgba(255, 255, 255, 0.05);
+        border-color: var(--primary);
+        transform: translateY(-10px) rotateX(5deg);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(0, 242, 255, 0.1);
+    }
 }
 
 .step-number-container {
@@ -1420,6 +1444,8 @@ nav .container {
     border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
     animation: morph 8s ease-in-out infinite;
     transition: var(--transition);
+    will-change: border-radius;
+    transform: translateZ(0);
 }
 
 @keyframes morph {
@@ -1600,11 +1626,13 @@ nav .container {
     filter: grayscale(1);
 }
 
-.game-select-row:not(.disabled):hover {
-    border-color: var(--primary);
-    transform: translateX(15px);
-    background: rgba(0, 242, 255, 0.08);
-    box-shadow: -10px 10px 30px rgba(0, 0, 0, 0.3), 0 0 20px rgba(0, 242, 255, 0.1);
+@media (hover: hover) {
+    .game-select-row:not(.disabled):hover {
+        border-color: var(--primary);
+        transform: translateX(15px);
+        background: rgba(0, 242, 255, 0.08);
+        box-shadow: -10px 10px 30px rgba(0, 0, 0, 0.3), 0 0 20px rgba(0, 242, 255, 0.1);
+    }
 }
 
 .game-select-row .game-img-small {
@@ -1616,9 +1644,11 @@ nav .container {
     transition: var(--transition);
 }
 
-.game-select-row:not(.disabled):hover .game-img-small {
-    transform: scale(1.1) rotate(5deg);
-    box-shadow: 0 0 25px rgba(0, 242, 255, 0.5);
+@media (hover: hover) {
+    .game-select-row:not(.disabled):hover .game-img-small {
+        transform: scale(1.1) rotate(5deg);
+        box-shadow: 0 0 25px rgba(0, 242, 255, 0.5);
+    }
 }
 
 .row-content {
@@ -1656,10 +1686,12 @@ nav .container {
     color: var(--primary);
 }
 
-.game-select-row:not(.disabled):hover .select-arrow {
-    background: var(--primary);
-    color: var(--bg-dark);
-    transform: translateX(5px);
+@media (hover: hover) {
+    .game-select-row:not(.disabled):hover .select-arrow {
+        background: var(--primary);
+        color: var(--bg-dark);
+        transform: translateX(5px);
+    }
 }
 
 .row-overlay {
