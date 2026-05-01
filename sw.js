@@ -1,4 +1,4 @@
-const CACHE_NAME = 'veve-joki-v14';
+const CACHE_NAME = 'veve-joki-v15';
 const ASSETS_TO_CACHE = [
     './',
     './index.html',
@@ -22,6 +22,7 @@ const ASSETS_TO_CACHE = [
     './js/router.js',
     './js/background-animation.js',
     './js/security.js',
+    './js/datastatus.js',
     './assets/favicon-baru.svg',
     './assets/preview.png',
     './assets/hero.png',

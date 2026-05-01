@@ -64,10 +64,10 @@
             <div class="container">
                 <div class="hero-content">
                     <div class="status-indicator-wrapper">
-                        <span class="hero-badge">Available Now</span>
+                        <span id="status-badge" class="hero-badge">Available Now</span>
                         <div class="live-status">
-                            <span class="status-dot"></span>
-                            <span class="status-text">Status: <b>Open Order</b></span>
+                            <span id="status-dot" class="status-dot"></span>
+                            <span class="status-text">Status: <b id="status-label">Open Order</b></span>
                         </div>
                     </div>
                     <h1>Professional <span>Game Boosting</span> Services</h1>
@@ -396,6 +396,7 @@
 
     <div id="footer-placeholder"></div>
 
+    <script src="js/datastatus.js"></script>
     <script src="js/navbar.js"></script>
     <script src="js/footer.js"></script>
     <script src="js/floating-buttons.js"></script>
@@ -407,9 +408,34 @@
     <script src="js/background-animation.js"></script>
     <script src="js/security.js"></script>
     <script>
+        // Update Order Status from datastatus.js
+        function updateStatus() {
+            const badge = document.getElementById('status-badge');
+            const label = document.getElementById('status-label');
+            const dot = document.getElementById('status-dot');
+
+            if (DATA_STATUS.isOpen) {
+                badge.textContent = DATA_STATUS.openBadge;
+                label.textContent = DATA_STATUS.openText;
+                dot.style.background = '#00ff88'; // Green for open
+                dot.style.boxShadow = '0 0 10px #00ff88';
+            } else {
+                badge.textContent = DATA_STATUS.closeBadge;
+                badge.style.background = 'rgba(255, 50, 50, 0.1)';
+                badge.style.color = '#ff4444';
+                badge.style.borderColor = 'rgba(255, 50, 50, 0.3)';
+                label.textContent = DATA_STATUS.closeText;
+                label.style.color = '#ff4444';
+                dot.style.background = '#ff4444'; // Red for closed
+                dot.style.boxShadow = '0 0 10px #ff4444';
+            }
+        }
+        document.addEventListener('DOMContentLoaded', updateStatus);
+    </script>
+    <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js?v=14')
+                navigator.serviceWorker.register('./sw.js?v=15')
                     .then(reg => {
                         console.log('PWA: Service Worker Registered');
                         // Deteksi update dan reload otomatis
