@@ -542,6 +542,40 @@ nav .container {
     transform: rotate(-15deg);
 }
 
+/* Premium Square Button */
+.btn-premium-square {
+    background: #000;
+    color: #fff;
+    border: 2px solid transparent;
+    background-image: linear-gradient(#000, #000), var(--accent-gradient);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+    border-radius: 12px;
+    padding: 14px 40px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 700;
+    font-family: 'Outfit', sans-serif;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    margin-top: 25px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.btn-premium-square:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0, 242, 255, 0.3);
+    filter: brightness(1.1);
+}
+
+.btn-premium-square i {
+    color: var(--primary);
+    font-size: 1rem;
+}
+
 /* Games Grid */
 .section {
     padding: 60px 0;
