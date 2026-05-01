@@ -1,4 +1,4 @@
-const CACHE_NAME = 'veve-joki-v8';
+const CACHE_NAME = 'veve-joki-v9';
 const ASSETS_TO_CACHE = [
     './',
     './index.html',
@@ -24,7 +24,15 @@ const ASSETS_TO_CACHE = [
     './assets/hero_2.png',
     './assets/wuwa.webp',
     './assets/arknight_endfield.png',
-    './assets/NTE.webp'
+    './assets/NTE.webp',
+    './assets/testimoni/1.png',
+    './assets/testimoni/2.png',
+    './assets/testimoni/3.png',
+    './assets/testimoni/4.png',
+    './assets/testimoni/5.png',
+    './assets/testimoni/6.png',
+    './assets/testimoni/7.png',
+    './assets/testimoni/8.png'
 ];
 
 // Install Event - Nyimpen aset awal
