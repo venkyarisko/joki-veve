@@ -7,7 +7,7 @@
     <title>NTE Calculator - Veve Services</title>
 
     <!-- Use absolute paths or relative parents -->
-    <link rel="stylesheet" href="../css/index.css?v=1.0.1">
+    <link rel="stylesheet" href="../css/index.css?v=1.0.2">
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -53,6 +53,11 @@
                             <h2 style="margin:0;">Kalkulator Harga NTE</h2>
                             <p style="margin:5px 0 0; color: var(--text-muted);">Estimasi Biaya Joki Neverness To
                                 Everness</p>
+                            <div class="calc-notice">
+                                <i class="fas fa-exclamation-triangle"></i> Peringatan: Pastikan Akun Sudah Memenuhi
+                                Syarat Minimal Level Untuk Layanan Tertentu. Untuk Eksplorasi 100% Wajib Sudah
+                                Menyelesaikan Story Quest.
+                            </div>
                         </div>
                     </div>
 
@@ -143,35 +148,76 @@
 
             grid.innerHTML = '';
 
-            // Group by category
-            const categories = {};
+            // Group by category and subcategory
+            const categoryMap = {};
             jokiServices.forEach(service => {
-                if (!categories[service.category]) {
-                    categories[service.category] = [];
+                const cat = service.category || 'Lainnya';
+                const sub = service.subcategory || 'General';
+                if (!categoryMap[cat]) {
+                    categoryMap[cat] = {
+                        order: [],
+                        subs: {}
+                    };
                 }
-                categories[service.category].push(service);
+                if (!categoryMap[cat].subs[sub]) {
+                    categoryMap[cat].subs[sub] = [];
+                    categoryMap[cat].order.push(sub);
+                }
+                categoryMap[cat].subs[sub].push(service);
             });
 
             // Render categories
-            for (const category in categories) {
+            for (const category in categoryMap) {
                 // Add Category Title
                 const title = document.createElement('h3');
                 title.className = 'calc-category-title';
                 title.textContent = category;
                 grid.appendChild(title);
 
-                // Add Services in this category
-                    categories[category].forEach(service => {
+                const subs = categoryMap[category].subs;
+                categoryMap[category].order.forEach(subcategory => {
+                    let container = grid;
+                    if (subcategory !== 'General') {
+                        // Create Subcategory Group
+                        const subGroup = document.createElement('div');
+                        subGroup.className = 'subcategory-group';
+                        grid.appendChild(subGroup);
+
+                        // Add Subcategory Title
+                        const subTitle = document.createElement('div');
+                        subTitle.className = 'calc-subcategory-title clickable';
+                        subTitle.innerHTML = `<span>${subcategory}</span> <i class="fas fa-chevron-down toggle-icon"></i>`;
+                        subGroup.appendChild(subTitle);
+
+                        // Create Subcategory Content Container
+                        const subContent = document.createElement('div');
+                        subContent.className = 'subcategory-content hidden';
+                        subGroup.appendChild(subContent);
+
+                        container = subContent;
+
+                        // Add collapsed class by default
+                        subTitle.classList.add('collapsed');
+
+                        // Add Click Event to Toggle
+                        subTitle.addEventListener('click', () => {
+                            const isHidden = subContent.classList.toggle('hidden');
+                            subTitle.classList.toggle('collapsed', isHidden);
+                        });
+                    }
+
+                    // Add Services in this subcategory
+                    subs[subcategory].forEach(service => {
                         const isComingSoon = service.isComingSoon || false;
                         const isSlash = service.slash || false;
                         const isNew = service.isNew || false;
                         const item = document.createElement('div');
                         item.className = `calc-item ${isComingSoon ? 'disabled-item' : ''}`;
-                        item.setAttribute('data-category', service.category);
-                        item.setAttribute('data-id', service.id); // Add ID for message gen
-                        
+                        item.setAttribute('data-category', service.category || 'Lainnya');
+                        item.setAttribute('data-id', service.id);
+
                         const finalPrice = isSlash ? service.slashPrice : service.price;
-                        
+
                         if (!isComingSoon) {
                             item.setAttribute('data-price', finalPrice);
                         }
@@ -193,47 +239,45 @@
                                 </div>`;
                         }
 
-                    const qtyHtml = service.hasQuantity ? `
-                        <div class="qty-controls">
-                            <button class="qty-btn minus" onclick="event.stopPropagation(); updateQty('${service.id}', -1)">-</button>
-                            <span class="qty-value" id="qty-${service.id}">1</span>
-                            <button class="qty-btn plus" onclick="event.stopPropagation(); updateQty('${service.id}', 1)">+</button>
-                        </div>
-                    ` : '';
+                        const qtyHtml = service.hasQuantity ? `
+                            <div class="qty-controls">
+                                <button class="qty-btn minus" onclick="event.stopPropagation(); updateQty('${service.id}', -1)">-</button>
+                                <span class="qty-value" id="qty-${service.id}">1</span>
+                                <button class="qty-btn plus" onclick="event.stopPropagation(); updateQty('${service.id}', 1)">+</button>
+                            </div>
+                        ` : '';
 
-                    const newBadgeHtml = isNew ? `<div class="new-badge">NEW</div>` : '';
+                        const newBadgeHtml = isNew ? `<div class="new-badge">NEW</div>` : '';
 
-                    item.innerHTML = `
-                        ${newBadgeHtml}
-                        <div class="item-info">
-                            <h4>${service.title}</h4>
-                            <p>${service.description}</p>
-                            ${qtyHtml}
-                        </div>
-                        ${priceDisplay}
-                    `;
+                        item.innerHTML = `
+                            ${newBadgeHtml}
+                            <div class="item-info">
+                                <h4>${service.title}</h4>
+                                <p>${service.description}</p>
+                                ${qtyHtml}
+                            </div>
+                            ${priceDisplay}
+                        `;
 
-                    if (!isComingSoon) {
-                        item.addEventListener('click', () => {
-                            // Single choice logic for specific categories (e.g., Rawat)
-                            if (service.category === 'Rawat') {
-                                const alreadySelected = item.classList.contains('selected');
-                                // Deselect all others in the same category
-                                const sameCategoryItems = grid.querySelectorAll(`.calc-item[data-category="${service.category}"]`);
-                                sameCategoryItems.forEach(i => i.classList.remove('selected'));
-
-                                if (!alreadySelected) {
-                                    item.classList.add('selected');
+                        if (!isComingSoon) {
+                            item.addEventListener('click', () => {
+                                // Single choice logic for specific categories (e.g., Rawat)
+                                if (service.category === 'Rawat') {
+                                    const alreadySelected = item.classList.contains('selected');
+                                    const sameCategoryItems = grid.querySelectorAll(`.calc-item[data-category="${service.category}"]`);
+                                    sameCategoryItems.forEach(i => i.classList.remove('selected'));
+                                    if (!alreadySelected) {
+                                        item.classList.add('selected');
+                                    }
+                                } else {
+                                    item.classList.toggle('selected');
                                 }
-                            } else {
-                                // Multiple choice for other categories
-                                item.classList.toggle('selected');
-                            }
-                            updateTotal();
-                        });
-                    }
+                                updateTotal();
+                            });
+                        }
 
-                    grid.appendChild(item);
+                        container.appendChild(item);
+                    });
                 });
             }
         }

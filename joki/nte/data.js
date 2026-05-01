@@ -72,14 +72,10 @@ var jokiServices = [
         category: 'Map',
         title: 'Eksplorasi Map (100%)',
         description: 'Semua Wilayah Hethereau',
-        price: 300000
-    },
-    {
-        id: 'map_100',
-        category: 'Map',
-        title: 'Eksplorasi Map (100%)',
-        description: 'Eksplorasi Map Per Wilayah Hethereau',
-        price: 40000
+        price: 220000,
+        slash: true,
+        normalPrice: 240000,
+        slashPrice: 220000
     },
     {
         id: 'teleport',
@@ -87,6 +83,48 @@ var jokiServices = [
         title: 'Unlock All Teleport',
         description: 'Buka Semua Titik Teleportasi Di Map',
         price: 20000
+    },
+
+    // Kategori: Map Area
+    {
+        id: 'map_new_herland_district',
+        category: 'Map Area',
+        subcategory: 'Hetherau',
+        title: 'Eksplorasi Map (100%) New Herland District',
+        description: 'Penyelesaian 100% Wilayah New Herland District',
+        price: 50000
+    },
+    {
+        id: 'map_miguel_district',
+        category: 'Map Area',
+        subcategory: 'Hetherau',
+        title: 'Eksplorasi Map (100%) Miguel District',
+        description: 'Penyelesaian 100% Wilayah Miguel District',
+        price: 50000
+    },
+    {
+        id: 'map_illusion_town',
+        category: 'Map Area',
+        subcategory: 'Hetherau',
+        title: 'Eksplorasi Map (100%) Illusion Town',
+        description: 'Penyelesaian 100% Wilayah Illusion Town',
+        price: 50000
+    },
+    {
+        id: 'map_unheard_shores',
+        category: 'Map Area',
+        subcategory: 'Hetherau',
+        title: 'Eksplorasi Map (100%) Unheard Shores',
+        description: 'Penyelesaian 100% Wilayah Unheard Shores',
+        price: 50000
+    },
+    {
+        id: 'map_bridge_crossings',
+        category: 'Map Area',
+        subcategory: 'Hetherau',
+        title: 'Eksplorasi Map (100%) Bridge Crossings',
+        description: 'Penyelesaian 100% Wilayah Bridge Crossings',
+        price: 40000
     },
 
     // Kategori: Misc

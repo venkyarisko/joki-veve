@@ -85,30 +85,20 @@ var jokiServices = [
         category: 'Eksplorasi',
         title: 'Eksplorasi Map (100%) Valley IV',
         description: 'Eksplorasi Seluruh Map Endfield (All Clear)',
-        price: 290000,
-    },
-    {
-        id: 'map_area_valley_iv',
-        category: 'Eksplorasi',
-        title: 'Eksplorasi / Area<br>Valley IV',
-        description: 'Eksplorasi 100% Untuk Satu Wilayah Spesifik',
-        price: 50000,
-        hasQuantity: true
+        price: 310000,
+        slash: true,
+        normalPrice: 320000,
+        slashPrice: 310000
     },
     {
         id: 'map_100_wuling',
         category: 'Eksplorasi',
         title: 'Eksplorasi Map (100%) Wuling',
         description: 'Eksplorasi Seluruh Map Endfield (All Clear)',
-        price: 340000,
-    },
-    {
-        id: 'map_area_wuling',
-        category: 'Eksplorasi',
-        title: 'Eksplorasi / Area<br>Wuling',
-        description: 'Eksplorasi 100% Untuk Satu Wilayah Spesifik',
-        price: 70000,
-        hasQuantity: true
+        price: 300000,
+        slash: true,
+        normalPrice: 310000,
+        slashPrice: 300000
     },
     {
         id: 'teleport',
@@ -116,6 +106,89 @@ var jokiServices = [
         title: 'Unlock All Teleport',
         description: 'Buka Semua Titik Fast Travel Di Map',
         price: 25000
+    },
+
+    // Kategori: Map Area
+    {
+        id: 'map_the_hub',
+        category: 'Map Area',
+        subcategory: 'Valley IV',
+        title: 'Eksplorasi Map (100%) The HUB',
+        description: 'Eksplorasi 100% Wilayah The HUB',
+        price: 60000
+    },
+    {
+        id: 'map_valley_pass',
+        category: 'Map Area',
+        subcategory: 'Valley IV',
+        title: 'Eksplorasi Map (100%) Valley Pass',
+        description: 'Eksplorasi 100% Wilayah Valley Pass',
+        price: 40000
+    },
+    {
+        id: 'map_abburey_quarry',
+        category: 'Map Area',
+        subcategory: 'Valley IV',
+        title: 'Eksplorasi Map (100%) Abburey Quarry',
+        description: 'Eksplorasi 100% Wilayah Abburey Quarry',
+        price: 50000
+    },
+    {
+        id: 'map_originium_science_park',
+        category: 'Map Area',
+        subcategory: 'Valley IV',
+        title: 'Eksplorasi Map (100%) Originium Science Park',
+        description: 'Eksplorasi 100% Wilayah Originium Science Park',
+        price: 50000
+    },
+    {
+        id: 'map_origin_lodespring',
+        category: 'Map Area',
+        subcategory: 'Valley IV',
+        title: 'Eksplorasi Map (100%) Origin Lodespring',
+        description: 'Eksplorasi 100% Wilayah Origin Lodespring',
+        price: 60000
+    },
+    {
+        id: 'map_power_plateau',
+        category: 'Map Area',
+        subcategory: 'Valley IV',
+        title: 'Eksplorasi Map (100%) Power Plateau',
+        description: 'Eksplorasi 100% Wilayah Power Plateau',
+        price: 60000
+    },
+    {
+        id: 'map_wuling_city',
+        category: 'Map Area',
+        subcategory: 'Wuling',
+        title: 'Eksplorasi Map (100%) Wuling City',
+        description: 'Eksplorasi 100% Wilayah Wuling City',
+        price: 110000
+    },
+    {
+        id: 'map_jingyu_valley',
+        category: 'Map Area',
+        subcategory: 'Wuling',
+        title: 'Eksplorasi Map (100%) Jingyu Valley',
+        description: 'Eksplorasi 100% Wilayah Jingyu Valley',
+        price: 70000
+    },
+    {
+        id: 'map_qingbo_stockade',
+        category: 'Map Area',
+        subcategory: 'Wuling',
+        title: 'Eksplorasi Map (100%) Qingbo Stockade',
+        description: 'Eksplorasi 100% Wilayah Qingbo Stockade',
+        price: 60000
+    },
+    {
+        id: 'map_marker_stone',
+        category: 'Map Area',
+        subcategory: 'Wuling',
+        title: 'Marker Stone',
+        description: 'Eksplorasi 100% Wilayah Marker Stone',
+        price: 70000,
+        isNew: true
     },
 
     // Kategori: Industri (Base Management)
@@ -135,4 +208,5 @@ var jokiServices = [
         price: 0,
         displayPrice: '50k - 200k',
     }
+
 ];

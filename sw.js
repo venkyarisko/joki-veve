@@ -1,4 +1,4 @@
-const CACHE_NAME = 'veve-joki-v12';
+const CACHE_NAME = 'veve-joki-v14';
 const ASSETS_TO_CACHE = [
     './',
     './index.html',
@@ -8,7 +8,10 @@ const ASSETS_TO_CACHE = [
     './kalkulator/nte.html',
     './testimoni.html',
     './manifest.json',
-    './css/index.css?v=1.0.1',
+    './css/index.css?v=1.0.2',
+    './joki/wuwa/data.js',
+    './joki/endfield/data.js',
+    './joki/nte/data.js',
     './js/navbar.js',
     './js/footer.js',
     './js/floating-buttons.js',
@@ -80,7 +83,8 @@ self.addEventListener('fetch', (event) => {
     // 1. STRATEGI: NETWORK FIRST (Cek internet dulu, kalau gagal baru cache)
     if (event.request.mode === 'navigate' || 
         event.request.destination === 'script' || 
-        event.request.destination === 'style') {
+        event.request.destination === 'style' ||
+        url.pathname.endsWith('.html')) {
         
         event.respondWith(
             fetch(event.request)
