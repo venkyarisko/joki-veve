@@ -1,4 +1,4 @@
-const CACHE_NAME = 'veve-joki-v10';
+const CACHE_NAME = 'veve-joki-v12';
 const ASSETS_TO_CACHE = [
     './',
     './index.html',
@@ -7,6 +7,7 @@ const ASSETS_TO_CACHE = [
     './kalkulator/endfield.html',
     './kalkulator/nte.html',
     './testimoni.html',
+    './manifest.json',
     './css/index.css?v=1.0.1',
     './js/navbar.js',
     './js/footer.js',
@@ -63,35 +64,78 @@ self.addEventListener('activate', (event) => {
 // Fetch Event - Strategi Pintar
 self.addEventListener('fetch', (event) => {
     const url = new URL(event.request.url);
+    const path = url.pathname;
+
+    // Normalisasi URL untuk Clean URL (misal: /kalkulator/wuwa -> /kalkulator/wuwa.html)
+    // Digunakan untuk pencocokan di cache
+    let cacheUrl = event.request.url;
+    if (event.request.mode === 'navigate' || (!path.includes('.') && !path.endsWith('/'))) {
+        if (!path.endsWith('.html')) {
+            cacheUrl = event.request.url + '.html';
+        }
+    } else if (path.endsWith('/')) {
+        cacheUrl = event.request.url + 'index.html';
+    }
 
     // 1. STRATEGI: NETWORK FIRST (Cek internet dulu, kalau gagal baru cache)
-    // Cocok untuk HTML, JS, dan CSS agar perubahan codingan langsung muncul
     if (event.request.mode === 'navigate' || 
         event.request.destination === 'script' || 
         event.request.destination === 'style') {
+        
         event.respondWith(
             fetch(event.request)
                 .then((response) => {
-                    // Update cache dengan file terbaru dari network
-                    const copy = response.clone();
-                    caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
+                    // Hanya simpan di cache jika response valid (ok)
+                    if (response.ok) {
+                        const copy = response.clone();
+                        caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
+                    }
                     return response;
                 })
-                .catch(() => caches.match(event.request)) // Offline? Pakai cache
+                .catch(() => {
+                    // Jika offline atau network error, coba cari di cache
+                    // Gunakan URL asli ATAU URL yang sudah dinormalisasi (.html)
+                    return caches.match(event.request).then((matched) => {
+                        return matched || caches.match(cacheUrl);
+                    });
+                })
         );
         return;
     }
 
     // 2. STRATEGI: CACHE FIRST (Cek cache dulu, kalau gak ada baru network)
-    // Cocok untuk Gambar/Assets berat agar hemat kuota & kencang
     event.respondWith(
         caches.match(event.request).then((response) => {
-            return response || fetch(event.request).then((fetchRes) => {
-                return caches.open(CACHE_NAME).then((cache) => {
-                    cache.put(event.request, fetchRes.clone());
-                    return fetchRes;
+            if (response) return response;
+
+            // Jika tidak ada di cache dengan URL asli, coba dengan .html (untuk SPA)
+            if (cacheUrl !== event.request.url) {
+                return caches.match(cacheUrl).then((htmlResponse) => {
+                    return htmlResponse || fetchAndCache(event.request);
                 });
-            });
+            }
+
+            return fetchAndCache(event.request);
         })
     );
 });
+
+// Helper function untuk fetch dan simpan ke cache
+function fetchAndCache(request) {
+    return fetch(request).then((response) => {
+        if (!response || response.status !== 200 || response.type !== 'basic') {
+            return response;
+        }
+        const copy = response.clone();
+        caches.open(CACHE_NAME).then((cache) => {
+            cache.put(request, copy);
+        });
+        return response;
+    }).catch(() => {
+        // Return response kosong daripada rejected promise agar tidak muncul error merah di console
+        return new Response('Offline - Resource not available', {
+            status: 503,
+            statusText: 'Service Unavailable'
+        });
+    });
+}
