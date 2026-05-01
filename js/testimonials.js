@@ -2,7 +2,7 @@ if (!window.testimonialData) {
     window.testimonialData = [
         {
             game: 'Arknight Endfield',
-            image: 'assets/testimoni/1.webp',
+            image: 'assets/testimoni/1.png',
             name: 'Morieyama Ken',
             service: ['Maintenance Factory'],
             price: 'Rp 25.000',
@@ -10,7 +10,7 @@ if (!window.testimonialData) {
         },
         {
             game: 'Arknight Endfield',
-            image: 'https://cdn.discordapp.com/attachments/1464711878944231456/1466479565718159502/transaction_details.png?ex=69f2e346&is=69f191c6&hm=cd0528925d09daf05c1d4daa3da4a151a326baacd64a4b68948de63d10b54aa8&',
+            image: 'assets/testimoni/2.png',
             name: 'Morieyama Ken',
             service: ['Maintenance Factory'],
             price: 'Rp 40.000',
@@ -18,7 +18,7 @@ if (!window.testimonialData) {
         },
         {
             game: 'Arknight Endfield',
-            image: 'https://cdn.discordapp.com/attachments/1476574735365312563/1495797472830689280/Screenshot_20260420_214453_OCBC.jpg?ex=69f2c234&is=69f170b4&hm=e0ed61c26d3645e6508c33dbe10047009c680df65bd07de4d7a697b1939ff53b&',
+            image: 'assets/testimoni/3.png',
             name: 'V9LENTINE',
             service: ['Maintenance Factory'],
             price: 'Rp 40.000',
@@ -26,7 +26,7 @@ if (!window.testimonialData) {
         },
         {
             game: 'Arknight Endfield',
-            image: 'https://cdn.discordapp.com/attachments/1476574735365312563/1486650191313637567/Screenshot_20260326_155644_OCBC.jpg?ex=69f31962&is=69f1c7e2&hm=a907c0310138d6268b7093c2dd74e21f5c1216ff04ef34767535b5e5517e58a8&',
+            image: 'assets/testimoni/4.png',
             name: 'V9LENTINE',
             service: ['Maintenance Factory'],
             price: 'Rp 70.000',
@@ -34,7 +34,7 @@ if (!window.testimonialData) {
         },
         {
             game: 'Arknight Endfield',
-            image: 'https://cdn.discordapp.com/attachments/1476574735365312563/1476831667162447902/Screenshot_20260227_134113_neobank.jpg?ex=69f2f9ab&is=69f1a82b&hm=8f98d6b17898a3227ebbb1d0c48398d226fb2c80a21cb1091ac7c43b6964d174&',
+            image: 'assets/testimoni/5.png',
             name: 'V9LENTINE',
             service: ['Maintenance Factory'],
             price: 'Rp 100.000',
@@ -42,7 +42,7 @@ if (!window.testimonialData) {
         },
         {
             game: 'Arknight Endfield',
-            image: 'https://cdn.discordapp.com/attachments/1476574735365312563/1476832510263431280/Screenshot_20260227_134454_neobank.jpg?ex=69f2fa74&is=69f1a8f4&hm=2823bb6759f46eea60c742c928cca39c2a9e89b54654ec466e413b9590b7d251&',
+            image: 'assets/testimoni/6.png',
             name: 'V9LENTINE',
             service: ['Maintenance Factory'],
             price: 'Rp 170.000',
@@ -50,7 +50,7 @@ if (!window.testimonialData) {
         },
         {
             game: 'Arknight Endfield',
-            image: 'assets/testimoni/7.webp',
+            image: 'assets/testimoni/7.png',
             name: 'Lolipopo',
             service: ['Rawat Akun', 'Story', 'Exploration'],
             price: 'Rp 800.000',
@@ -58,7 +58,7 @@ if (!window.testimonialData) {
         },
         {
             game: 'Arknight Endfield',
-            image: 'assets/testimoni/8.webp',
+            image: 'assets/testimoni/8.png',
             name: 'Lolipopo',
             service: ['Event Participation', 'Endgame Content'],
             price: 'Rp 238.000',
