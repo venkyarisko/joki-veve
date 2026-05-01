@@ -2,7 +2,7 @@ if (!window.testimonialData) {
     window.testimonialData = [
         {
             game: 'Arknight Endfield',
-            image: 'assets/testimoni/1.png',
+            image: './assets/testimoni/1.png',
             name: 'Morieyama Ken',
             service: ['Maintenance Factory'],
             price: 'Rp 25.000',
@@ -10,7 +10,7 @@ if (!window.testimonialData) {
         },
         {
             game: 'Arknight Endfield',
-            image: 'assets/testimoni/2.png',
+            image: './assets/testimoni/2.png',
             name: 'Morieyama Ken',
             service: ['Maintenance Factory'],
             price: 'Rp 40.000',
@@ -18,7 +18,7 @@ if (!window.testimonialData) {
         },
         {
             game: 'Arknight Endfield',
-            image: 'assets/testimoni/3.png',
+            image: './assets/testimoni/3.png',
             name: 'V9LENTINE',
             service: ['Maintenance Factory'],
             price: 'Rp 40.000',
@@ -26,7 +26,7 @@ if (!window.testimonialData) {
         },
         {
             game: 'Arknight Endfield',
-            image: 'assets/testimoni/4.png',
+            image: './assets/testimoni/4.png',
             name: 'V9LENTINE',
             service: ['Maintenance Factory'],
             price: 'Rp 70.000',
@@ -34,7 +34,7 @@ if (!window.testimonialData) {
         },
         {
             game: 'Arknight Endfield',
-            image: 'assets/testimoni/5.png',
+            image: './assets/testimoni/5.png',
             name: 'V9LENTINE',
             service: ['Maintenance Factory'],
             price: 'Rp 100.000',
@@ -42,7 +42,7 @@ if (!window.testimonialData) {
         },
         {
             game: 'Arknight Endfield',
-            image: 'assets/testimoni/6.png',
+            image: './assets/testimoni/6.png',
             name: 'V9LENTINE',
             service: ['Maintenance Factory'],
             price: 'Rp 170.000',
@@ -50,7 +50,7 @@ if (!window.testimonialData) {
         },
         {
             game: 'Arknight Endfield',
-            image: 'assets/testimoni/7.png',
+            image: './assets/testimoni/7.png',
             name: 'Lolipopo',
             service: ['Rawat Akun', 'Story', 'Exploration'],
             price: 'Rp 800.000',
@@ -58,7 +58,7 @@ if (!window.testimonialData) {
         },
         {
             game: 'Arknight Endfield',
-            image: 'assets/testimoni/8.png',
+            image: './assets/testimoni/8.png',
             name: 'Lolipopo',
             service: ['Event Participation', 'Endgame Content'],
             price: 'Rp 238.000',
