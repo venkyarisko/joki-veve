@@ -17,8 +17,8 @@ if (!window.gameList) {
             title: 'Wuthering Waves',
             image: 'assets/wuwa.webp',
             path: 'kalkulator/wuwa.html',
-            status: 'Coming Soon',
-            description: 'Layanan Kalkulator Segera Hadir'
+            status: 'Available',
+            description: 'Hitung Estimasi Joki Untuk Game Wuthering Waves'
         },
         {
             id: 'endfield',

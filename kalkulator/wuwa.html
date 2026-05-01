@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Endfield Calculator - Veve Services</title>
+    <title>WuWa Calculator - Veve Services</title>
 
     <link rel="stylesheet" href="../css/index.css?v=1.0.1">
     <!-- Google Fonts -->
@@ -33,14 +33,16 @@
                         <i class="fas fa-arrow-left"></i> Kembali Pilih Game
                     </a>
                     <div class="calc-header">
-                        <img src="../assets/arknight_endfield.png" alt="Endfield">
+                        <img src="../assets/wuwa.webp" alt="Wuthering Waves">
                         <div>
-                            <h2 style="margin:0;">Kalkulator Harga AK:E</h2>
-                            <p style="margin:5px 0 0; color: var(--text-muted);">Estimasi Biaya Joki Arknights: Endfield
+                            <h2 style="margin:0;">Kalkulator Harga WuWa</h2>
+                            <p style="margin:5px 0 0; color: var(--text-muted);">Estimasi Biaya Joki Wuthering Waves
+                                (WuWa)
                             </p>
                             <div class="calc-notice">
-                                <i class="fas fa-exclamation-triangle"></i> Peringatan: Joki Explorasi Dan Rawat Pabric
-                                Wajib Sudah Story Akhir
+                                <i class="fas fa-exclamation-triangle"></i> Peringatan: Pastikan Akun Sudah Memenuhi
+                                Syarat Minimal Level Untuk Layanan Tertentu. Untuk Eksplorasi 100% wajib sudah
+                                menyelesaikan quest Eksplorasi.
                             </div>
                         </div>
                     </div>
@@ -121,17 +123,12 @@
     <div id="footer-placeholder"></div>
 
 
-    <script src="../joki/endfield/data.js"></script>
+    <script src="../joki/wuwa/data.js"></script>
 
     <script>
         // Interactive Dynamic Calculator Logic
         // Mutual exclusion mapping for specific services
-        const SERVICE_EXCLUSIONS = {
-            'map_100_valley_iv': 'map_area_valley_iv',
-            'map_area_valley_iv': 'map_100_valley_iv',
-            'map_100_wuling': 'map_area_wuling',
-            'map_area_wuling': 'map_100_wuling'
-        };
+        const SERVICE_EXCLUSIONS = {};
 
         function renderServices() {
             const grid = document.getElementById('services-grid');
@@ -140,102 +137,142 @@
 
             grid.innerHTML = '';
 
-            // Group by category
-            const categories = {};
+            // Group by category and subcategory
+            const categoryMap = {};
             jokiServices.forEach(service => {
                 const cat = service.category || 'Lainnya';
-                if (!categories[cat]) {
-                    categories[cat] = [];
+                const sub = service.subcategory || 'General';
+                if (!categoryMap[cat]) {
+                    categoryMap[cat] = {
+                        order: [],
+                        subs: {}
+                    };
                 }
-                categories[cat].push(service);
+                if (!categoryMap[cat].subs[sub]) {
+                    categoryMap[cat].subs[sub] = [];
+                    categoryMap[cat].order.push(sub);
+                }
+                categoryMap[cat].subs[sub].push(service);
             });
 
             // Render categories
-            for (const category in categories) {
+            for (const category in categoryMap) {
                 // Add Category Title
                 const title = document.createElement('h3');
                 title.className = 'calc-category-title';
                 title.textContent = category;
                 grid.appendChild(title);
 
-                // Add Services in this category
-                categories[category].forEach(service => {
-                    const isComingSoon = service.isComingSoon || false;
-                    const isSlash = service.slash || false;
-                    const isNew = service.isNew || false;
-                    const item = document.createElement('div');
-                    item.className = `calc-item ${isComingSoon ? 'disabled-item' : ''}`;
-                    item.setAttribute('data-category', service.category || 'Lainnya');
-                    item.setAttribute('data-id', service.id);
-                    
-                    const finalPrice = isSlash ? service.slashPrice : service.price;
-                    
-                    if (!isComingSoon) {
-                        item.setAttribute('data-price', finalPrice);
-                    }
+                const subs = categoryMap[category].subs;
+                categoryMap[category].order.forEach(subcategory => {
+                    let container = grid;
+                    if (subcategory !== 'General') {
+                        // Create Subcategory Group
+                        const subGroup = document.createElement('div');
+                        subGroup.className = 'subcategory-group';
+                        grid.appendChild(subGroup);
 
-                    let priceDisplay = '';
-                    if (isComingSoon) {
-                        priceDisplay = `<span class="price-tag coming-soon">Coming Soon</span>`;
-                    } else if (isSlash) {
-                        priceDisplay = `
-                            <div class="price-tag-container">
-                                <span class="price-old">Rp ${service.normalPrice.toLocaleString('id-ID')}</span>
-                                <span class="price-tag">Rp ${service.slashPrice.toLocaleString('id-ID')}</span>
-                            </div>`;
-                    } else {
-                        priceDisplay = `
-                            <div class="price-tag-container" style="text-align: right;">
-                                <span class="price-tag" style="line-height: 1.2;">${service.displayPrice ? 'Rp ' + service.displayPrice : (service.price === 0 ? 'Info Harga ' + service.title : 'Rp ' + service.price.toLocaleString('id-ID'))}</span>
-                                ${service.displayPrice ? '<div class="price-note">DM untuk info<br>lebih lanjut</div>' : ''}
-                            </div>`;
-                    }
+                        // Add Subcategory Title
+                        const subTitle = document.createElement('div');
+                        subTitle.className = 'calc-subcategory-title clickable';
+                        subTitle.innerHTML = `<span>${subcategory}</span> <i class="fas fa-chevron-down toggle-icon"></i>`;
+                        subGroup.appendChild(subTitle);
 
-                    const qtyHtml = service.hasQuantity ? `
-                        <div class="qty-controls">
-                            <button class="qty-btn minus" onclick="event.stopPropagation(); updateQty('${service.id}', -1)">-</button>
-                            <span class="qty-value" id="qty-${service.id}">1</span>
-                            <button class="qty-btn plus" onclick="event.stopPropagation(); updateQty('${service.id}', 1)">+</button>
-                        </div>
-                    ` : '';
+                        // Create Subcategory Content Container
+                        const subContent = document.createElement('div');
+                        subContent.className = 'subcategory-content hidden';
+                        subGroup.appendChild(subContent);
 
-                    const newBadgeHtml = isNew ? `<div class="new-badge">NEW</div>` : '';
+                        container = subContent;
 
-                    item.innerHTML = `
-                        ${newBadgeHtml}
-                        <div class="item-info">
-                            <h4>${service.title}</h4>
-                            <p>${service.description}</p>
-                            ${qtyHtml}
-                        </div>
-                        ${priceDisplay}
-                    `;
+                        // Add collapsed class by default
+                        subTitle.classList.add('collapsed');
 
-                    if (!isComingSoon) {
-                        item.addEventListener('click', () => {
-                            // Single choice logic for specific categories (e.g., Rawat)
-                            if (service.category === 'Rawat') {
-                                const alreadySelected = item.classList.contains('selected');
-                                const sameCategoryItems = grid.querySelectorAll(`.calc-item[data-category="${service.category}"]`);
-                                sameCategoryItems.forEach(i => i.classList.remove('selected'));
-                                if (!alreadySelected) {
-                                    item.classList.add('selected');
-                                }
-                            } else {
-                                // Mutual exclusion for specific pairs (e.g., 100% Map vs Area Map)
-                                const isSelecting = !item.classList.contains('selected');
-                                if (isSelecting && SERVICE_EXCLUSIONS[service.id]) {
-                                    const pairItem = grid.querySelector(`.calc-item[data-id="${SERVICE_EXCLUSIONS[service.id]}"]`);
-                                    if (pairItem) pairItem.classList.remove('selected');
-                                }
-
-                                item.classList.toggle('selected');
-                            }
-                            updateTotal();
+                        // Add Click Event to Toggle
+                        subTitle.addEventListener('click', () => {
+                            const isHidden = subContent.classList.toggle('hidden');
+                            subTitle.classList.toggle('collapsed', isHidden);
                         });
                     }
 
-                    grid.appendChild(item);
+                    // Add Services in this subcategory
+                    subs[subcategory].forEach(service => {
+                        const isComingSoon = service.isComingSoon || false;
+                        const isSlash = service.slash || false;
+                        const isNew = service.isNew || false;
+                        const item = document.createElement('div');
+                        item.className = `calc-item ${isComingSoon ? 'disabled-item' : ''}`;
+                        item.setAttribute('data-category', service.category || 'Lainnya');
+                        item.setAttribute('data-id', service.id);
+
+                        const finalPrice = isSlash ? service.slashPrice : service.price;
+
+                        if (!isComingSoon) {
+                            item.setAttribute('data-price', finalPrice);
+                        }
+
+                        let priceDisplay = '';
+                        if (isComingSoon) {
+                            priceDisplay = `<span class="price-tag coming-soon">Coming Soon</span>`;
+                        } else if (isSlash) {
+                            priceDisplay = `
+                                <div class="price-tag-container">
+                                    <span class="price-old">Rp ${service.normalPrice.toLocaleString('id-ID')}</span>
+                                    <span class="price-tag">Rp ${service.slashPrice.toLocaleString('id-ID')}</span>
+                                </div>`;
+                        } else {
+                            priceDisplay = `
+                                <div class="price-tag-container" style="text-align: right;">
+                                    <span class="price-tag" style="line-height: 1.2;">${service.displayPrice ? 'Rp ' + service.displayPrice : (service.price === 0 ? 'Info Harga <br> ' + service.title : 'Rp ' + service.price.toLocaleString('id-ID'))}</span>
+                                    ${service.displayPrice ? '<div class="price-note">DM untuk info<br>lebih lanjut</div>' : ''}
+                                </div>`;
+                        }
+
+                        const qtyHtml = service.hasQuantity ? `
+                            <div class="qty-controls">
+                                <button class="qty-btn minus" onclick="event.stopPropagation(); updateQty('${service.id}', -1)">-</button>
+                                <span class="qty-value" id="qty-${service.id}">1</span>
+                                <button class="qty-btn plus" onclick="event.stopPropagation(); updateQty('${service.id}', 1)">+</button>
+                            </div>
+                        ` : '';
+
+                        const newBadgeHtml = isNew ? `<div class="new-badge">NEW</div>` : '';
+
+                        item.innerHTML = `
+                            ${newBadgeHtml}
+                            <div class="item-info">
+                                <h4>${service.title}</h4>
+                                <p>${service.description}</p>
+                                ${qtyHtml}
+                            </div>
+                            ${priceDisplay}
+                        `;
+
+                        if (!isComingSoon) {
+                            item.addEventListener('click', () => {
+                                // Single choice logic for specific categories (e.g., Rawat)
+                                if (service.category === 'Rawat') {
+                                    const alreadySelected = item.classList.contains('selected');
+                                    const sameCategoryItems = grid.querySelectorAll(`.calc-item[data-category="${service.category}"]`);
+                                    sameCategoryItems.forEach(i => i.classList.remove('selected'));
+                                    if (!alreadySelected) {
+                                        item.classList.add('selected');
+                                    }
+                                } else {
+                                    // Mutual exclusion logic
+                                    const isSelecting = !item.classList.contains('selected');
+                                    if (isSelecting && SERVICE_EXCLUSIONS[service.id]) {
+                                        const pairItem = grid.querySelector(`.calc-item[data-id="${SERVICE_EXCLUSIONS[service.id]}"]`);
+                                        if (pairItem) pairItem.classList.remove('selected');
+                                    }
+                                    item.classList.toggle('selected');
+                                }
+                                updateTotal();
+                            });
+                        }
+
+                        container.appendChild(item);
+                    });
                 });
             }
         }
@@ -250,13 +287,11 @@
             qtySpan.textContent = next;
 
             if (!item.classList.contains('selected')) {
-                // Handle mutual exclusion if selected via quantity buttons
                 if (SERVICE_EXCLUSIONS[id]) {
                     const grid = document.getElementById('services-grid');
                     const pairItem = grid.querySelector(`.calc-item[data-id="${SERVICE_EXCLUSIONS[id]}"]`);
                     if (pairItem) pairItem.classList.remove('selected');
                 }
-
                 item.classList.add('selected');
             }
 
@@ -320,7 +355,7 @@
 
             message += `\n-----------------------\n`;
             message += `Total Estimasi: ${totalDisplay.textContent}\n\n`;
-            message += `Game: Arknights: Endfield`;
+            message += `Game: Wuthering Waves (WuWa)`;
 
             navigator.clipboard.writeText(message).then(() => {
                 const btnText = document.getElementById('btn-text');
@@ -393,7 +428,7 @@
                 </div>
                 <div class="invoice-row">
                     <span class="invoice-label">GAME:</span>
-                    <span class="invoice-value">ARKNIGHTS: ENDFIELD</span>
+                    <span class="invoice-value">WUTHERING WAVES (WUWA)</span>
                 </div>
                 
                 <div class="invoice-items">

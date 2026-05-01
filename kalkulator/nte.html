@@ -7,7 +7,7 @@
     <title>NTE Calculator - Veve Services</title>
 
     <!-- Use absolute paths or relative parents -->
-    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/index.css?v=1.0.1">
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19,7 +19,7 @@
     <link rel="icon" type="image/svg+xml" href="../assets/favicon-baru.svg">
 
     <link rel="icon" type="image/svg+xml" href="../assets/favicon-baru.svg">
-
+    <link rel="manifest" href="../manifest.json">
 </head>
 
 <body>
@@ -149,22 +149,37 @@
                 grid.appendChild(title);
 
                 // Add Services in this category
-                categories[category].forEach(service => {
-                    const isComingSoon = service.isComingSoon || false;
-                    const item = document.createElement('div');
-                    item.className = `calc-item ${isComingSoon ? 'disabled-item' : ''}`;
-                    item.setAttribute('data-category', service.category);
-                    item.setAttribute('data-id', service.id); // Add ID for message gen
-                    if (!isComingSoon) {
-                        item.setAttribute('data-price', service.price);
-                    }
+                    categories[category].forEach(service => {
+                        const isComingSoon = service.isComingSoon || false;
+                        const isSlash = service.slash || false;
+                        const isNew = service.isNew || false;
+                        const item = document.createElement('div');
+                        item.className = `calc-item ${isComingSoon ? 'disabled-item' : ''}`;
+                        item.setAttribute('data-category', service.category);
+                        item.setAttribute('data-id', service.id); // Add ID for message gen
+                        
+                        const finalPrice = isSlash ? service.slashPrice : service.price;
+                        
+                        if (!isComingSoon) {
+                            item.setAttribute('data-price', finalPrice);
+                        }
 
-                    const priceDisplay = isComingSoon ?
-                        `<span class="price-tag coming-soon">Coming Soon</span>` :
-                        `<div style="display: flex; flex-direction: column; align-items: flex-end;">
-                            <span class="price-tag">${service.displayPrice || (service.price === 0 ? 'Info Harga ' + service.title : 'Rp ' + service.price.toLocaleString('id-ID'))}</span>
-                            ${service.displayPrice ? '<div class="price-note">DM untuk info <br>lebih lanjut</div>' : ''}
-                        </div>`;
+                        let priceDisplay = '';
+                        if (isComingSoon) {
+                            priceDisplay = `<span class="price-tag coming-soon">Coming Soon</span>`;
+                        } else if (isSlash) {
+                            priceDisplay = `
+                                <div class="price-tag-container">
+                                    <span class="price-old">Rp ${service.normalPrice.toLocaleString('id-ID')}</span>
+                                    <span class="price-tag">Rp ${service.slashPrice.toLocaleString('id-ID')}</span>
+                                </div>`;
+                        } else {
+                            priceDisplay = `
+                                <div class="price-tag-container" style="text-align: right;">
+                                    <span class="price-tag" style="line-height: 1.2;">${service.displayPrice ? 'Rp ' + service.displayPrice : (service.price === 0 ? 'Info Harga ' + service.title : 'Rp ' + service.price.toLocaleString('id-ID'))}</span>
+                                    ${service.displayPrice ? '<div class="price-note">DM untuk info <br>lebih lanjut</div>' : ''}
+                                </div>`;
+                        }
 
                     const qtyHtml = service.hasQuantity ? `
                         <div class="qty-controls">
@@ -174,7 +189,10 @@
                         </div>
                     ` : '';
 
+                    const newBadgeHtml = isNew ? `<div class="new-badge">NEW</div>` : '';
+
                     item.innerHTML = `
+                        ${newBadgeHtml}
                         <div class="item-info">
                             <h4>${service.title}</h4>
                             <p>${service.description}</p>

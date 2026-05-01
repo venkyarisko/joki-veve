@@ -27,12 +27,23 @@ var jokiServices = [
         description: '30 Hari Rawat Akun (Hemat 30k)',
         price: 120000
     },
+    /* Contoh Layanan dengan Slash Harga:
+    {
+        id: 'promo_test',
+        category: 'Rawat',
+        title: 'Promo Spesial',
+        description: 'Layanan Promo Terbatas',
+        slash: true,
+        normalPrice: 50000,
+        slashPrice: 35000
+    },
+    */
     {
         id: 'patch',
         category: 'Rawat',
         title: 'Paket 1 Patch',
         description: 'Rawat Akun Full 1 Patch <br>(42 Hari) + Event Patch',
-        price: 210000
+        price: 260000
     },
 
     // Kategori: Story
@@ -42,7 +53,7 @@ var jokiServices = [
         title: 'Main Story',
         description: 'Selesaikan Main Story /Act ',
         price: 35000,
-        displayPrice: '35000',
+        displayPrice: '35.000',
         hasQuantity: true
     },
     {
@@ -51,7 +62,7 @@ var jokiServices = [
         title: 'Side Quests',
         description: 'Selesaikan Quest Sampingan Yang Tersedia',
         price: 15000,
-        displayPrice: '15000',
+        displayPrice: '15.000',
         hasQuantity: true
     },
 

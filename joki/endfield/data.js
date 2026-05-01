@@ -26,6 +26,17 @@ var jokiServices = [
         description: '30 Hari Rawat Akun (Lebih Hemat 30k)',
         price: 180000
     },
+    /* Contoh Layanan dengan Slash Harga:
+    {
+        id: 'promo_test',
+        category: 'Rawat',
+        title: 'Promo Spesial',
+        description: 'Layanan Promo Terbatas',
+        slash: true,
+        normalPrice: 50000,
+        slashPrice: 35000
+    },
+    */
     {
         id: 'patch',
         category: 'Rawat',
@@ -74,7 +85,7 @@ var jokiServices = [
         category: 'Eksplorasi',
         title: 'Eksplorasi Map (100%) Valley IV',
         description: 'Eksplorasi Seluruh Map Endfield (All Clear)',
-        price: 280000,
+        price: 290000,
     },
     {
         id: 'map_area_valley_iv',
@@ -89,7 +100,7 @@ var jokiServices = [
         category: 'Eksplorasi',
         title: 'Eksplorasi Map (100%) Wuling',
         description: 'Eksplorasi Seluruh Map Endfield (All Clear)',
-        price: 350000,
+        price: 340000,
     },
     {
         id: 'map_area_wuling',
