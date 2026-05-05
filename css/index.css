@@ -1820,6 +1820,8 @@ nav .container {
         padding: 25px 20px;
         margin: 30px 10px;
         border-radius: 20px;
+        backdrop-filter: none; /* Fix for position: fixed children on mobile */
+        background: rgba(20, 20, 25, 0.95);
     }
 
     .calc-header {
@@ -2054,6 +2056,7 @@ nav .container {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    transition: all 0.3s ease;
 }
 
 @media (max-width: 480px) {
@@ -2662,6 +2665,30 @@ nav .container {
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
+
+.btn-invoice-download {
+    background: var(--primary);
+    color: #000;
+    border-color: var(--primary);
+}
+
+.btn-invoice-download:hover {
+    background: #00d8e6;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 242, 255, 0.3);
+}
+
+.invoice-btns.three-btns {
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+@media (max-width: 480px) {
+    .invoice-btns.three-btns {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+}
+
 
 @media (max-width: 480px) {
     #activity-ticker-container {

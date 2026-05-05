@@ -1,4 +1,4 @@
-const CACHE_NAME = 'veve-joki-v16';
+const CACHE_NAME = 'veve-joki-v17';
 const ASSETS_TO_CACHE = [
     './',
     './index.html',
@@ -8,7 +8,7 @@ const ASSETS_TO_CACHE = [
     './kalkulator/nte.html',
     './testimoni.html',
     './manifest.json',
-    './css/index.css?v=1.0.2',
+    './css/index.css?v=1.0.3',
     './joki/wuwa/data.js',
     './joki/endfield/data.js',
     './joki/nte/data.js',
