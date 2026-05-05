@@ -605,6 +605,9 @@ nav .container {
     transition: var(--transition);
     position: relative;
     overflow: hidden;
+    display: block;
+    text-decoration: none;
+    color: inherit;
 }
 
 @media (hover: hover) {

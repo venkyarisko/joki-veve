@@ -52,8 +52,8 @@ var jokiServices = [
         category: 'Story',
         title: 'Main Story',
         description: 'Selesaikan Main Story /Act ',
-        price: 35000,
-        displayPrice: '35.000',
+        price: 30000,
+        displayPrice: '30.000',
         hasQuantity: true
     },
     {
@@ -61,8 +61,17 @@ var jokiServices = [
         category: 'Story',
         title: 'Side Quests',
         description: 'Selesaikan Quest Sampingan Yang Tersedia',
-        price: 15000,
-        displayPrice: '15.000',
+        price: 7000,
+        displayPrice: '7.000',
+        hasQuantity: true
+    },
+    {
+        id: 'story_spinoffs',
+        category: 'Story',
+        title: 'Spinoffs Quests',
+        description: 'Selesaikan Quest Spinoffs Yang Tersedia',
+        price: 10000,
+        displayPrice: '10.000',
         hasQuantity: true
     },
 

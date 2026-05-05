@@ -324,7 +324,6 @@ async function navigate(url, addHistory = true) {
             }
 
             if (typeof Navbar !== 'undefined') Navbar.render();
-            else updateNavbarActive(currentPath);
 
             // Handle scroll after content swap
             if (targetHash) {

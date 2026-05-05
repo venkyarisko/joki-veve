@@ -1,4 +1,4 @@
-const CACHE_NAME = 'veve-joki-v15';
+const CACHE_NAME = 'veve-joki-v16';
 const ASSETS_TO_CACHE = [
     './',
     './index.html',

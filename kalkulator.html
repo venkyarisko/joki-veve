@@ -51,7 +51,7 @@
                     <span class="hero-badge">Cek Biaya Joki</span>
                     <h1>Pilih <span>Game</span> Kamu</h1>
                     <p style="color: var(--text-muted); max-width: 600px; margin: 20px auto;">Pilih Game Yang Ingin
-                        KamuHitung Estimasi Harganya. Transparan, Jujur, Dan Tanpa Biaya Tersembunyi.</p>
+                        Kamu Hitung Estimasi Harganya. Transparan, Jujur, Dan Tanpa Biaya Tersembunyi.</p>
                 </div>
 
                 <div class="game-selection-list" id="game-list-container">
@@ -76,7 +76,7 @@
      <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js')
+                navigator.serviceWorker.register('./sw.js?v=16')
                     .then(reg => console.log('PWA: Service Worker Registered'))
                     .catch(err => console.log('PWA: Service Worker Failed', err));
             });

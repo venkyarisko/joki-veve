@@ -147,10 +147,10 @@ var jokiServices = [
         category: 'Eksplorasi',
         title: "Eksplorasi Map (100%) Dimmr Plains",
         description: 'Penyelesaian 100% Untuk Satu Wilayah (All Chests, Echoes, etc)',
-        price: 190000,
+        price: 150000,
         slash: true,
-        normalPrice: 200000,
-        slashPrice: 190000,
+        normalPrice: 160000,
+        slashPrice: 150000,
         isNew: true
     },
 
@@ -518,7 +518,7 @@ var jokiServices = [
         subcategory: 'Dimmr Plains',
         title: 'Solisia Landing',
         description: 'Eksplorasi 100% Wilayah Solisia Landing',
-        price: 50000,
+        price: 40000,
         isNew: true
     },
     {
@@ -527,7 +527,7 @@ var jokiServices = [
         subcategory: 'Dimmr Plains',
         title: 'Sealed Fissure',
         description: 'Eksplorasi 100% Wilayah Sealed Fissure',
-        price: 50000,
+        price: 40000,
         isNew: true
     },
     {
@@ -536,7 +536,7 @@ var jokiServices = [
         subcategory: 'Dimmr Plains',
         title: 'Silent Crag',
         description: 'Eksplorasi 100% Wilayah Silent Crag',
-        price: 50000,
+        price: 40000,
         isNew: true
     },
     {
@@ -545,7 +545,7 @@ var jokiServices = [
         subcategory: 'Dimmr Plains',
         title: 'Dimmr Deep',
         description: 'Eksplorasi 100% Wilayah Dimmr Deep',
-        price: 50000,
+        price: 40000,
         isNew: true
     },
 
