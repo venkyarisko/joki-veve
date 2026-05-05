@@ -61,7 +61,7 @@ var jokiServices = [
         category: 'Story',
         title: 'Side Quests',
         description: 'Selesaikan Quest Sampingan Yang Tersedia',
-        price: 7000,
+        price: 10000,
         displayPrice: '7.000',
         hasQuantity: true
     },
@@ -70,7 +70,7 @@ var jokiServices = [
         category: 'Story',
         title: 'Spinoffs Quests',
         description: 'Selesaikan Quest Spinoffs Yang Tersedia',
-        price: 10000,
+        price: 15000,
         displayPrice: '10.000',
         hasQuantity: true
     },
