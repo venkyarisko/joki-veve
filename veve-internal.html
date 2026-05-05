@@ -152,6 +152,35 @@
             </div>
         </div>
 
+        <!-- Testing Firebase Section -->
+        <div class="stats-card" style="margin-bottom: 30px;">
+            <h2 style="font-size: 1.2rem; margin-bottom: 20px; color: var(--primary);">Add Testimonial to Firebase</h2>
+            <form id="testi-form" style="display: grid; gap: 15px;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <input type="text" id="name" placeholder="Client Name" required style="padding: 10px; border-radius: 8px; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); color: white;">
+                    <select id="game" required style="padding: 10px; border-radius: 8px; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); color: white;">
+                        <option value="" disabled selected style="background: #1a1a1c;">Pilih Game</option>
+                        <option value="Arknight Endfield" style="background: #1a1a1c;">Arknight Endfield</option>
+                        <option value="Wuthering Waves" style="background: #1a1a1c;">Wuthering Waves</option>
+                        <option value="Neverness to Everness" style="background: #1a1a1c;">NTE (Neverness to Everness)</option>
+                    </select>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <input type="text" id="price" placeholder="Price (e.g. Rp 500.000)" required style="padding: 10px; border-radius: 8px; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); color: white;">
+                    <select id="status" style="padding: 10px; border-radius: 8px; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); color: white;">
+                        <option value="1" style="background: #1a1a1c;">Complete</ioption>
+                        <option value="0" style="background: #1a1a1c;">On Process</option>
+                    </select>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <input type="text" id="services" placeholder="Service Tags (e.g. Maintenance, Story) - Pisahkan dengan koma" required style="padding: 10px; border-radius: 8px; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); color: white;">
+                    <input type="text" id="image-url" placeholder="Image URL (Link Discord / Imgur)" style="padding: 10px; border-radius: 8px; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); color: white;">
+                </div>
+                <button type="submit" id="submit-btn" style="padding: 12px; background: var(--primary); color: black; border: none; border-radius: 8px; font-weight: 800; cursor: pointer;">Send to Firebase</button>
+            </form>
+            <div id="form-msg" style="margin-top: 10px; font-size: 0.9rem; text-align: center;"></div>
+        </div>
+
         <div class="stats-card">
             <div class="client-item" style="border-bottom: 2px solid var(--primary); padding-bottom: 10px; margin-bottom: 10px; opacity: 0.8; font-size: 0.8rem; text-transform: uppercase; font-weight: 800; letter-spacing: 1px;">
                 <span>Nama Client</span>
@@ -163,20 +192,31 @@
             </ul>
         </div>
     </div>
-
     <script src="js/testimonials.js"></script>
-    <script>
-        function processData() {
+    <script type="module">
+        import { db, collection, getDocs, addDoc, serverTimestamp, storage, ref, uploadBytes, getDownloadURL } from './js/firebase-config.js';
+
+        const form = document.getElementById('testi-form');
+        const msg = document.getElementById('form-msg');
+
+        // Function to process and render data
+        async function processAndRender() {
+            let combinedData = [...(window.testimonialData || [])];
+            
+            try {
+                const querySnapshot = await getDocs(collection(db, "testimonials"));
+                querySnapshot.forEach((doc) => {
+                    combinedData.push(doc.data());
+                });
+            } catch (error) {
+                console.error("Error fetching from Firebase:", error);
+            }
+
             const clients = {};
             let totalRevenue = 0;
 
-            if (typeof testimonialData === 'undefined') {
-                console.error('Data testimonials tidak ditemukan');
-                return;
-            }
-
-            testimonialData.forEach(item => {
-                const numericPrice = parseInt(item.price.replace(/[^0-9]/g, '')) || 0;
+            combinedData.forEach(item => {
+                const numericPrice = parseInt(item.price.toString().replace(/[^0-9]/g, '')) || 0;
                 if (!clients[item.name]) clients[item.name] = 0;
                 clients[item.name] += numericPrice;
                 totalRevenue += numericPrice;
@@ -193,22 +233,11 @@
                 let badgeClass = 'tier-none';
                 let badgeText = 'No Discount';
 
-                if (total >= 10000000) {
-                    badgeClass = 'tier-30';
-                    badgeText = 'Elite: 30%';
-                } else if (total >= 8000000) {
-                    badgeClass = 'tier-20';
-                    badgeText = 'Loyal: 20%';
-                } else if (total >= 5000000) {
-                    badgeClass = 'tier-15';
-                    badgeText = 'Regular: 15%';
-                } else if (total >= 3000000) {
-                    badgeClass = 'tier-10';
-                    badgeText = 'Member: 10%';
-                } else if (total >= 1000000) {
-                    badgeClass = 'tier-5';
-                    badgeText = 'Beginner: 5%';
-                }
+                if (total >= 10000000) { badgeClass = 'tier-30'; badgeText = 'Elite: 30%'; }
+                else if (total >= 8000000) { badgeClass = 'tier-20'; badgeText = 'Loyal: 20%'; }
+                else if (total >= 5000000) { badgeClass = 'tier-15'; badgeText = 'Regular: 15%'; }
+                else if (total >= 3000000) { badgeClass = 'tier-10'; badgeText = 'Member: 10%'; }
+                else if (total >= 1000000) { badgeClass = 'tier-5'; badgeText = 'Beginner: 5%'; }
 
                 const li = document.createElement('li');
                 li.className = 'client-item';
@@ -223,7 +252,49 @@
             });
         }
 
-        document.addEventListener('DOMContentLoaded', processData);
+        // Handle Form Submission
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('submit-btn');
+            btn.disabled = true;
+            btn.innerText = 'Saving Data...';
+
+            const servicesInput = document.getElementById('services').value;
+            const servicesArray = servicesInput.split(',').map(s => s.trim()).filter(s => s !== "");
+            const statusValue = parseInt(document.getElementById('status').value);
+            const imageUrl = document.getElementById('image-url').value || './assets/preview.png';
+
+            try {
+                // Format Harga
+                const rawPrice = document.getElementById('price').value.replace(/[^0-9]/g, '');
+                const formattedPrice = 'Rp ' + (parseInt(rawPrice) || 0).toLocaleString('id-ID');
+
+                const newTesti = {
+                    name: document.getElementById('name').value,
+                    game: document.getElementById('game').value,
+                    price: formattedPrice,
+                    image: imageUrl,
+                    service: servicesArray,
+                    status: statusValue,
+                    createdAt: serverTimestamp()
+                };
+
+                await addDoc(collection(db, "testimonials"), newTesti);
+                msg.style.color = '#00ff88';
+                msg.innerText = 'Success! Data saved to Firestore.';
+                form.reset();
+                processAndRender();
+            } catch (error) {
+                console.error("Error:", error);
+                msg.style.color = '#ff4444';
+                msg.innerText = 'Error: ' + error.message;
+            } finally {
+                btn.disabled = false;
+                btn.innerText = 'Send to Firebase';
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', processAndRender);
     </script>
 </body>
 

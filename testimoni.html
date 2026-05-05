@@ -117,6 +117,41 @@
     <script src="js/router.js"></script>
     <script src="js/background-animation.js"></script>
      <script src="js/security.js"></script>
+     
+     <!-- Firebase Sync Logic -->
+     <script type="module">
+        import { db, collection, getDocs, query, orderBy } from './js/firebase-config.js';
+
+        async function syncFirebaseTestimonials() {
+            try {
+                const q = query(collection(db, "testimonials"), orderBy("createdAt", "desc"));
+                const querySnapshot = await getDocs(q);
+                
+                const firebaseData = [];
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    // Gunakan placeholder jika tidak ada image
+                    if (!data.image) data.image = './assets/preview.png'; 
+                    firebaseData.push(data);
+                });
+
+                if (firebaseData.length > 0) {
+                    // Gabungkan data statis (lama) dengan data Firebase (baru)
+                    window.testimonialData = [...firebaseData, ...window.testimonialData];
+                    
+                    // Re-render jika fungsi tersedia
+                    if (typeof renderTestimonials === 'function') {
+                        renderTestimonials();
+                    }
+                }
+            } catch (error) {
+                console.error("Gagal sinkronisasi Firebase:", error);
+            }
+        }
+
+        // Tunggu data statis dimuat dulu baru sync
+        window.addEventListener('load', syncFirebaseTestimonials);
+     </script>
      <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
