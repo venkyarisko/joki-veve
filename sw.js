@@ -1,4 +1,4 @@
-const CACHE_NAME = 'veve-joki-v17';
+const CACHE_NAME = 'veve-joki-v18';
 const ASSETS_TO_CACHE = [
     './',
     './index.html',
@@ -82,11 +82,11 @@ self.addEventListener('fetch', (event) => {
     }
 
     // 1. STRATEGI: NETWORK FIRST (Cek internet dulu, kalau gagal baru cache)
-    if (event.request.mode === 'navigate' || 
-        event.request.destination === 'script' || 
+    if (event.request.mode === 'navigate' ||
+        event.request.destination === 'script' ||
         event.request.destination === 'style' ||
         url.pathname.endsWith('.html')) {
-        
+
         event.respondWith(
             fetch(event.request)
                 .then((response) => {

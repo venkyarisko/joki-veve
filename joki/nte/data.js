@@ -81,10 +81,10 @@ var jokiServices = [
         category: 'Map',
         title: 'Eksplorasi Map (100%)',
         description: 'Semua Wilayah Hethereau',
-        price: 220000,
+        price: 90000,
         slash: true,
-        normalPrice: 240000,
-        slashPrice: 220000
+        normalPrice: 290000,
+        slashPrice: 260000
     },
     {
         id: 'teleport',
@@ -101,7 +101,7 @@ var jokiServices = [
         subcategory: 'Hetherau',
         title: 'Eksplorasi Map (100%) New Herland District',
         description: 'Penyelesaian 100% Wilayah New Herland District',
-        price: 50000
+        price: 60000
     },
     {
         id: 'map_miguel_district',
@@ -109,7 +109,7 @@ var jokiServices = [
         subcategory: 'Hetherau',
         title: 'Eksplorasi Map (100%) Miguel District',
         description: 'Penyelesaian 100% Wilayah Miguel District',
-        price: 50000
+        price: 60000
     },
     {
         id: 'map_illusion_town',
@@ -117,7 +117,7 @@ var jokiServices = [
         subcategory: 'Hetherau',
         title: 'Eksplorasi Map (100%) Illusion Town',
         description: 'Penyelesaian 100% Wilayah Illusion Town',
-        price: 50000
+        price: 60000
     },
     {
         id: 'map_unheard_shores',
@@ -125,7 +125,7 @@ var jokiServices = [
         subcategory: 'Hetherau',
         title: 'Eksplorasi Map (100%) Unheard Shores',
         description: 'Penyelesaian 100% Wilayah Unheard Shores',
-        price: 50000
+        price: 60000
     },
     {
         id: 'map_bridge_crossings',
@@ -133,7 +133,7 @@ var jokiServices = [
         subcategory: 'Hetherau',
         title: 'Eksplorasi Map (100%) Bridge Crossings',
         description: 'Penyelesaian 100% Wilayah Bridge Crossings',
-        price: 40000
+        price: 50000
     },
 
     // Kategori: Misc
