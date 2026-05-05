@@ -9,10 +9,7 @@ var jokiServices = [
         category: 'Rawat',
         title: 'Rawat Akun Harian',
         description: 'Daily Task + Waveplates Spend',
-        price: 5000,
-        slash: true,
-        normalPrice: 10000,
-        slashPrice: 5000
+        price: 5000
     },
     {
         id: 'weekly',
@@ -44,7 +41,10 @@ var jokiServices = [
         category: 'Rawat',
         title: 'Paket 1 Patch',
         description: 'Rawat Akun Full 1 Patch <br>(42 Hari) + Event Patch',
-        price: 280000
+        price: 280000,
+        slash: true,
+        normalPrice: 280000,
+        slashPrice: 250000
     },
 
     // Kategori: Story
@@ -87,10 +87,10 @@ var jokiServices = [
         category: 'Eksplorasi',
         title: 'Eksplorasi Map (100%) Huanglong',
         description: 'Penyelesaian 100% Untuk Satu Wilayah (All Chests, Echoes, etc)',
-        price: 500000,
+        price: 425000,
         slash: true,
-        normalPrice: 530000,
-        slashPrice: 500000
+        normalPrice: 455000,
+        slashPrice: 425000
     },
     {
         id: 'exploration_100_tethys_deep',
@@ -178,7 +178,7 @@ var jokiServices = [
         subcategory: 'Huanglong',
         title: 'Desorock Highland',
         description: 'Eksplorasi 100% Wilayah Desorock Highland',
-        price: 50000
+        price: 40000
     },
     {
         id: 'map_norfall_barrens',
@@ -194,7 +194,7 @@ var jokiServices = [
         subcategory: 'Huanglong',
         title: 'Central Plains',
         description: 'Eksplorasi 100% Wilayah Central Plains',
-        price: 60000
+        price: 45000
     },
     {
         id: 'map_port_city_of_guixu',
@@ -202,7 +202,7 @@ var jokiServices = [
         subcategory: 'Huanglong',
         title: 'Port City of Guixu',
         description: 'Eksplorasi 100% Wilayah Port City of Guixu',
-        price: 70000
+        price: 50000
     },
     {
         id: 'map_tigers_maw',
@@ -226,7 +226,7 @@ var jokiServices = [
         subcategory: 'Huanglong',
         title: 'Dim Forest',
         description: 'Eksplorasi 100% Wilayah Dim Forest',
-        price: 50000
+        price: 40000
     },
     {
         id: 'map_whining_mirror',
@@ -234,7 +234,7 @@ var jokiServices = [
         subcategory: 'Huanglong',
         title: "Whining Aix's Mire",
         description: "Eksplorasi 100% Wilayah Whining Aix's Mire",
-        price: 70000
+        price: 50000
     },
     {
         id: 'map_mt_firmament',
