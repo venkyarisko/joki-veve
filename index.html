@@ -189,8 +189,33 @@
                         </ul>
                     </a>
                 </div>
+
+                <!-- Discount Info Banner -->
+                <div class="discount-banner"
+                    style="margin-top: 40px; max-width: 800px; margin-left: auto; margin-right: auto;">
+                    <i class="fas fa-gift"></i>
+                    <div class="discount-info">
+                        <div
+                            style="font-weight: 800; color: var(--primary); font-family: 'Outfit', sans-serif; font-size: 1rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;">
+                            Veve Services Loyalty
+                        </div>
+                        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 12px; line-height: 1.6;">
+                            Nikmati keuntungan eksklusif bagi pelanggan setia Veve Services! Dapatkan potongan harga
+                            hingga <b>30%</b> berdasarkan akumulasi total belanja Anda. Semakin sering Anda menggunakan
+                            jasa kami, semakin besar diskon yang Anda dapatkan secara permanen!
+                        </p>
+                        <div class="discount-tiers">
+                            <span class="tier-item">1 Juta: 5%</span>
+                            <span class="tier-item">3 Juta: 10%</span>
+                            <span class="tier-item">5 Juta: 15%</span>
+                            <span class="tier-item">8 Juta: 20%</span>
+                            <span class="tier-item">10 Juta+: 30%</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
+
 
         <!-- Workflow Section -->
         <section class="section workflow-section">
@@ -432,7 +457,7 @@
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js?v=16')
+                navigator.serviceWorker.register('./sw.js?v=19')
                     .then(reg => {
                         console.log('PWA: Service Worker Registered');
                         // Deteksi update dan reload otomatis

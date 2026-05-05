@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Internal Dashboard - Veve Services</title>
+    <link rel="stylesheet" href="css/index.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Outfit:wght@800&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            background: #0a0a0c;
+            color: white;
+            padding: 40px 20px;
+        }
+
+        .admin-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            color: var(--primary);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .stats-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        .client-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .client-item {
+            display: grid;
+            grid-template-columns: 2fr 1.5fr 1.5fr;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .client-item:last-child {
+            border-bottom: none;
+        }
+
+        .client-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .client-badge-col {
+            text-align: center;
+        }
+
+        .client-total {
+            color: var(--primary);
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 800;
+            text-align: right;
+        }
+
+        .client-meta {
+            text-align: right;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 5px;
+        }
+
+        .discount-badge {
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .tier-none { background: rgba(255, 255, 255, 0.1); color: rgba(255, 255, 255, 0.5); }
+        .tier-5 { background: rgba(0, 255, 128, 0.2); color: #00ff80; border: 1px solid rgba(0, 255, 128, 0.3); }
+        .tier-10 { background: rgba(0, 242, 255, 0.2); color: #00f2ff; border: 1px solid rgba(0, 242, 255, 0.3); }
+        .tier-15 { background: rgba(112, 0, 255, 0.2); color: #7000ff; border: 1px solid rgba(112, 0, 255, 0.3); }
+        .tier-20 { background: rgba(255, 0, 128, 0.2); color: #ff0080; border: 1px solid rgba(255, 0, 128, 0.3); }
+        .tier-30 { background: linear-gradient(45deg, #ffd700, #ff8c00); color: #000; box-shadow: 0 0 10px rgba(255, 215, 0, 0.4); }
+
+        .summary-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-box {
+            background: rgba(0, 242, 255, 0.05);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            border: 1px solid rgba(0, 242, 255, 0.2);
+        }
+
+        .stat-val {
+            display: block;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .stat-lbl {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            opacity: 0.6;
+            letter-spacing: 1px;
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .back-btn:hover {
+            color: var(--primary);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="admin-container">
+        <a href="index.html" class="back-btn">← Back to Site</a>
+        <h1>Internal Client Tracker</h1>
+
+        <div class="summary-stats">
+            <div class="stat-box">
+                <span class="stat-lbl">Total Omzet (Testi)</span>
+                <span class="stat-val" id="total-revenue">Rp 0</span>
+            </div>
+            <div class="stat-box">
+                <span class="stat-lbl">Total Client Unique</span>
+                <span class="stat-val" id="total-clients">0</span>
+            </div>
+        </div>
+
+        <div class="stats-card">
+            <div class="client-item" style="border-bottom: 2px solid var(--primary); padding-bottom: 10px; margin-bottom: 10px; opacity: 0.8; font-size: 0.8rem; text-transform: uppercase; font-weight: 800; letter-spacing: 1px;">
+                <span>Nama Client</span>
+                <span style="text-align: center;">Status Diskon</span>
+                <span style="text-align: right;">Total Pengeluaran</span>
+            </div>
+            <ul class="client-list" id="client-list">
+                <!-- Data will be injected here -->
+            </ul>
+        </div>
+    </div>
+
+    <script src="js/testimonials.js"></script>
+    <script>
+        function processData() {
+            const clients = {};
+            let totalRevenue = 0;
+
+            if (typeof testimonialData === 'undefined') {
+                console.error('Data testimonials tidak ditemukan');
+                return;
+            }
+
+            testimonialData.forEach(item => {
+                const numericPrice = parseInt(item.price.replace(/[^0-9]/g, '')) || 0;
+                if (!clients[item.name]) clients[item.name] = 0;
+                clients[item.name] += numericPrice;
+                totalRevenue += numericPrice;
+            });
+
+            document.getElementById('total-revenue').textContent = 'Rp ' + totalRevenue.toLocaleString('id-ID');
+            document.getElementById('total-clients').textContent = Object.keys(clients).length;
+
+            const sortedClients = Object.entries(clients).sort((a, b) => b[1] - a[1]);
+            const list = document.getElementById('client-list');
+            list.innerHTML = '';
+            
+            sortedClients.forEach(([name, total]) => {
+                let badgeClass = 'tier-none';
+                let badgeText = 'No Discount';
+
+                if (total >= 10000000) {
+                    badgeClass = 'tier-30';
+                    badgeText = 'Elite: 30%';
+                } else if (total >= 8000000) {
+                    badgeClass = 'tier-20';
+                    badgeText = 'Loyal: 20%';
+                } else if (total >= 5000000) {
+                    badgeClass = 'tier-15';
+                    badgeText = 'Regular: 15%';
+                } else if (total >= 3000000) {
+                    badgeClass = 'tier-10';
+                    badgeText = 'Member: 10%';
+                } else if (total >= 1000000) {
+                    badgeClass = 'tier-5';
+                    badgeText = 'Beginner: 5%';
+                }
+
+                const li = document.createElement('li');
+                li.className = 'client-item';
+                li.innerHTML = `
+                    <span class="client-name">${name}</span>
+                    <div class="client-badge-col">
+                        <span class="discount-badge ${badgeClass}">${badgeText}</span>
+                    </div>
+                    <span class="client-total">Rp ${total.toLocaleString('id-ID')}</span>
+                `;
+                list.appendChild(li);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', processData);
+    </script>
+</body>
+
+</html>

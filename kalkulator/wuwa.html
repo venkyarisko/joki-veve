@@ -31,7 +31,7 @@
     <meta property="twitter:title" content="WuWa Calculator - Veve Services">
     <meta property="twitter:description" content="Estimasi Biaya Joki Wuthering Waves (WuWa) secara transparan.">
     <meta property="twitter:image" content="https://venkyarisko.github.io/joki-veve/assets/preview.png">
-    
+
     <!-- html2canvas for Download Invoice feature -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
@@ -64,13 +64,50 @@
                         </div>
                     </div>
 
+                    <!-- Discount Info -->
+                    <div class="discount-banner">
+                        <i class="fas fa-gift"></i>
+                        <div class="discount-info">
+                            <div
+                                style="font-weight: 800; color: var(--primary); font-family: 'Outfit', sans-serif; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">
+                                Veve Services Loyalty
+                            </div>
+                            <div class="discount-tiers">
+                                <span class="tier-item">1 Juta: 5%</span>
+                                <span class="tier-item">3 Juta: 10%</span>
+                                <span class="tier-item">5 Juta: 15%</span>
+                                <span class="tier-item">8 Juta: 20%</span>
+                                <span class="tier-item">10 Juta+: 30%</span>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Tiles will be injected here -->
                     <div class="calc-grid" id="services-grid"></div>
 
-                    <div class="total-section">
-                        <span class="total-label">Total Estimasi:</span>
-                        <span class="total-price" id="total-display">Rp 0</span>
+
+
+                    <div class="total-section" style="display: block;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span class="total-label">Total Estimasi:</span>
+                            <span class="total-price" id="total-display">Rp 0</span>
+                        </div>
+
+
+
+                        <!-- Breakdown -->
+                        <div id="total-breakdown" class="total-breakdown">
+                            <div class="breakdown-row">
+                                <span>Harga Normal:</span>
+                                <span id="subtotal-display">Rp 0</span>
+                            </div>
+                            <div class="breakdown-row discount-row">
+                                <span id="discount-label">Diskon (0%):</span>
+                                <span id="discount-amount">- Rp 0</span>
+                            </div>
+                        </div>
                     </div>
+
 
                     <div class="calc-actions">
                         <button onclick="copyOrderMessage()" class="btn btn-primary order-btn" id="order-btn">
@@ -321,24 +358,84 @@
         function updateTotal() {
             const items = document.querySelectorAll('.calc-item');
             const totalDisplay = document.getElementById('total-display');
-            let total = 0;
+            const subtotalDisplay = document.getElementById('subtotal-display');
+            const discountLabel = document.getElementById('discount-label');
+            const discountAmount = document.getElementById('discount-amount');
+            const breakdown = document.getElementById('total-breakdown');
+
+            let subtotal = 0;
+
 
             items.forEach(item => {
                 if (item.classList.contains('selected')) {
                     const price = parseInt(item.getAttribute('data-price'));
                     const qtySpan = item.querySelector('.qty-value');
                     const qty = qtySpan ? parseInt(qtySpan.textContent) : 1;
-                    total += price * qty;
+                    subtotal += price * qty;
                 }
             });
 
-            totalDisplay.textContent = 'Rp ' + total.toLocaleString('id-ID');
+            // Discount Logic
+            let discountPercent = 0;
+            let nextThreshold = 1000000;
+            let currentTierText = "1 Juta";
+
+            if (subtotal >= 10000000) {
+                discountPercent = 30;
+                nextThreshold = 0;
+            } else if (subtotal >= 8000000) {
+                discountPercent = 20;
+                nextThreshold = 10000000;
+                currentTierText = "10 Juta";
+            } else if (subtotal >= 5000000) {
+                discountPercent = 15;
+                nextThreshold = 8000000;
+                currentTierText = "8 Juta";
+            } else if (subtotal >= 3000000) {
+                discountPercent = 10;
+                nextThreshold = 5000000;
+                currentTierText = "5 Juta";
+            } else if (subtotal >= 1000000) {
+                discountPercent = 5;
+                nextThreshold = 3000000;
+                currentTierText = "3 Juta";
+            }
+
+
+            const discountVal = Math.floor(subtotal * (discountPercent / 100));
+            const finalTotal = subtotal - discountVal;
+
+            // Update UI
+            totalDisplay.textContent = 'Rp ' + finalTotal.toLocaleString('id-ID');
+
+            // Highlight Active Tier in Banner
+            const tiers = document.querySelectorAll('.tier-item');
+            tiers.forEach(t => t.classList.remove('active'));
+            if (discountPercent === 5) tiers[0].classList.add('active');
+            if (discountPercent === 10) tiers[1].classList.add('active');
+            if (discountPercent === 15) tiers[2].classList.add('active');
+            if (discountPercent === 20) tiers[3].classList.add('active');
+            if (discountPercent === 30) tiers[4].classList.add('active');
+
+            if (discountPercent > 0) {
+                breakdown.style.display = 'block';
+                subtotalDisplay.textContent = 'Rp ' + subtotal.toLocaleString('id-ID');
+                discountLabel.textContent = `Diskon (${discountPercent}%):`;
+                discountAmount.textContent = `- Rp ${discountVal.toLocaleString('id-ID')}`;
+            } else {
+                breakdown.style.display = 'none';
+            }
+
+
+
+            // Pop effect
 
             totalDisplay.style.transform = 'scale(1.1)';
             setTimeout(() => {
                 totalDisplay.style.transform = 'scale(1)';
             }, 100);
         }
+
 
         function copyOrderMessage() {
             const selectedItems = document.querySelectorAll('.calc-item.selected');
@@ -374,7 +471,19 @@
             });
 
             message += `\n-----------------------\n`;
+
+            const subtotal = document.getElementById('subtotal-display').textContent;
+            const discountLabelText = document.getElementById('discount-label').textContent;
+            const discountAmt = document.getElementById('discount-amount').textContent;
+            const isDiscounted = document.getElementById('total-breakdown').style.display !== 'none';
+
+            if (isDiscounted) {
+                message += `Subtotal: ${subtotal}\n`;
+                message += `${discountLabelText} ${discountAmt}\n`;
+            }
+
             message += `Total Estimasi: ${totalDisplay.textContent}\n\n`;
+
             message += `Game: Wuthering Waves (WuWa)`;
 
             navigator.clipboard.writeText(message).then(() => {
@@ -437,6 +546,25 @@
                 `;
             });
 
+            const subtotal = document.getElementById('subtotal-display').textContent;
+            const discountLabelText = document.getElementById('discount-label').textContent;
+            const discountAmt = document.getElementById('discount-amount').textContent;
+            const isDiscounted = document.getElementById('total-breakdown').style.display !== 'none';
+
+            let breakdownHtml = '';
+            if (isDiscounted) {
+                breakdownHtml = `
+                    <div class="invoice-row" style="margin-top: 10px; opacity: 0.8; font-size: 0.85rem;">
+                        <span>SUBTOTAL:</span>
+                        <span>${subtotal}</span>
+                    </div>
+                    <div class="invoice-row" style="color: #00ff80; font-size: 0.85rem; margin-bottom: 5px;">
+                        <span>${discountLabelText}</span>
+                        <span>${discountAmt}</span>
+                    </div>
+                `;
+            }
+
             content.innerHTML = `
                 <div style="background: #fff9db; border: 1px solid #ffec99; padding: 10px; border-radius: 6px; font-size: 0.75rem; color: #856404; margin-bottom: 20px; text-align: center; font-weight: 600;">
                     <i class="fas fa-camera"></i> PENTING: Silakan screenshot invoice ini sebagai bukti pesanan Anda.
@@ -456,10 +584,13 @@
                     ${itemsHtml}
                 </div>
 
+                ${breakdownHtml}
+
                 <div class="invoice-total">
                     <span>TOTAL:</span>
                     <span>${totalDisplay.textContent}</span>
                 </div>
+
             `;
 
             document.getElementById('invoice-modal').classList.add('active');
