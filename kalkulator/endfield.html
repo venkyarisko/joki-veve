@@ -109,10 +109,10 @@
 
                     <div class="calc-actions">
                         <button onclick="generateInvoice()" class="btn btn-primary order-btn" id="order-btn">
-                            <i class="fas fa-qrcode"></i> <span id="btn-text">Bayar QRIS</span>
+                            <i class="fas fa-qrcode"></i> <span id="order-btn-text">Bayar QRIS</span>
                         </button>
                         <button onclick="copyOrderMessage()" class="btn btn-invoice-trigger" id="invoice-btn">
-                            <i class="fas fa-paper-plane"></i> Salin & Chat
+                            <i class="fas fa-paper-plane"></i> <span id="invoice-btn-text">Salin & Chat</span>
                         </button>
                     </div>
                 </div>
@@ -233,6 +233,29 @@
                     </a>
                     <button class="modal-btn" style="background: #2a2a30; color: white; width: 100%; margin-top: 5px;"
                         onclick="closeSuccessCelebrate()">Tutup</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dedicated Tanya Harga Modal -->
+        <div class="modal-overlay" id="tanya-harga-modal">
+            <div class="custom-modal" style="border-color: var(--primary); box-shadow: 0 0 30px rgba(0, 242, 255, 0.2);">
+                <div class="modal-icon" style="color: var(--primary); filter: drop-shadow(0 0 15px rgba(0, 242, 255, 0.3));">
+                    <i class="fas fa-comment-dots"></i>
+                </div>
+                <h3 style="color: white;">Konsultasi Harga</h3>
+                <p>Layanan yang Anda pilih memerlukan konfirmasi harga manual. Silakan hubungi Veve untuk mendapatkan penawaran terbaik:</p>
+                <div class="modal-btns" style="flex-direction: column; gap: 10px;">
+                    <a href="https://discord.com/users/vevego" target="_blank" class="modal-btn"
+                        style="background: #5865F2; color: white; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%;">
+                        <i class="fab fa-discord"></i> Tanya via Discord
+                    </a>
+                    <a href="https://www.instagram.com/venkyarisko/" target="_blank" class="modal-btn"
+                        style="background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2743 50%,#cc2366 75%,#bc1888 100%); color: white; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%;">
+                        <i class="fab fa-instagram"></i> Tanya via Instagram
+                    </a>
+                    <button class="modal-btn" style="background: #2a2a30; color: white; width: 100%; margin-top: 5px;"
+                        onclick="closeTanyaHargaModal()">Kembali</button>
                 </div>
             </div>
         </div>
@@ -498,6 +521,16 @@
             setTimeout(() => {
                 totalDisplay.style.transform = 'scale(1)';
             }, 100);
+
+            // Update Main Button Label
+            const orderBtnText = document.getElementById('order-btn-text');
+            if (orderBtnText) {
+                if (finalTotal === 0) {
+                    orderBtnText.textContent = "Tanya Harga";
+                } else {
+                    orderBtnText.textContent = "Bayar QRIS";
+                }
+            }
         }
 
 
@@ -551,7 +584,7 @@
             message += `Game: Arknights: Endfield`;
 
             navigator.clipboard.writeText(message).then(() => {
-                const btnText = document.getElementById('btn-text');
+                const btnText = document.getElementById('invoice-btn-text');
                 const originalText = btnText.textContent;
                 btnText.textContent = "Berhasil Disalin!";
                 setTimeout(() => {
@@ -586,8 +619,25 @@
             const content = document.getElementById('invoice-content');
 
             if (selectedItems.length === 0) {
-                showWarning('Silakan pilih layanan terlebih dahulu sebelum melihat invoice!');
+                showWarning('Silakan pilih layanan terlebih dahulu sebelum melanjutkan!');
                 return;
+            }
+
+            // Logic Tombol di dalam Invoice
+            const priceText = totalDisplay.textContent.replace(/\D/g, '');
+            const isZero = parseInt(priceText) === 0;
+            const hasInfoHarga = content.innerHTML.includes('Info Harga'); // Cek apakah ada layanan yang harganya belum pasti
+            const payBtn = document.getElementById('pay-qris-btn');
+            
+            if (isZero || hasInfoHarga) {
+                payBtn.innerHTML = '<i class="fas fa-comment-dots"></i> Tanya Harga';
+                payBtn.onclick = () => {
+                    copyOrderMessage();
+                    closeInvoice();
+                };
+            } else {
+                payBtn.innerHTML = '<i class="fas fa-qrcode"></i> Bayar QRIS';
+                payBtn.onclick = payWithPakasir;
             }
 
             const now = new Date();
@@ -670,22 +720,31 @@
             const checkbox = document.getElementById('check-save-img');
             const payBtn = document.getElementById('pay-qris-btn');
             const totalDisplay = document.getElementById('total-display');
+            const invoiceContent = document.getElementById('invoice-content');
+            
             const priceText = totalDisplay.textContent.replace(/\D/g, ''); 
             const isZero = parseInt(priceText) === 0;
+            const hasInfoHarga = invoiceContent && invoiceContent.innerHTML.includes('Info Harga');
 
             if (!checkbox || !payBtn) return;
 
             const isChecked = checkbox.checked;
-            const isDisabled = !isChecked || isZero;
+            const isDisabled = !isChecked; 
 
             payBtn.disabled = isDisabled;
             payBtn.style.opacity = isDisabled ? '0.5' : '1';
             payBtn.style.cursor = isDisabled ? 'not-allowed' : 'pointer';
 
-            if (isZero && isChecked) {
-                payBtn.innerHTML = '<i class="fas fa-exclamation-circle"></i> Harga Rp 0';
+            // Update teks dan fungsi untuk memastikan konsistensi
+            if (isZero || hasInfoHarga) {
+                payBtn.innerHTML = '<i class="fas fa-comment-dots"></i> Tanya Harga';
+                payBtn.onclick = () => {
+                    copyOrderMessage();
+                    closeInvoice();
+                };
             } else {
                 payBtn.innerHTML = '<i class="fas fa-qrcode"></i> Bayar QRIS';
+                payBtn.onclick = payWithPakasir;
             }
         }
 
@@ -742,6 +801,13 @@
         function payWithPakasir() {
             const totalDisplay = document.getElementById('total-display');
             const priceText = totalDisplay.textContent.replace(/\D/g, ''); // Ambil angka saja
+            const amount = parseInt(priceText);
+
+            if (isNaN(amount) || amount <= 0) {
+                showWarning('Maaf, nominal pembayaran tidak valid atau Rp 0. Silakan hubungi Veve via Discord untuk informasi harga.');
+                return;
+            }
+
             const orderId = 'ENDFIELD-' + Date.now();
             const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
             const redirectUrl = window.location.origin + (isLocal ? '' : '/joki-veve') + '/invoices';
@@ -772,6 +838,14 @@
 
         function closeSuccessCelebrate() {
             document.getElementById('success-celebrate-modal').classList.remove('active');
+        }
+
+        function openTanyaHargaModal() {
+            document.getElementById('tanya-harga-modal').classList.add('active');
+        }
+
+        function closeTanyaHargaModal() {
+            document.getElementById('tanya-harga-modal').classList.remove('active');
         }
 
         function initCalculator() {
