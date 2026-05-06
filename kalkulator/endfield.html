@@ -669,12 +669,24 @@
         function togglePayButton() {
             const checkbox = document.getElementById('check-save-img');
             const payBtn = document.getElementById('pay-qris-btn');
+            const totalDisplay = document.getElementById('total-display');
+            const priceText = totalDisplay.textContent.replace(/\D/g, ''); 
+            const isZero = parseInt(priceText) === 0;
+
             if (!checkbox || !payBtn) return;
 
             const isChecked = checkbox.checked;
-            payBtn.disabled = !isChecked;
-            payBtn.style.opacity = isChecked ? '1' : '0.5';
-            payBtn.style.cursor = isChecked ? 'pointer' : 'not-allowed';
+            const isDisabled = !isChecked || isZero;
+
+            payBtn.disabled = isDisabled;
+            payBtn.style.opacity = isDisabled ? '0.5' : '1';
+            payBtn.style.cursor = isDisabled ? 'not-allowed' : 'pointer';
+
+            if (isZero && isChecked) {
+                payBtn.innerHTML = '<i class="fas fa-exclamation-circle"></i> Harga Rp 0';
+            } else {
+                payBtn.innerHTML = '<i class="fas fa-qrcode"></i> Bayar QRIS';
+            }
         }
 
         function closeInvoice() {
