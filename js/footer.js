@@ -35,13 +35,13 @@ if (!window.Footer) {
                         <a href="https://discord.com/users/vevego" target="_blank" style="color: var(--text-muted); text-decoration: none; transition: var(--transition);">
                             <i class="fab fa-discord"></i> Discord
                         </a>
-                        <a href="${root}index.html#faq" style="color: var(--text-muted); text-decoration: none; transition: var(--transition);">
+                        <a href="${root}#faq" style="color: var(--text-muted); text-decoration: none; transition: var(--transition);">
                             <i class="fas fa-question-circle"></i> FAQ
                         </a>
-                        <a href="${root}testimoni.html" style="color: var(--text-muted); text-decoration: none; transition: var(--transition);">
+                        <a href="${root}testimoni" style="color: var(--text-muted); text-decoration: none; transition: var(--transition);">
                             <i class="fas fa-star"></i> Testimonials
                         </a>
-                        <a href="${root}partner.html" style="color: var(--text-muted); text-decoration: none; transition: var(--transition);">
+                        <a href="${root}partner" style="color: var(--text-muted); text-decoration: none; transition: var(--transition);">
                             <i class="fas fa-handshake"></i> Join Partner
                         </a>
                     </div>

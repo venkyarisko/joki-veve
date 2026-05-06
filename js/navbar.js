@@ -6,12 +6,12 @@
 if (!window.Navbar) {
 window.Navbar = {
     links: [
-        { name: 'Services', path: 'index.html#services' },
-        { name: 'About', path: 'index.html#about' },
-        { name: 'Kalkulator', path: 'kalkulator.html' },
-        { name: 'Testimonials', path: 'testimoni.html' },
-        { name: 'Q&A', path: 'index.html#faq' },
-        { name: 'Contact', path: 'index.html#contact' }
+        { name: 'Services', path: '#services' },
+        { name: 'About', path: '#about' },
+        { name: 'Kalkulator', path: 'kalkulator' },
+        { name: 'Testimonials', path: 'testimoni' },
+        { name: 'Partner', path: 'partner' },
+        { name: 'Contact', path: '#contact' }
     ],
 
     /**
@@ -60,7 +60,7 @@ window.Navbar = {
         const cleanCurrentPath = currentPath.replace('.html', '');
         const isHome = cleanCurrentPath === '/' || cleanCurrentPath === rootPathname || cleanCurrentPath === rootPathname.slice(0, -1) || cleanCurrentPath.endsWith('/') || cleanCurrentPath.endsWith('/index');
         
-        const logoHref = isHome ? '#' : root + 'index.html';
+        const logoHref = isHome ? '#' : root;
 
         const html = `
             <nav>
