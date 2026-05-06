@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join Partner - Veve Game Services</title>
+    <link rel="stylesheet" href="css/index.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Outfit:wght@800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background: #0a0a0c;
+            color: white;
+            padding-bottom: 50px;
+        }
+
+        .partner-hero {
+            padding: 100px 20px 60px;
+            text-align: center;
+            background: radial-gradient(circle at top, rgba(0, 242, 255, 0.1) 0%, transparent 70%);
+        }
+
+        .partner-hero h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 3rem;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, #fff, var(--primary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .container-small {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .rules-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 40px;
+            backdrop-filter: blur(10px);
+        }
+
+        .rule-item {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .rule-icon {
+            color: var(--primary);
+            font-size: 1.2rem;
+            margin-top: 3px;
+        }
+
+        .rule-content h4 {
+            margin: 0 0 5px 0;
+            color: var(--primary);
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .rule-content p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .apply-form {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 40px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            color: white;
+            font-family: inherit;
+            box-sizing: border-box;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .form-group option {
+            background: #1a1a1c;
+            color: white;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: var(--primary);
+            color: black;
+            border: none;
+            border-radius: 12px;
+            font-weight: 800;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 242, 255, 0.3);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .form-status {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 0.9rem;
+            padding: 10px;
+            border-radius: 8px;
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="navbar-placeholder"></div>
+
+    <section class="partner-hero">
+        <div class="container">
+            <span class="hero-badge">Recruitment Open</span>
+            <h1>Jadi Partner <span>Joki Veve</span></h1>
+            <p style="color: var(--text-muted); max-width: 600px; margin: 0 auto;">Cari cuan dari main game?
+                Bergabunglah sebagai partner resmi Veve Services dan nikmati sistem yang transparan & aman.</p>
+        </div>
+    </section>
+
+    <div class="container-small">
+        <div class="rules-card">
+            <h3 style="font-family: 'Outfit', sans-serif; margin-bottom: 25px; text-align: center;">Syarat & Ketentuan
+                Partner</h3>
+
+            <div class="rule-item">
+                <div class="rule-icon"><i class="fas fa-percent"></i></div>
+                <div class="rule-content">
+                    <h4>Sistem Komisi 10%</h4>
+                    <p>Setiap transaksi yang berhasil, owner mendapatkan komisi sebesar 10%. Kamu tetap akan menerima
+                        90% dari total harga joki.</p>
+                </div>
+            </div>
+
+            <div class="rule-item">
+                <div class="rule-icon"><i class="fas fa-shield-alt"></i></div>
+                <div class="rule-content">
+                    <h4>Wajib Rekber Veve</h4>
+                    <p>Semua transaksi wajib melalui sistem Rekber Veve. Kami memegang dana client sampai pengerjaan
+                        selesai untuk keamanan bersama. Segala bentuk transaksi langsung (Direct Transfer) ke partner di
+                        luar sistem kami adalah pelanggaran berat dan di luar tanggung jawab owner.</p>
+                </div>
+            </div>
+
+            <div class="rule-item">
+                <div class="rule-icon"><i class="fas fa-bullhorn"></i></div>
+                <div class="rule-content">
+                    <h4>Branding & Promosi</h4>
+                    <p>Kamu diperbolehkan mencari client sendiri, namun wajib mencantumkan "Partner Joki Veve" dan
+                        memberikan testimoni hasil kerja ke pihak Veve.</p>
+                </div>
+            </div>
+
+            <div class="rule-item">
+                <div class="rule-icon"><i class="fas fa-tasks"></i></div>
+                <div class="rule-content">
+                    <h4>Kualitas Pengerjaan</h4>
+                    <p>Dilarang keras menggunakan Cheat, Bot, atau script ilegal lainnya. Jika melanggar, kerjasama akan
+                        langsung diputus.</p>
+                </div>
+            </div>
+        </div>
+
+        <form class="apply-form" id="partner-form">
+            <h3 style="font-family: 'Outfit', sans-serif; margin-bottom: 30px; text-align: center;">Formulir Pendaftaran
+            </h3>
+
+            <div class="form-group">
+                <label>Nama Lengkap / Username</label>
+                <input type="text" id="name" placeholder="Masukin Namamu" required>
+            </div>
+
+            <div class="form-group">
+                <label>ID Discord</label>
+                <input type="text" id="contact" placeholder="Username Discordmu" required>
+            </div>
+
+            <div class="form-group">
+                <label>Game yang Dikuasai</label>
+                <select id="game" required>
+                    <option value="" disabled selected>Pilih Game Utama</option>
+                    <option value="Wuthering Waves">Wuthering Waves</option>
+                    <option value="Arknights Endfield">Arknights Endfield</option>
+                    <option value="Neverness to Everness">NTE</option>
+                    <option value="Multi-Game">Bisa Banyak Game</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Link Portfolio / Bukti Hasil Kerja</label>
+                <input type="url" id="portfolio" placeholder="Link Discord Channel / Imgur / Drive" required>
+            </div>
+
+            <div class="form-group">
+                <label>Alasan Ingin Bergabung</label>
+                <textarea id="reason" rows="4" placeholder="Ceritakan sedikit tentang pengalaman kamu..."
+                    required></textarea>
+            </div>
+
+            <button type="submit" class="submit-btn" id="submit-btn">Kirim Lamaran Partner</button>
+            <div id="form-msg" class="form-status"></div>
+        </form>
+    </div>
+
+    <div id="footer-placeholder"></div>
+
+    <script src="js/navbar.js"></script>
+    <script src="js/footer.js"></script>
+    <script type="module">
+        import { db, collection, addDoc, serverTimestamp } from './js/firebase-config.js';
+
+        const form = document.getElementById('partner-form');
+        const btn = document.getElementById('submit-btn');
+        const msg = document.getElementById('form-msg');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            btn.disabled = true;
+            btn.innerText = 'Mengirim data...';
+
+            try {
+                const application = {
+                    name: document.getElementById('name').value,
+                    contact: document.getElementById('contact').value,
+                    game: document.getElementById('game').value,
+                    portfolio: document.getElementById('portfolio').value,
+                    reason: document.getElementById('reason').value,
+                    status: 'pending',
+                    createdAt: serverTimestamp()
+                };
+
+                await addDoc(collection(db, "partner_applications"), application);
+
+                msg.style.display = 'block';
+                msg.style.background = 'rgba(0, 255, 128, 0.1)';
+                msg.style.color = '#00ff80';
+                msg.innerText = 'Sukses! Lamaran kamu telah terkirim. Tunggu kabar selanjutnya dari kami.';
+                form.reset();
+            } catch (error) {
+                console.error("Error:", error);
+                msg.style.display = 'block';
+                msg.style.background = 'rgba(255, 50, 50, 0.1)';
+                msg.style.color = '#ff4444';
+                msg.innerText = 'Maaf, terjadi kesalahan. Silakan coba lagi nanti.';
+            } finally {
+                btn.disabled = false;
+                btn.innerText = 'Kirim Lamaran Partner';
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -61,8 +61,8 @@ var jokiServices = [
         category: 'Story',
         title: 'Side Quests',
         description: 'Selesaikan Quest Sampingan Yang Tersedia',
-        price: 10000,
-        displayPrice: '10.000',
+        price: 15000,
+        displayPrice: '15.000',
         hasQuantity: true
     },
     {
@@ -81,10 +81,10 @@ var jokiServices = [
         category: 'Map',
         title: 'Eksplorasi Map (100%)',
         description: 'Semua Wilayah Hethereau',
-        price: 90000,
+        price: 300000,
         slash: true,
-        normalPrice: 290000,
-        slashPrice: 260000
+        normalPrice: 330000,
+        slashPrice: 300000
     },
     {
         id: 'teleport',

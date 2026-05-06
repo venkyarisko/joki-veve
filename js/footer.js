@@ -41,6 +41,9 @@ if (!window.Footer) {
                         <a href="${root}testimoni.html" style="color: var(--text-muted); text-decoration: none; transition: var(--transition);">
                             <i class="fas fa-star"></i> Testimonials
                         </a>
+                        <a href="${root}partner.html" style="color: var(--text-muted); text-decoration: none; transition: var(--transition);">
+                            <i class="fas fa-handshake"></i> Join Partner
+                        </a>
                     </div>
                 </div>
             </footer>
