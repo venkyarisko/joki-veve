@@ -2766,11 +2766,28 @@ nav .container {
     grid-template-columns: 1fr 1fr 1fr;
 }
 
+.invoice-btns.four-btns {
+    grid-template-columns: 1fr 1fr;
+}
+
 @media (max-width: 480px) {
-    .invoice-btns.three-btns {
+    .invoice-btns.three-btns,
+    .invoice-btns.four-btns {
         grid-template-columns: 1fr;
         gap: 10px;
     }
+}
+
+.btn-invoice-qris {
+    background: #7000ff;
+    color: #fff;
+    border-color: #7000ff;
+}
+
+.btn-invoice-qris:hover {
+    background: #8a2be2;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(112, 0, 255, 0.3);
 }
 
 

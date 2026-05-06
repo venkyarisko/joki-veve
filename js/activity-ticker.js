@@ -61,20 +61,27 @@
         // Service display
         let serviceText = Array.isArray(data.service) ? data.service[0] : data.service;
 
+        // Status-based display
+        const isComplete = data.status === 1 || data.status === undefined; // Default to complete for static data
+        const title = isComplete ? 'Order Completed!' : 'New Order!';
+        const statusText = isComplete ? 'complete!' : 'sedang diproses!';
+        const icon = isComplete ? 'fa-check-circle' : 'fa-spinner fa-spin';
+        const color = isComplete ? 'var(--primary)' : '#ffcc00';
+
         notification.innerHTML = `
             <div class="ticker-content">
-                <div class="ticker-icon">
-                    <i class="fas fa-check-circle"></i>
+                <div class="ticker-icon" style="color: ${color}">
+                    <i class="fas ${icon}"></i>
                 </div>
                 <div class="ticker-info">
-                    <p class="ticker-title">Order Completed!</p>
-                    <p class="ticker-text">Joki <b>${serviceText}</b> di <b>${data.game}</b> milik <b>${data.name}</b> complete!</p>
+                    <p class="ticker-title">${title}</p>
+                    <p class="ticker-text">Joki <b>${serviceText}</b> di <b>${data.game}</b> milik <b>${data.name}</b> ${statusText}</p>
                 </div>
                 <button class="ticker-close" onclick="this.parentElement.parentElement.remove()">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            <div class="ticker-progress"></div>
+            <div class="ticker-progress" style="background: ${color}"></div>
         `;
 
         container.appendChild(notification);

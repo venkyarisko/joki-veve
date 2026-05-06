@@ -19,23 +19,25 @@ function syncOrderStats() {
     const manualEl = document.getElementById('stat-manual');
     const responseEl = document.getElementById('stat-response');
 
-    // Deteksi otomatis jumlah testimoni & client jika tersedia
-    let finalOrders = orderConfig.ordersDone;
-    let finalClients = orderConfig.happyClients;
+    // Murni menghitung dari data testimoni (Statis + Firebase)
+    let finalOrders = 0;
+    let finalClients = 0;
 
-    if (typeof testimonialData !== 'undefined') {
-        // Hitung total order (semua testimoni)
-        if (testimonialData.length > finalOrders) {
-            finalOrders = testimonialData.length;
-        }
+    if (typeof testimonialData !== 'undefined' && testimonialData.length > 0) {
+        // Hitung TOTAL order dari semua data testimoni
+        finalOrders = testimonialData.length;
 
-        // Hitung unik client (berdasarkan nama)
+        // Hitung UNIK client dari semua data testimoni
         const uniqueNames = new Set(testimonialData.map(item => item.name));
-        if (uniqueNames.size > finalClients) {
-            finalClients = uniqueNames.size;
-        }
+        finalClients = uniqueNames.size;
+    } else if (window.STATIC_TESTIMONIALS) {
+        // Fallback jika testimonialData belum siap tapi STATIC_TESTIMONIALS ada
+        finalOrders = window.STATIC_TESTIMONIALS.length;
+        const uniqueNames = new Set(window.STATIC_TESTIMONIALS.map(item => item.name));
+        finalClients = uniqueNames.size;
     }
 
+    // Update tampilan
     if (ordersEl) {
         ordersEl.setAttribute('data-target', finalOrders);
         ordersEl.innerText = finalOrders + '+';
@@ -59,3 +61,8 @@ if (document.readyState === 'loading') {
 } else {
     syncOrderStats();
 }
+
+// Dengarkan sinyal jika data Firebase baru saja masuk
+window.addEventListener('firebaseTestimonialsLoaded', () => {
+    syncOrderStats();
+});

@@ -201,13 +201,20 @@
 
         // Function to process and render data
         async function processAndRender() {
-            let combinedData = [...(window.testimonialData || [])];
+            console.log("Internal Dashboard: Syncing data...");
+            // Start with static data as base
+            let combinedData = [...(window.STATIC_TESTIMONIALS || window.testimonialData || [])];
             
             try {
                 const querySnapshot = await getDocs(collection(db, "testimonials"));
+                const firebaseData = [];
                 querySnapshot.forEach((doc) => {
-                    combinedData.push(doc.data());
+                    firebaseData.push(doc.data());
                 });
+                
+                // Merge without duplicates (using name + game as simple key if needed, or just combine)
+                // For the tracker, we just want all of them.
+                combinedData = [...firebaseData, ...(window.STATIC_TESTIMONIALS || [])];
             } catch (error) {
                 console.error("Error fetching from Firebase:", error);
             }

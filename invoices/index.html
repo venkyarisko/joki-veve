@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Status - Veve Services</title>
+    <link rel="stylesheet" href="../css/index.css?v=1.0.2">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" type="image/svg+xml" href="../assets/favicon-baru.svg">
+    <style>
+        .status-container {
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .status-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .status-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        .status-success { color: #00ff88; }
+        .status-pending { color: #ffcc00; }
+        .status-error { color: #ff4444; }
+
+        .order-id {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-family: monospace;
+            margin: 20px 0;
+            display: inline-block;
+            border: 1px dashed var(--glass-border);
+        }
+
+        .btn-home {
+            margin-top: 30px;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="bg-canvas"></canvas>
+    <div id="navbar-placeholder"></div>
+
+    <main id="main-content">
+        <div class="status-container">
+            <div class="status-card">
+                <div id="status-content">
+                    <div class="status-icon status-pending">
+                        <i class="fas fa-spinner fa-spin"></i>
+                    </div>
+                    <h2>Memproses Pembayaran...</h2>
+                    <p>Mohon tunggu sebentar, kami sedang memverifikasi status pembayaran Anda.</p>
+                </div>
+                
+                <div class="order-id" id="display-order-id">
+                    ORDER ID: <span id="id-val">LOADING...</span>
+                </div>
+
+                <div class="status-actions">
+                    <a href="../index.html" class="btn btn-primary btn-home">Kembali ke Beranda</a>
+                    <a href="https://discord.com/users/vevego" target="_blank" class="btn" style="margin-top: 10px; width: 100%; border: 1px solid var(--glass-border);">Konfirmasi via Discord</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="footer-placeholder"></div>
+
+    <script src="../js/navbar.js"></script>
+    <script src="../js/footer.js"></script>
+    <script src="../js/background-animation.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const hashParams = new URLSearchParams(window.location.hash.substring(1));
+            
+            // Kumpulkan semua parameter yang mungkin dikirim Pakasir
+            const orderId = urlParams.get('order_id') || hashParams.get('order_id') || 
+                            urlParams.get('id') || hashParams.get('id') ||
+                            urlParams.get('trx_id') || 'N/A';
+
+            console.log('--- DEBUG PEMBAYARAN ---');
+            console.log('Full URL:', window.location.href);
+            console.log('Search Params:', Object.fromEntries(urlParams));
+            console.log('Hash Params:', Object.fromEntries(hashParams));
+            console.log('Detected Order ID:', orderId);
+
+            document.getElementById('id-val').textContent = orderId;
+            const content = document.getElementById('status-content');
+            
+            // Selalu kirim pesan ke parent jika kita sampai di halaman ini 
+            // (karena halaman ini hanya diakses setelah redirect pembayaran)
+            if (window.parent && window.parent !== window) {
+                window.parent.postMessage({ 
+                    type: 'PAYMENT_SUCCESS', 
+                    orderId: orderId 
+                }, '*');
+            }
+
+            if (orderId !== 'N/A') {
+                content.innerHTML = `
+                    <div class="status-icon status-success">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h2>Pembayaran Diterima!</h2>
+                    <p>Terima kasih! Pesanan Anda dengan ID <b>${orderId}</b> telah kami terima. Silakan konfirmasi ke Discord Veve untuk mempercepat proses pengerjaan.</p>
+                `;
+            } else {
+                content.innerHTML = `
+                    <div class="status-icon status-success">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h2>Pembayaran Selesai!</h2>
+                    <p>Terima kasih telah melakukan pembayaran. Jika Order ID tidak muncul, Anda tetap bisa konfirmasi manual via Discord dengan bukti transfer.</p>
+                `;
+            }
+        });
+    </script>
+</body>
+
+</html>

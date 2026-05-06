@@ -108,11 +108,11 @@
 
 
                     <div class="calc-actions">
-                        <button onclick="copyOrderMessage()" class="btn btn-primary order-btn" id="order-btn">
-                            <i class="fab fa-discord"></i> <span id="btn-text">Salin & Pesan via Discord</span>
+                        <button onclick="generateInvoice()" class="btn btn-primary order-btn" id="order-btn">
+                            <i class="fas fa-qrcode"></i> <span id="btn-text">Bayar QRIS</span>
                         </button>
-                        <button onclick="generateInvoice()" class="btn btn-invoice-trigger" id="invoice-btn">
-                            <i class="fas fa-file-invoice"></i> Lihat Invoice Digital
+                        <button onclick="copyOrderMessage()" class="btn btn-invoice-trigger" id="invoice-btn">
+                            <i class="fas fa-paper-plane"></i> Salin & Chat
                         </button>
                     </div>
                 </div>
@@ -126,10 +126,18 @@
                     <i class="fas fa-check-circle"></i>
                 </div>
                 <h3>Pesan Disalin!</h3>
-                <p>Rincian pesanan sudah tersimpan di clipboard. Ingin lanjut ke Discord untuk mengirimnya ke Veve?</p>
-                <div class="modal-btns">
-                    <button class="modal-btn modal-btn-cancel" onclick="closeModal()">Nanti Saja</button>
-                    <button class="modal-btn modal-btn-confirm" onclick="redirectToDiscord()">Gas ke Discord!</button>
+                <p>Rincian pesanan sudah tersimpan di clipboard. Silakan pilih platform untuk menghubungi Veve:</p>
+                <div class="modal-btns" style="flex-direction: column; gap: 10px;">
+                    <a href="https://discord.com/users/vevego" target="_blank" class="modal-btn"
+                        style="background: #5865F2; color: white; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%;">
+                        <i class="fab fa-discord"></i> Chat via Discord
+                    </a>
+                    <a href="https://www.instagram.com/venkyarisko/" target="_blank" class="modal-btn"
+                        style="background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%); color: white; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%;">
+                        <i class="fab fa-instagram"></i> Chat via Instagram
+                    </a>
+                    <button class="modal-btn" style="background: #2a2a30; color: white; width: 100%; margin-top: 5px;"
+                        onclick="closeModal()">Nanti Saja</button>
                 </div>
             </div>
         </div>
@@ -149,12 +157,23 @@
                     <p>Terima kasih telah menggunakan jasa Veve Services!</p>
                 </div>
 
-                <div class="invoice-btns three-btns">
-                    <button class="btn-invoice" onclick="closeInvoice()">Kembali</button>
-                    <button class="btn-invoice btn-invoice-download" onclick="downloadInvoice()">
-                        <i class="fas fa-download"></i> Simpan Gambar
+                <div class="capture-ignore"
+                    style="margin: 15px 25px; display: flex; align-items: center; gap: 10px; color: #333; font-size: 0.85rem; font-weight: 600; background: rgba(0, 242, 255, 0.05); padding: 10px; border-radius: 8px; border: 1px dashed var(--primary);">
+                    <input type="checkbox" id="check-save-img" onchange="togglePayButton()"
+                        style="width: 18px; height: 18px; cursor: pointer; accent-color: var(--primary);">
+                    <label for="check-save-img" style="cursor: pointer;">Saya sudah simpan gambar invoice</label>
+                </div>
+
+                <div class="invoice-btns" style="display: flex; flex-direction: column; gap: 10px;">
+                    <div style="display: flex; gap: 10px; width: 100%;">
+                        <button class="btn-invoice" style="flex: 1;" onclick="closeInvoice()">Kembali</button>
+                        <button class="btn-invoice btn-invoice-download" style="flex: 1;" onclick="downloadInvoice()">
+                            <i class="fas fa-download"></i> Simpan Gambar
+                        </button>
+                    </div>
+                    <button class="btn-invoice btn-invoice-qris" id="pay-qris-btn" onclick="payWithPakasir()" disabled style="width: 100%; opacity: 0.5; cursor: not-allowed; justify-content: center;">
+                        <i class="fas fa-qrcode"></i> Bayar QRIS
                     </button>
-                    <button class="btn-invoice btn-invoice-primary" onclick="copyOrderMessage()">Salin & Pesan</button>
                 </div>
             </div>
         </div>
@@ -170,6 +189,50 @@
                 <div class="modal-btns">
                     <button class="modal-btn modal-btn-confirm" style="background: #ffc107;"
                         onclick="closeWarning()">Oke, Mengerti</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payment Popup Modal (Iframe) -->
+        <div class="modal-overlay" id="payment-modal">
+            <div class="custom-modal"
+                style="max-width: 500px; padding: 0; overflow: hidden; height: 85vh; border-color: var(--primary);">
+                <div
+                    style="background: #1a1a1e; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--primary);">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <i class="fas fa-qrcode" style="color: var(--primary);"></i>
+                        <h3 style="margin: 0; font-size: 1rem; color: white;">Pembayaran QRIS</h3>
+                    </div>
+                    <button onclick="closePaymentModal()"
+                        style="background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1.5rem; transition: var(--transition);">&times;</button>
+                </div>
+                <iframe id="payment-iframe" src=""
+                    style="width: 100%; height: calc(85vh - 55px); border: none; background: white;"></iframe>
+            </div>
+        </div>
+
+        <!-- Celebrate Success Modal -->
+        <div class="modal-overlay" id="success-celebrate-modal">
+            <div class="custom-modal"
+                style="border-color: var(--primary); box-shadow: 0 0 50px rgba(0, 242, 255, 0.3);">
+                <div class="modal-icon"
+                    style="color: var(--primary); filter: drop-shadow(0 0 15px rgba(0, 242, 255, 0.4));">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h3 style="color: white;">Pembayaran Berhasil!</h3>
+                <p>Yeay! Pembayaran kamu sudah kami terima. Silakan konfirmasi pesanan kamu melalui salah satu platform
+                    di bawah ini:</p>
+                <div class="modal-btns" style="flex-direction: column; gap: 10px;">
+                    <a href="https://discord.com/users/vevego" target="_blank" class="modal-btn"
+                        style="background: #5865F2; color: white; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%;">
+                        <i class="fab fa-discord"></i> Chat via Discord
+                    </a>
+                    <a href="https://www.instagram.com/venkyarisko/" target="_blank" class="modal-btn"
+                        style="background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2743 50%,#cc2366 75%,#bc1888 100%); color: white; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%;">
+                        <i class="fab fa-instagram"></i> Chat via Instagram
+                    </a>
+                    <button class="modal-btn" style="background: #2a2a30; color: white; width: 100%; margin-top: 5px;"
+                        onclick="closeSuccessCelebrate()">Tutup</button>
                 </div>
             </div>
         </div>
@@ -568,7 +631,7 @@
 
             content.innerHTML = `
                 <div style="background: #fff9db; border: 1px solid #ffec99; padding: 10px; border-radius: 6px; font-size: 0.75rem; color: #856404; margin-bottom: 20px; text-align: center; font-weight: 600;">
-                    <i class="fas fa-camera"></i> PENTING: Silakan screenshot invoice ini sebagai bukti pesanan Anda.
+                    <i class="fas fa-camera"></i> PENTING: Silakan <b>Simpan Gambar</b> invoice ini sebagai bukti pesanan Anda.
                 </div>
 
                 <div class="invoice-row">
@@ -596,6 +659,22 @@
 
             document.getElementById('invoice-modal').classList.add('active');
             document.body.style.overflow = 'hidden';
+
+            // Reset checkbox and button state
+            const checkbox = document.getElementById('check-save-img');
+            if (checkbox) checkbox.checked = false;
+            togglePayButton();
+        }
+
+        function togglePayButton() {
+            const checkbox = document.getElementById('check-save-img');
+            const payBtn = document.getElementById('pay-qris-btn');
+            if (!checkbox || !payBtn) return;
+
+            const isChecked = checkbox.checked;
+            payBtn.disabled = !isChecked;
+            payBtn.style.opacity = isChecked ? '1' : '0.5';
+            payBtn.style.cursor = isChecked ? 'pointer' : 'not-allowed';
         }
 
         function closeInvoice() {
@@ -618,7 +697,7 @@
                     logging: false,
                     useCORS: true,
                     ignoreElements: (element) => {
-                        return element.classList.contains('invoice-btns');
+                        return element.classList.contains('invoice-btns') || element.classList.contains('capture-ignore');
                     }
                 });
 
@@ -646,6 +725,41 @@
         function redirectToDiscord() {
             window.open('https://discord.com/users/vevego', '_blank');
             closeModal();
+        }
+
+        function payWithPakasir() {
+            const totalDisplay = document.getElementById('total-display');
+            const priceText = totalDisplay.textContent.replace(/\D/g, ''); // Ambil angka saja
+            const orderId = 'ENDFIELD-' + Date.now();
+            const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+            const redirectUrl = window.location.origin + (isLocal ? '' : '/joki-veve') + '/invoices';
+
+            // Construct Pakasir URL
+            const pakasirUrl = `https://app.pakasir.com/pay/joki-game/${priceText}?order_id=${orderId}&qris_only=1&redirect=${redirectUrl}`;
+
+            // Open in iframe modal
+            document.getElementById('payment-iframe').src = pakasirUrl;
+            document.getElementById('payment-modal').classList.add('active');
+            closeInvoice();
+        }
+
+        function closePaymentModal() {
+            document.getElementById('payment-modal').classList.remove('active');
+            document.getElementById('payment-iframe').src = '';
+        }
+
+        // Listener for payment success from iframe
+        window.addEventListener('message', (event) => {
+            if (event.data.type === 'PAYMENT_SUCCESS') {
+                closePaymentModal();
+
+                // Show celebration modal
+                document.getElementById('success-celebrate-modal').classList.add('active');
+            }
+        });
+
+        function closeSuccessCelebrate() {
+            document.getElementById('success-celebrate-modal').classList.remove('active');
         }
 
         function initCalculator() {

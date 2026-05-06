@@ -69,6 +69,7 @@
     <script src="js/floating-buttons.js"></script>
     <script src="js/games-data.js"></script>
     <script src="js/testimonials.js"></script>
+    <script type="module" src="js/firebase-testimonials.js"></script>
     <script src="js/activity-ticker.js"></script>
     <script src="js/router.js"></script>
     <script src="js/background-animation.js"></script>
@@ -76,7 +77,7 @@
      <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js?v=16')
+                navigator.serviceWorker.register('./sw.js?v=22')
                     .then(reg => console.log('PWA: Service Worker Registered'))
                     .catch(err => console.log('PWA: Service Worker Failed', err));
             });
