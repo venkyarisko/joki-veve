@@ -154,6 +154,19 @@
             border-radius: 8px;
             display: none;
         }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+        }
     </style>
 </head>
 
@@ -248,6 +261,17 @@
                     required></textarea>
             </div>
 
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Rekening / E-Wallet <small>(Opsional)</small></label>
+                    <input type="text" id="payment_method" placeholder="Contoh: Dana - 0812..." >
+                </div>
+                <div class="form-group">
+                    <label>A.N <small>(Opsional)</small></label>
+                    <input type="text" id="payment_name" placeholder="Nama Pemilik Rekening" >
+                </div>
+            </div>
+
             <button type="submit" class="submit-btn" id="submit-btn">Kirim Lamaran Partner</button>
             <div id="form-msg" class="form-status"></div>
         </form>
@@ -276,6 +300,8 @@
                     game: document.getElementById('game').value,
                     portfolio: document.getElementById('portfolio').value,
                     reason: document.getElementById('reason').value,
+                    payment_method: document.getElementById('payment_method').value,
+                    payment_name: document.getElementById('payment_name').value,
                     status: 'pending',
                     createdAt: serverTimestamp()
                 };

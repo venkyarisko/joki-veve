@@ -6,7 +6,8 @@ window.STATIC_TESTIMONIALS = [
         name: 'Morieyama Ken',
         service: ['Maintenance Factory'],
         price: 'Rp 25.000',
-        status: 1
+        status: 1,
+        worker: 'VeveGo'
     },
     {
         game: 'Arknight Endfield',
@@ -14,7 +15,8 @@ window.STATIC_TESTIMONIALS = [
         name: 'Morieyama Ken',
         service: ['Maintenance Factory'],
         price: 'Rp 40.000',
-        status: 1
+        status: 1,
+        worker: 'VeveGo'
     },
     {
         game: 'Arknight Endfield',
@@ -22,7 +24,8 @@ window.STATIC_TESTIMONIALS = [
         name: 'V9LENTINE',
         service: ['Maintenance Factory'],
         price: 'Rp 40.000',
-        status: 1
+        status: 1,
+        worker: 'VeveGo'
     },
     {
         game: 'Arknight Endfield',
@@ -30,7 +33,8 @@ window.STATIC_TESTIMONIALS = [
         name: 'V9LENTINE',
         service: ['Maintenance Factory'],
         price: 'Rp 70.000',
-        status: 1
+        status: 1,
+        worker: 'VeveGo'
     },
     {
         game: 'Arknight Endfield',
@@ -38,7 +42,8 @@ window.STATIC_TESTIMONIALS = [
         name: 'V9LENTINE',
         service: ['Maintenance Factory'],
         price: 'Rp 100.000',
-        status: 1
+        status: 1,
+        worker: 'VeveGo'
     },
     {
         game: 'Arknight Endfield',
@@ -46,7 +51,8 @@ window.STATIC_TESTIMONIALS = [
         name: 'V9LENTINE',
         service: ['Maintenance Factory'],
         price: 'Rp 170.000',
-        status: 1
+        status: 1,
+        worker: 'VeveGo'
     },
     {
         game: 'Arknight Endfield',
@@ -54,7 +60,8 @@ window.STATIC_TESTIMONIALS = [
         name: 'Lolipopo',
         service: ['Rawat Akun', 'Story', 'Exploration'],
         price: 'Rp 800.000',
-        status: 1
+        status: 1,
+        worker: 'VeveGo'
     },
     {
         game: 'Arknight Endfield',
@@ -62,7 +69,8 @@ window.STATIC_TESTIMONIALS = [
         name: 'Lolipopo',
         service: ['Event Participation', 'Endgame Content'],
         price: 'Rp 238.000',
-        status: 1
+        status: 1,
+        worker: 'VeveGo'
     }
 ];
 
@@ -115,6 +123,7 @@ function renderTestimonials() {
                 <span class="customer-game">${testi.game || 'Game Service'}</span>
                 <span class="customer-name">${testi.name}</span>
                 ${serviceHTML}
+                ${testi.worker ? `<div class="worker-tag"><i class="fas fa-user-ninja"></i> ${testi.worker}</div>` : ''}
                 <div class="customer-meta">
                     <span class="customer-price">${testi.price}</span>
                     <span class="status-badge ${statusClass}">${statusText}</span>

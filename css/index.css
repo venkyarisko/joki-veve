@@ -1251,6 +1251,24 @@ nav .container {
     color: var(--text-muted);
 }
 
+.worker-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.75rem;
+    color: var(--primary);
+    margin-top: 10px;
+    padding: 4px 10px;
+    background: rgba(0, 242, 255, 0.05);
+    border-radius: 6px;
+    font-weight: 600;
+}
+
+.worker-tag i {
+    font-size: 0.8rem;
+    opacity: 0.8;
+}
+
 .customer-meta {
     display: flex;
     justify-content: space-between;
