@@ -81,10 +81,10 @@ var jokiServices = [
         category: 'Map',
         title: 'Eksplorasi Map (100%)',
         description: 'Semua Wilayah Hethereau',
-        price: 300000,
+        price: 330000,
         slash: true,
-        normalPrice: 330000,
-        slashPrice: 300000
+        normalPrice: 370000,
+        slashPrice: 330000
     },
     {
         id: 'teleport',
@@ -101,7 +101,7 @@ var jokiServices = [
         subcategory: 'Hetherau',
         title: 'Eksplorasi Map (100%) New Herland District',
         description: 'Penyelesaian 100% Wilayah New Herland District',
-        price: 60000
+        price: 100000
     },
     {
         id: 'map_miguel_district',
@@ -109,7 +109,7 @@ var jokiServices = [
         subcategory: 'Hetherau',
         title: 'Eksplorasi Map (100%) Miguel District',
         description: 'Penyelesaian 100% Wilayah Miguel District',
-        price: 60000
+        price: 100000
     },
     {
         id: 'map_illusion_town',
