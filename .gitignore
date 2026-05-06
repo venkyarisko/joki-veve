@@ -4,3 +4,7 @@ agents/
 node_modules/
 .DS_Store
 *.log
+
+# Internal & Admin Files
+veve-internal.html
+.env

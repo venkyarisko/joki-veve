@@ -1,6 +1,6 @@
 // js/firebase-config.js
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, collection, getDocs, addDoc, query, orderBy, serverTimestamp, deleteDoc, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, collection, getDocs, getDoc, addDoc, query, where, orderBy, serverTimestamp, deleteDoc, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 
 // Konfigurasi Firebase Anda
@@ -18,4 +18,4 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const storage = getStorage(app);
 
-export { db, collection, getDocs, addDoc, query, orderBy, serverTimestamp, deleteDoc, doc, onSnapshot, storage, ref, uploadBytes, getDownloadURL };
+export { db, collection, getDocs, getDoc, addDoc, query, where, orderBy, serverTimestamp, deleteDoc, doc, onSnapshot, storage, ref, uploadBytes, getDownloadURL };

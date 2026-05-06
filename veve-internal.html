@@ -239,6 +239,7 @@
         <div class="admin-tabs">
             <button class="tab-btn active" onclick="switchTab('tracker')">Client Tracker</button>
             <button class="tab-btn" onclick="switchTab('partners')">Partner Applications</button>
+            <button class="tab-btn" onclick="switchTab('promos')">Manage Promos</button>
         </div>
 
         <!-- TAB: Tracker -->
@@ -303,6 +304,31 @@
                 <p style="text-align: center; opacity: 0.5; padding: 20px;">Fetching applications...</p>
             </div>
         </div>
+
+        <!-- TAB: Promos -->
+        <div id="tab-promos" class="tab-content">
+            <h2 style="font-size: 1.2rem; margin-bottom: 20px; color: var(--primary);">Promo & Discount Codes</h2>
+            
+            <div class="stats-card" style="margin-bottom: 30px;">
+                <h3 style="font-size: 1rem; margin-bottom: 15px;">Create New Code</h3>
+                <form id="promo-form" style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 10px;">
+                    <input type="text" id="promo-code" placeholder="CODE (e.g. VEVE-BEST)" required style="padding: 10px; border-radius: 8px; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); color: white; text-transform: lowercase;">
+                    <input type="number" id="promo-discount" placeholder="Discount %" required style="padding: 10px; border-radius: 8px; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); color: white;">
+                    <button type="submit" style="background: var(--primary); color: black; border: none; border-radius: 8px; font-weight: 800; cursor: pointer;">Add Code</button>
+                </form>
+            </div>
+
+            <div class="stats-card">
+                <div class="client-item" style="border-bottom: 2px solid var(--primary); padding-bottom: 10px; margin-bottom: 10px; opacity: 0.8; font-size: 0.8rem; text-transform: uppercase; font-weight: 800;">
+                    <span>Promo Code</span>
+                    <span style="text-align: center;">Discount</span>
+                    <span style="text-align: right;">Action</span>
+                </div>
+                <ul class="client-list" id="promo-list">
+                    <!-- Promo data will be injected here -->
+                </ul>
+            </div>
+        </div>
     </div>
 
     <script src="js/testimonials.js"></script>
@@ -318,6 +344,7 @@
             document.getElementById(`tab-${tabName}`).classList.add('active');
             
             if (tabName === 'partners') fetchPartnerApps();
+            if (tabName === 'promos') fetchPromos();
         }
 
         const form = document.getElementById('testi-form');
@@ -363,10 +390,48 @@
             });
         }
 
+        // Function to fetch Promos
+        async function fetchPromos() {
+            const list = document.getElementById('promo-list');
+            const q = query(collection(db, "promo_codes"), orderBy("discount", "asc"));
+            onSnapshot(q, (snapshot) => {
+                list.innerHTML = '';
+                if (snapshot.empty) {
+                    list.innerHTML = '<p style="text-align: center; opacity: 0.5; padding: 20px;">No promo codes active.</p>';
+                    return;
+                }
+                snapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    const id = docSnap.id;
+                    const li = document.createElement('li');
+                    li.className = 'client-item';
+                    li.innerHTML = `
+                        <span class="client-name" style="font-family: monospace;">${id}</span>
+                        <div class="client-badge-col">
+                            <span class="discount-badge tier-10">${data.discount}% OFF</span>
+                        </div>
+                        <div class="client-meta">
+                            <div style="display: flex; gap: 5px;">
+                                <button class="action-btn" style="background: var(--primary); color: black;" onclick="window.copyCode('${id}')">Copy</button>
+                                <button class="action-btn btn-delete" onclick="window.deletePromo('${id}')">Delete</button>
+                            </div>
+                        </div>
+                    `;
+                    list.appendChild(li);
+                });
+            });
+        }
+
         // Helper functions attached to window for onclick access
         window.copyContact = (text) => {
             navigator.clipboard.writeText(text);
             alert('Contact copied to clipboard!');
+        }
+
+        window.copyCode = (text) => {
+            navigator.clipboard.writeText(text);
+            // Custom toast notification style alert could be better, but sticking to alert for consistency
+            alert(`Promo code "${text}" copied!`);
         }
 
         window.deleteApp = async (id) => {
@@ -375,6 +440,16 @@
                     await deleteDoc(doc(db, "partner_applications", id));
                 } catch (error) {
                     console.error("Error deleting:", error);
+                }
+            }
+        }
+
+        window.deletePromo = async (id) => {
+            if (confirm(`Delete promo code "${id}"?`)) {
+                try {
+                    await deleteDoc(doc(db, "promo_codes", id));
+                } catch (error) {
+                    console.error("Error deleting promo:", error);
                 }
             }
         }
@@ -478,6 +553,32 @@
             } finally {
                 btn.disabled = false;
                 btn.innerText = 'Send to Firebase';
+            }
+        });
+
+        // Promo Form Submission
+        document.getElementById('promo-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const codeInput = document.getElementById('promo-code');
+            const discountInput = document.getElementById('promo-discount');
+            const code = codeInput.value.trim(); // Case sensitive as requested
+            const discount = parseInt(discountInput.value);
+
+            if (!code || isNaN(discount)) return;
+
+            try {
+                // Use doc() with code as ID to prevent duplicates and make it easy to fetch
+                const { setDoc } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js");
+                await setDoc(doc(db, "promo_codes", code), {
+                    discount: discount,
+                    createdAt: serverTimestamp()
+                });
+                codeInput.value = '';
+                discountInput.value = '';
+                alert('Promo code added successfully!');
+            } catch (error) {
+                console.error("Error adding promo:", error);
+                alert('Error adding promo code.');
             }
         });
 

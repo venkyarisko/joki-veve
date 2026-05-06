@@ -104,6 +104,13 @@
                                 <span id="discount-amount">- Rp 0</span>
                             </div>
                         </div>
+                        
+                        <!-- Discount Code Input -->
+                        <div class="discount-field-wrapper">
+                            <input type="text" id="discount-code" class="discount-input" placeholder="Nama / Kode Diskon">
+                            <button onclick="applyDiscountCode()" class="btn-apply-discount">Apply</button>
+                        </div>
+                        <div id="discount-status" class="discount-msg"></div>
                     </div>
 
 
@@ -442,6 +449,14 @@
             updateTotal();
         }
 
+        var internalDiscountPercent = 0;
+        var appliedCode = "";
+
+        function applyDiscountCode() {
+            // This will be overridden by the module script below
+            console.log("Firebase checking enabled...");
+        }
+
         function updateTotal() {
             const items = document.querySelectorAll('.calc-item');
             const totalDisplay = document.getElementById('total-display');
@@ -486,6 +501,13 @@
                 discountPercent = 5;
                 nextThreshold = 3000000;
                 currentTierText = "3 Juta";
+            }
+
+            // Internal Discount Override (If applicable)
+            if (internalDiscountPercent > 0) {
+                if (internalDiscountPercent > discountPercent) {
+                    discountPercent = internalDiscountPercent;
+                }
             }
 
 
@@ -576,6 +598,9 @@
 
             if (isDiscounted) {
                 message += `Subtotal: ${subtotal}\n`;
+                if (appliedCode) {
+                    message += `Kode Diskon: ${appliedCode}\n`;
+                }
                 message += `${discountLabelText} ${discountAmt}\n`;
             }
 
@@ -673,7 +698,7 @@
                         <span>${subtotal}</span>
                     </div>
                     <div class="invoice-row" style="color: #00ff80; font-size: 0.85rem; margin-bottom: 5px;">
-                        <span>${discountLabelText}</span>
+                        <span>${appliedCode ? 'KODE: ' + appliedCode + ' (' + discountLabelText + ')' : discountLabelText}</span>
                         <span>${discountAmt}</span>
                     </div>
                 `;
@@ -684,6 +709,10 @@
                     <i class="fas fa-camera"></i> PENTING: Silakan <b>Simpan Gambar</b> invoice ini sebagai bukti pesanan Anda.
                 </div>
 
+                <div class="invoice-row">
+                    <span class="invoice-label">NAMA:</span>
+                    <span class="invoice-value">${document.getElementById('discount-code').value.toUpperCase() || 'GUEST'}</span>
+                </div>
                 <div class="invoice-row">
                     <span class="invoice-label">TANGGAL:</span>
                     <span class="invoice-value">${dateStr}</span>
@@ -864,6 +893,56 @@
     <script src="../js/floating-buttons.js"></script>
     <script src="../js/router.js"></script>
     <script src="../js/background-animation.js"></script>
+    <script type="module">
+        import { db, doc, getDoc } from '../js/firebase-config.js';
+
+        window.applyDiscountCode = async function() {
+            const input = document.getElementById('discount-code');
+            const status = document.getElementById('discount-status');
+            const btn = document.querySelector('.btn-apply-discount');
+            const code = input.value.trim(); // Case sensitive as requested
+
+            if (code === "") {
+                status.textContent = "Silakan masukkan kode diskon!";
+                status.className = "discount-msg error";
+                return;
+            }
+
+            try {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                
+                const docRef = doc(db, "promo_codes", code);
+                const docSnap = await getDoc(docRef);
+
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    window.internalDiscountPercent = data.discount || 0;
+                    window.appliedCode = code.toUpperCase();
+                    
+                    status.textContent = `Kode Berhasil! Diskon ${window.internalDiscountPercent}% diterapkan.`;
+                    status.className = "discount-msg success";
+                    input.readOnly = true;
+                    btn.style.display = 'none';
+                } else {
+                    window.internalDiscountPercent = 0;
+                    window.appliedCode = "";
+                    status.textContent = "Kode tidak valid atau sudah kedaluwarsa!";
+                    status.className = "discount-msg error";
+                }
+                
+                if (typeof window.updateTotal === 'function') window.updateTotal();
+                
+            } catch (error) {
+                console.error("Firebase Error:", error);
+                status.textContent = "Terjadi kesalahan sistem. Coba lagi nanti.";
+                status.className = "discount-msg error";
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = 'Apply';
+            }
+        };
+    </script>
 </body>
 
 </html>

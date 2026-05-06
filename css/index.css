@@ -2159,6 +2159,66 @@ nav .container {
     }
 }
 
+/* Discount Code Input Field */
+.discount-field-wrapper {
+    margin-top: 15px;
+    display: flex;
+    gap: 10px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.discount-input {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    border-radius: 8px;
+    padding: 10px 15px;
+    color: white;
+    font-size: 0.9rem;
+    outline: none;
+    transition: var(--transition);
+}
+
+.discount-input:focus {
+    border-color: var(--primary);
+    background: rgba(0, 242, 255, 0.05);
+}
+
+.btn-apply-discount {
+    padding: 10px 20px;
+    background: var(--primary);
+    color: black;
+    border: none;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: var(--transition);
+    font-size: 0.85rem;
+}
+
+.btn-apply-discount:hover {
+    filter: brightness(1.1);
+    transform: translateY(-1px);
+}
+
+.discount-msg {
+    font-size: 0.75rem;
+    margin-top: 8px;
+    display: none;
+    font-weight: 600;
+}
+
+.discount-msg.success {
+    color: #00ff80;
+    display: block;
+}
+
+.discount-msg.error {
+    color: #ff4444;
+    display: block;
+}
+
 
 .total-breakdown {
     margin-top: 15px;
