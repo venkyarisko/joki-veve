@@ -12,34 +12,42 @@ export async function syncFirebaseTestimonials() {
     try {
         const querySnapshot = await getDocs(collection(db, "testimonials"));
         
-        const firebaseData = [];
+        const imageFirebase = [];
+        const feedbackFirebase = [];
+
         querySnapshot.forEach((doc) => {
             const data = doc.data();
-            if (!data.image) data.image = './assets/preview.png'; 
-            firebaseData.push(data);
+            // Cek apakah ini feedback tekstual atau screenshot
+            if (data.type === 'feedback' || (data.message && data.rating)) {
+                feedbackFirebase.push(data);
+            } else {
+                if (!data.image) data.image = './assets/preview.png'; 
+                imageFirebase.push(data);
+            }
         });
 
-        console.log(`Firebase Global Sync: fetched ${firebaseData.length} items`);
+        console.log(`Firebase Global Sync: fetched ${imageFirebase.length} images & ${feedbackFirebase.length} feedback items`);
 
-        if (firebaseData.length > 0) {
-            // Urutkan berdasarkan createdAt jika ada
-            firebaseData.sort((a, b) => {
-                const dateA = a.createdAt?.seconds || 0;
-                const dateB = b.createdAt?.seconds || 0;
-                return dateB - dateA;
-            });
+        // Sort data Firebase berdasarkan createdAt jika ada
+        const sortByDate = (a, b) => {
+            const dateA = a.createdAt?.seconds || 0;
+            const dateB = b.createdAt?.seconds || 0;
+            return dateB - dateA;
+        };
 
-            // Gabungkan data Firebase (baru) dengan data statis (lama)
-            // Reset dulu ke static untuk menghindari duplikasi
-            const staticData = window.STATIC_TESTIMONIALS || [];
-            window.testimonialData = [...firebaseData, ...staticData];
-        } else {
-            window.testimonialData = [...(window.STATIC_TESTIMONIALS || [])];
-        }
+        imageFirebase.sort(sortByDate);
+        feedbackFirebase.sort(sortByDate);
+
+        // Gabungkan dengan data statis
+        window.testimonialData = [...imageFirebase, ...(window.STATIC_TESTIMONIALS || [])];
+        window.feedbackData = [...feedbackFirebase, ...(window.STATIC_FEEDBACK || [])];
         
-        // Re-render testimoni jika fungsi tersedia
-        if (typeof renderTestimonials === 'function') {
+        // Re-render testimoni jika fungsi tersedia (cek tab aktif)
+        if (typeof renderTestimonials === 'function' && (typeof currentTab === 'undefined' || currentTab === 'images')) {
             renderTestimonials();
+        }
+        if (typeof renderFeedback === 'function' && (typeof currentTab !== 'undefined' && currentTab === 'feedback')) {
+            renderFeedback();
         }
 
         // Update statistik order & client di index.html jika fungsi tersedia
@@ -49,7 +57,7 @@ export async function syncFirebaseTestimonials() {
 
         // Kirim sinyal bahwa data Firebase sudah siap
         window.dispatchEvent(new CustomEvent('firebaseTestimonialsLoaded', { 
-            detail: window.testimonialData 
+            detail: { images: window.testimonialData, feedback: window.feedbackData } 
         }));
     } catch (error) {
         console.error("Gagal sinkronisasi Firebase:", error);
