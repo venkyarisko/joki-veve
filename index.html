@@ -449,7 +449,7 @@
                                 <h4>Veve Service</h4>
                                 <div class="discord-status-online">
                                     <div class="status-indicator"></div>
-                                    <span>2 Members Online</span>
+                                    <span id="discord-online-count">Loading...</span>
                                 </div>
                             </div>
                         </div>
@@ -482,6 +482,7 @@
     <script src="js/router.js"></script>
     <script src="js/background-animation.js"></script>
     <script src="js/security.js"></script>
+    <script src="js/discord-sync.js"></script>
     <script>
         // Update Order Status from datastatus.js
         function updateStatus() {
@@ -510,7 +511,7 @@
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js?v=34')
+                navigator.serviceWorker.register('./sw.js?v=39')
                     .then(reg => {
                         console.log('PWA: Service Worker Registered');
                         // Deteksi update dan reload otomatis
