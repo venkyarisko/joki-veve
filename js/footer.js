@@ -31,7 +31,7 @@ if (!window.Footer) {
             <footer style="padding: 40px 0; text-align: center; border-top: 1px solid var(--glass-border);">
                 <div class="container">
                     <p style="color: var(--text-muted); margin-bottom: 10px;">&copy; ${currentYear} Veve Services. Jasa Joki Game Terpercaya & 100% Manual.</p>
-                    <div style="display: flex; justify-content: center; gap: 20px; font-size: 0.9rem;">
+                    <div class="footer-links" style="display: flex; justify-content: center; gap: 20px; font-size: 0.9rem; flex-wrap: wrap;">
                         <a href="https://discord.com/users/vevego" target="_blank" style="color: var(--text-muted); text-decoration: none; transition: var(--transition);">
                             <i class="fab fa-discord"></i> Discord
                         </a>
@@ -42,7 +42,7 @@ if (!window.Footer) {
                             <i class="fas fa-star"></i> Testimonials
                         </a>
                         <a href="${root}partner" style="color: var(--text-muted); text-decoration: none; transition: var(--transition);">
-                            <i class="fas fa-handshake"></i> Join Partner
+                            <i class="fas fa-handshake"></i> Partner
                         </a>
                     </div>
                 </div>
