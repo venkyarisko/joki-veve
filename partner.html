@@ -167,6 +167,71 @@
                 gap: 0;
             }
         }
+
+        /* Success Modal */
+        .success-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        }
+
+        .success-modal {
+            background: #161618;
+            border: 1px solid var(--primary);
+            border-radius: 24px;
+            padding: 40px;
+            max-width: 450px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(0, 242, 255, 0.2);
+            animation: modalIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes modalIn {
+            from {
+                transform: translateY(30px) scale(0.9);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+        }
+
+        .success-icon {
+            font-size: 4rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        .discord-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: #5865F2;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 800;
+            margin-top: 25px;
+            font-family: 'Outfit', sans-serif;
+            transition: all 0.3s;
+        }
+
+        .discord-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(88, 101, 242, 0.4);
+        }
     </style>
 </head>
 
@@ -223,6 +288,15 @@
                         langsung diputus.</p>
                 </div>
             </div>
+
+            <div class="rule-item">
+                <div class="rule-icon"><i class="fas fa-id-card"></i></div>
+                <div class="rule-content">
+                    <h4>Verifikasi Identitas</h4>
+                    <p>Setelah lamaran diterima, partner wajib melakukan verifikasi identitas (KTP/Kartu Pelajar) via DM
+                        Admin untuk keamanan data client.</p>
+                </div>
+            </div>
         </div>
 
         <form class="apply-form" id="partner-form">
@@ -230,24 +304,84 @@
             </h3>
 
             <div class="form-group">
-                <label>Nama Lengkap / Username</label>
+                <label>Nama Lengkap / Nama Asli</label>
                 <input type="text" id="name" placeholder="Masukin Namamu" required>
             </div>
 
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Umur</label>
+                    <input type="number" id="age" placeholder="Masukin Umurmu" required>
+                </div>
+                <div class="form-group">
+                    <label>Domisili / Kota Asal</label>
+                    <input type="text" id="domicile" placeholder="Contoh: Jakarta" required>
+                </div>
+            </div>
+
             <div class="form-group">
-                <label>ID Discord</label>
+                <label>Username Discord</label>
                 <input type="text" id="contact" placeholder="Username Discordmu" required>
             </div>
 
             <div class="form-group">
-                <label>Game yang Dikuasai</label>
-                <select id="game" required>
-                    <option value="" disabled selected>Pilih Game Utama</option>
-                    <option value="Wuthering Waves">Wuthering Waves</option>
-                    <option value="Arknights Endfield">Arknights Endfield</option>
-                    <option value="Neverness to Everness">NTE</option>
-                    <option value="Multi-Game">Bisa Banyak Game</option>
-                </select>
+                <label>Link Sosial Media (IG/FB/Tiktok) <small>(Opsional tapi direkomendasikan)</small></label>
+                <input type="url" id="social-media" placeholder="Link Profil Sosial Mediamu">
+            </div>
+
+            <div id="game-container">
+                <div class="form-group game-row">
+                    <label>Game yang Dikuasai</label>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <select class="game-select" required>
+                            <option value="" disabled selected>Pilih Game Utama</option>
+                            <option value="Wuthering Waves">Wuthering Waves</option>
+                            <option value="Arknights Endfield">Arknights Endfield</option>
+                            <option value="Neverness to Everness">NTE</option>
+                            <option value="Custom">Lainnya / Custom</option>
+                        </select>
+                        <input type="text" class="custom-game-input" placeholder="Tulis Nama Gamenya..."
+                            style="display: none;">
+                    </div>
+                </div>
+            </div>
+
+            <button type="button" id="add-game"
+                style="display: none; background: rgba(255,255,255,0.03); color: var(--primary); border: 1px dashed rgba(0, 242, 255, 0.3); padding: 10px; width: 100%; border-radius: 10px; cursor: pointer; margin-bottom: 25px; font-weight: 600; font-family: 'Outfit', sans-serif; font-size: 0.85rem; transition: all 0.2s;">
+                <i class="fas fa-plus-circle" style="margin-right: 5px;"></i>Tambah Game Lain
+            </button>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Spesialisasi Joki</label>
+                    <input type="text" id="specialty" placeholder="Misal: Exploration, Farming, Tower/Abyss" required>
+                </div>
+                <div class="form-group">
+                    <label>Device yang Digunakan</label>
+                    <select id="device" required>
+                        <option value="" disabled selected>Pilih Device</option>
+                        <option value="PC / Laptop">PC / Laptop</option>
+                        <option value="Android">Android</option>
+                        <option value="iOS (iPhone/iPad)">iOS (iPhone/iPad)</option>
+                        <option value="Multi-Device (Bisa Semua)">Multi-Device (Bisa Semua)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Status Kesibukan</label>
+                    <select id="status-activity" required>
+                        <option value="" disabled selected>Pilih Kesibukan</option>
+                        <option value="Full-time Joki (Banyak Waktu)">Full-time Joki (Banyak Waktu)</option>
+                        <option value="Mahasiswa / Pelajar">Mahasiswa / Pelajar</option>
+                        <option value="Pekerja (Part-time Joki)">Pekerja (Part-time Joki)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Jam Aktif / Waktu Luang</label>
+                    <input type="text" id="active-hours" placeholder="Misal: 18:00 - 24:00" required>
+                </div>
             </div>
 
             <div class="form-group">
@@ -261,23 +395,74 @@
                     required></textarea>
             </div>
 
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Rekening / E-Wallet <small>(Opsional)</small></label>
-                    <input type="text" id="payment_method" placeholder="Contoh: Dana - 0812...">
-                </div>
-                <div class="form-group">
-                    <label>A.N <small>(Opsional)</small></label>
-                    <input type="text" id="payment_name" placeholder="Nama Pemilik Rekening">
+            <style>
+                .payment-grid {
+                    display: grid;
+                    grid-template-columns: 1fr 1.5fr 1.5fr;
+                    gap: 15px;
+                }
+
+                @media (max-width: 600px) {
+                    .payment-grid {
+                        grid-template-columns: 1fr;
+                        gap: 0;
+                    }
+                }
+            </style>
+            <div id="payment-container">
+                <div class="payment-grid payment-row">
+                    <div class="form-group">
+                        <label>Bank/E-Wallet</label>
+                        <input type="text" class="payment_bank" placeholder="Misal: BCA / Dana">
+                    </div>
+                    <div class="form-group">
+                        <label>No. Rekening/Wallet</label>
+                        <input type="text" class="payment_number" placeholder="Nomor Rekening">
+                    </div>
+                    <div class="form-group">
+                        <label>A.N (Atas Nama)</label>
+                        <input type="text" class="payment_name" placeholder="Nama Pemilik">
+                    </div>
                 </div>
             </div>
 
-            <button type="submit" class="submit-btn" id="submit-btn">Kirim Lamaran Partner</button>
+            <button type="button" id="add-payment"
+                style="background: rgba(255,255,255,0.03); color: var(--primary); border: 1px dashed rgba(0, 242, 255, 0.3); padding: 12px; width: 100%; border-radius: 12px; cursor: pointer; margin-bottom: 25px; font-weight: 700; font-family: 'Outfit', sans-serif; transition: all 0.2s;">
+                <i class="fas fa-plus-circle" style="margin-right: 8px;"></i>Tambah Rekening / E-Wallet Lain
+            </button>
+
+            <div class="form-group"
+                style="display: flex; gap: 15px; background: rgba(0, 242, 255, 0.05); padding: 15px; border-radius: 10px; border: 1px solid rgba(0, 242, 255, 0.2); margin-bottom: 25px;">
+                <input type="checkbox" id="agreement" required
+                    style="width: 20px; height: 20px; flex-shrink: 0; cursor: pointer; margin-top: 2px;">
+                <label for="agreement"
+                    style="font-size: 0.85rem; line-height: 1.5; color: var(--text-muted); cursor: pointer; margin-bottom: 0;">
+                    Saya setuju dengan sistem potongan komisi 10% untuk platform, bersedia melakukan <b>verifikasi identitas (KTP/Kartu Pelajar) secara manual</b>, dan berjanji tidak akan menggunakan Cheat/Aplikasi pihak ketiga maupun melakukan tindakan penipuan terhadap akun client. Jika melanggar, saya siap diberhentikan dan dilaporkan.
+                </label>
+            </div>
+
+            <button type="submit" class="submit-btn" id="submit-btn" disabled>Kirim Lamaran Partner</button>
             <div id="form-msg" class="form-status"></div>
         </form>
     </div>
 
     <div id="footer-placeholder"></div>
+
+    <!-- Success Modal -->
+    <div id="success-modal" class="success-modal-overlay">
+        <div class="success-modal">
+            <div class="success-icon"><i class="fas fa-check-circle"></i></div>
+            <h2 style="font-family: 'Outfit', sans-serif; color: white; margin-bottom: 10px;">Lamaran Terkirim!</h2>
+            <p style="color: var(--text-muted); line-height: 1.6; font-size: 0.95rem;">Terima kasih sudah mendaftar.
+                <b>Jika lamaran diterima</b>, kamu wajib melakukan verifikasi KTP/Kartu Pelajar via DM Admin di Discord
+                untuk proses aktivasi partner.</p>
+            <a href="https://discord.gg/GCAxmPSFmw" target="_blank" class="discord-btn">
+                <i class="fab fa-discord"></i> Join Group Discord
+            </a>
+            <button onclick="location.reload()"
+                style="display: block; margin: 25px auto 0; background: transparent; border: none; color: var(--text-muted); cursor: pointer; text-decoration: underline; font-size: 0.85rem;">Keluar</button>
+        </div>
+    </div>
 
     <script src="js/navbar.js"></script>
     <script src="js/footer.js"></script>
@@ -287,6 +472,104 @@
         const form = document.getElementById('partner-form');
         const btn = document.getElementById('submit-btn');
         const msg = document.getElementById('form-msg');
+        const addPaymentBtn = document.getElementById('add-payment');
+        const paymentContainer = document.getElementById('payment-container');
+        const addGameBtn = document.getElementById('add-game');
+        const gameContainer = document.getElementById('game-container');
+        const agreementCheckbox = document.getElementById('agreement');
+
+        // Agreement toggle submit button
+        agreementCheckbox.addEventListener('change', (e) => {
+            btn.disabled = !e.target.checked;
+        });
+
+        // Game Selection Logic
+        function initGameRow(row) {
+            const select = row.querySelector('.game-select');
+            const customInput = row.querySelector('.custom-game-input');
+            select.addEventListener('change', () => {
+                if (select.value === 'Custom') {
+                    customInput.style.display = 'block';
+                    customInput.required = true;
+                    addGameBtn.style.display = 'block';
+                } else {
+                    customInput.style.display = 'none';
+                    customInput.required = false;
+                    // Check if any other row has "Custom"
+                    const anyCustom = Array.from(document.querySelectorAll('.game-select')).some(s => s.value === 'Custom');
+                    if (!anyCustom) addGameBtn.style.display = 'none';
+                }
+            });
+        }
+
+        // Initialize first row
+        initGameRow(document.querySelector('.game-row'));
+
+        addGameBtn.addEventListener('click', () => {
+            const newRow = document.createElement('div');
+            newRow.className = 'form-group game-row';
+            newRow.style.position = 'relative';
+            newRow.style.marginTop = '15px';
+            newRow.style.paddingTop = '15px';
+            newRow.style.borderTop = '1px solid rgba(255,255,255,0.05)';
+            newRow.innerHTML = `
+                <label>Game Tambahan</label>
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <select class="game-select" required>
+                        <option value="" disabled selected>Pilih Game</option>
+                        <option value="Wuthering Waves">Wuthering Waves</option>
+                        <option value="Arknights Endfield">Arknights Endfield</option>
+                        <option value="Neverness to Everness">NTE</option>
+                        <option value="Custom">Lainnya / Custom</option>
+                    </select>
+                    <input type="text" class="custom-game-input" placeholder="Tulis Nama Gamenya..." style="display: none;">
+                </div>
+                <button type="button" class="remove-item" style="position: absolute; right: -5px; top: 15px; background: rgba(255, 68, 68, 0.2); color: #ff4444; border: none; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 10px; z-index: 10; border: 1px solid rgba(255, 68, 68, 0.3);">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            gameContainer.appendChild(newRow);
+            initGameRow(newRow);
+            newRow.querySelector('.remove-item').onclick = () => {
+                newRow.remove();
+                const anyCustom = Array.from(document.querySelectorAll('.game-select')).some(s => s.value === 'Custom');
+                if (!anyCustom) addGameBtn.style.display = 'none';
+            };
+        });
+
+        // Hover effect for add buttons
+        [addPaymentBtn, addGameBtn].forEach(b => {
+            b.onmouseover = () => { b.style.background = 'rgba(0, 242, 255, 0.05)'; b.style.borderColor = 'var(--primary)'; };
+            b.onmouseout = () => { b.style.background = 'rgba(255, 255, 255, 0.03)'; b.style.borderColor = 'rgba(0, 242, 255, 0.3)'; };
+        });
+
+        addPaymentBtn.addEventListener('click', () => {
+            const newRow = document.createElement('div');
+            newRow.className = 'payment-grid payment-row';
+            newRow.style.position = 'relative';
+            newRow.style.marginTop = '15px';
+            newRow.style.paddingTop = '15px';
+            newRow.style.borderTop = '1px solid rgba(255,255,255,0.05)';
+            newRow.innerHTML = `
+                <div class="form-group">
+                    <label>Bank/E-Wallet</label>
+                    <input type="text" class="payment_bank" placeholder="Misal: BCA / Dana">
+                </div>
+                <div class="form-group">
+                    <label>No. Rekening/Wallet</label>
+                    <input type="text" class="payment_number" placeholder="Nomor Rekening">
+                </div>
+                <div class="form-group">
+                    <label>A.N (Atas Nama)</label>
+                    <input type="text" class="payment_name" placeholder="Nama Pemilik">
+                </div>
+                <button type="button" class="remove-item" style="position: absolute; right: -5px; top: 5px; background: rgba(255, 68, 68, 0.2); color: #ff4444; border: none; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 10px; z-index: 10; border: 1px solid rgba(255, 68, 68, 0.3);">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            paymentContainer.appendChild(newRow);
+            newRow.querySelector('.remove-item').onclick = () => newRow.remove();
+        });
 
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -294,25 +577,54 @@
             btn.innerText = 'Mengirim data...';
 
             try {
+                // Collect Games
+                const gameRows = document.querySelectorAll('.game-row');
+                const games = [];
+                gameRows.forEach(row => {
+                    const select = row.querySelector('.game-select');
+                    const customInput = row.querySelector('.custom-game-input');
+                    const val = select.value === 'Custom' ? customInput.value.trim() : select.value;
+                    if (val) games.push(val);
+                });
+
+                const paymentRows = document.querySelectorAll('.payment-row');
+                const payments = [];
+                paymentRows.forEach(row => {
+                    const bank = row.querySelector('.payment_bank').value.trim();
+                    const number = row.querySelector('.payment_number').value.trim();
+                    const name = row.querySelector('.payment_name').value.trim();
+                    if (bank || number) {
+                        payments.push({ bank, number, name });
+                    }
+                });
+
                 const application = {
                     name: document.getElementById('name').value,
+                    age: document.getElementById('age').value,
+                    domicile: document.getElementById('domicile').value,
                     contact: document.getElementById('contact').value,
-                    game: document.getElementById('game').value,
+                    social_media: document.getElementById('social-media').value,
+                    games: games,
+                    game: games[0] || 'Multi-Game', // For legacy support
+                    specialty: document.getElementById('specialty').value,
+                    device: document.getElementById('device').value,
+                    activity_status: document.getElementById('status-activity').value,
+                    active_hours: document.getElementById('active-hours').value,
                     portfolio: document.getElementById('portfolio').value,
                     reason: document.getElementById('reason').value,
-                    payment_method: document.getElementById('payment_method').value,
-                    payment_name: document.getElementById('payment_name').value,
+                    payments: payments,
                     status: 'pending',
                     createdAt: serverTimestamp()
                 };
 
                 await addDoc(collection(db, "partner_applications"), application);
 
-                msg.style.display = 'block';
-                msg.style.background = 'rgba(0, 255, 128, 0.1)';
-                msg.style.color = '#00ff80';
-                msg.innerText = 'Sukses! Lamaran kamu telah terkirim. Tunggu kabar selanjutnya dari kami.';
+                // Show Success Modal
+                document.getElementById('success-modal').style.display = 'flex';
                 form.reset();
+                // Reset dynamic rows
+                document.querySelectorAll('.remove-item').forEach(btn => btn.parentElement.remove());
+                document.querySelectorAll('.custom-game-input').forEach(i => i.style.display = 'none');
             } catch (error) {
                 console.error("Error:", error);
                 msg.style.display = 'block';
