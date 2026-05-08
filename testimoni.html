@@ -54,6 +54,194 @@
         .logo {
             font-family: 'Outfit', sans-serif;
         }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .result-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .result-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.05);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .result-img-wrapper {
+            width: 100%;
+            height: 220px;
+            overflow: hidden;
+            border-bottom: 1px solid var(--glass-border);
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 4px;
+            background: rgba(255, 255, 255, 0.03);
+            position: relative;
+        }
+
+        .result-img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: top;
+            transition: var(--transition);
+        }
+
+        /* Simplified Layouts */
+        .layout-1 img { 
+            grid-column: span 2; 
+        }
+        
+
+
+        .more-overlay {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: calc(50% - 2px);
+            height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 800;
+            backdrop-filter: blur(4px);
+            pointer-events: none;
+            font-family: 'Outfit', sans-serif;
+            z-index: 5;
+        }
+
+        /* Removed hover zoom for cleaner look */
+
+        .result-info {
+            padding: 15px;
+            text-align: center;
+        }
+
+        .result-name {
+            display: block;
+            font-weight: 800;
+            color: var(--text-main);
+            font-size: 1rem;
+            margin-bottom: 5px;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .result-service {
+            display: block;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        /* Gallery Lightbox Styles */
+        .modal-gallery-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            max-width: 90vw;
+            max-height: 80vh;
+        }
+
+        .gallery-nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: var(--transition);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .gallery-nav-btn:hover {
+            background: var(--primary);
+            color: black;
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .gallery-nav-btn.prev {
+            left: -60px;
+        }
+
+        .gallery-nav-btn.next {
+            right: -60px;
+        }
+
+        @media (max-width: 768px) {
+            .gallery-nav-btn.prev {
+                left: 10px;
+            }
+
+            .gallery-nav-btn.next {
+                right: 10px;
+            }
+
+            .gallery-nav-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+        }
+
+        .gallery-counter {
+            position: absolute;
+            bottom: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-weight: 600;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+
+        .multi-image-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            backdrop-filter: blur(4px);
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
     </style>
 </head>
 
@@ -81,7 +269,10 @@
                 <!-- Testimonial Tabs -->
                 <div class="testi-tabs">
                     <button id="tab-images" class="testi-tab active" onclick="switchTestiTab('images')">
-                        <i class="fas fa-images"></i> Screenshoot
+                        <i class="fas fa-images"></i> Bukti Pembayaran
+                    </button>
+                    <button id="tab-results" class="testi-tab" onclick="switchTestiTab('results')">
+                        <i class="fas fa-check-circle"></i> Hasil Kerja
                     </button>
                     <button id="tab-feedback" class="testi-tab" onclick="switchTestiTab('feedback')">
                         <i class="fas fa-star"></i> Real Feedback
@@ -97,6 +288,10 @@
 
                 <div id="testimonial-container" class="testimonial-grid">
                     <!-- Data will be loaded from testimonials.js -->
+                </div>
+
+                <div id="results-container" class="results-grid" style="display: none;">
+                    <!-- Work results will be loaded here -->
                 </div>
 
                 <div id="feedback-container" class="feedback-grid" style="display: none;">
@@ -119,7 +314,16 @@
         <!-- Modal for Lightbox -->
         <div id="lightbox" class="modal" onclick="closeLightbox()">
             <span class="close-modal">&times;</span>
-            <img class="modal-content" id="lightbox-img">
+            <div class="modal-gallery-container" onclick="event.stopPropagation()">
+                <button id="gallery-prev" class="gallery-nav-btn prev" onclick="changeGalleryImage(-1)">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <img class="modal-content" id="lightbox-img">
+                <button id="gallery-next" class="gallery-nav-btn next" onclick="changeGalleryImage(1)">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+                <div id="gallery-counter" class="gallery-counter">1 / 1</div>
+            </div>
         </div>
 
         <!-- Modal for Adding Feedback -->
@@ -238,7 +442,7 @@
         const updateServices = (game) => {
             if (!selectService) return;
             selectService.innerHTML = '<option value="" disabled selected>Pilih Layanan</option>';
-            
+
             const services = GAME_SERVICES[game] || GAME_SERVICES["Other"];
             services.forEach(s => {
                 const opt = document.createElement('option');
@@ -246,12 +450,12 @@
                 opt.textContent = s;
                 selectService.appendChild(opt);
             });
-            
+
             const optCustom = document.createElement('option');
             optCustom.value = "custom_service";
             optCustom.textContent = "Lainnya (Custom)";
             selectService.appendChild(optCustom);
-            
+
             // Hide custom input when changing games
             customServiceGroup.style.display = 'none';
         };
@@ -260,7 +464,7 @@
             selectGame.addEventListener('change', () => {
                 const game = selectGame.value;
                 customGameGroup.style.display = game === 'custom' ? 'block' : 'none';
-                
+
                 if (game === 'custom') {
                     updateServices("Other");
                 } else {

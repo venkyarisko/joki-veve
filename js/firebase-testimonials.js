@@ -14,19 +14,22 @@ export async function syncFirebaseTestimonials() {
         
         const imageFirebase = [];
         const feedbackFirebase = [];
+        const resultFirebase = [];
 
         querySnapshot.forEach((doc) => {
             const data = doc.data();
-            // Cek apakah ini feedback tekstual atau screenshot
+            // Cek apakah ini feedback tekstual, hasil kerja, atau screenshot
             if (data.type === 'feedback' || (data.message && data.rating)) {
                 feedbackFirebase.push(data);
+            } else if (data.type === 'result') {
+                resultFirebase.push(data);
             } else {
                 if (!data.image) data.image = './assets/preview.png'; 
                 imageFirebase.push(data);
             }
         });
 
-        console.log(`Firebase Global Sync: fetched ${imageFirebase.length} images & ${feedbackFirebase.length} feedback items`);
+        console.log(`Firebase Global Sync: fetched ${imageFirebase.length} images, ${feedbackFirebase.length} feedback items, & ${resultFirebase.length} result items`);
 
         // Sort data Firebase berdasarkan createdAt jika ada
         const sortByDate = (a, b) => {
@@ -37,10 +40,12 @@ export async function syncFirebaseTestimonials() {
 
         imageFirebase.sort(sortByDate);
         feedbackFirebase.sort(sortByDate);
+        resultFirebase.sort(sortByDate);
 
         // Gabungkan dengan data statis
         window.testimonialData = [...imageFirebase, ...(window.STATIC_TESTIMONIALS || [])];
         window.feedbackData = [...feedbackFirebase, ...(window.STATIC_FEEDBACK || [])];
+        window.resultsData = [...resultFirebase]; // Results usually only from Firebase
         
         // Re-render testimoni jika fungsi tersedia (cek tab aktif)
         if (typeof renderTestimonials === 'function' && (typeof currentTab === 'undefined' || currentTab === 'images')) {
@@ -48,6 +53,9 @@ export async function syncFirebaseTestimonials() {
         }
         if (typeof renderFeedback === 'function' && (typeof currentTab !== 'undefined' && currentTab === 'feedback')) {
             renderFeedback();
+        }
+        if (typeof renderResults === 'function' && (typeof currentTab !== 'undefined' && currentTab === 'results')) {
+            renderResults();
         }
 
         // Update statistik order & client di index.html jika fungsi tersedia
@@ -57,7 +65,11 @@ export async function syncFirebaseTestimonials() {
 
         // Kirim sinyal bahwa data Firebase sudah siap
         window.dispatchEvent(new CustomEvent('firebaseTestimonialsLoaded', { 
-            detail: { images: window.testimonialData, feedback: window.feedbackData } 
+            detail: { 
+                images: window.testimonialData, 
+                feedback: window.feedbackData,
+                results: window.resultsData
+            } 
         }));
     } catch (error) {
         console.error("Gagal sinkronisasi Firebase:", error);

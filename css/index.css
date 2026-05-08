@@ -851,10 +851,32 @@ nav .container {
     font-size: 1.1rem;
 }
 
-.payment-badge.dana {
-    color: #008CFF;
-    border-color: rgba(0, 140, 255, 0.2);
+.payment-details {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: -10px;
+    gap: 4px;
 }
+
+.acc-number {
+    font-size: 0.9rem !important;
+    letter-spacing: 1px !important;
+    color: var(--text-main);
+    background: rgba(255, 255, 255, 0.08);
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-family: 'Inter', sans-serif !important;
+}
+
+.acc-name {
+    font-size: 0.75rem !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.5px !important;
+    color: var(--text-muted);
+    text-transform: uppercase;
+}
+
 
 .payment-badge.jago {
     color: #FF9100;
@@ -867,11 +889,6 @@ nav .container {
 }
 
 @media (hover: hover) {
-    .payment-badge.dana:hover {
-        border-color: #008CFF;
-        box-shadow: 0 0 30px rgba(0, 140, 255, 0.2);
-        transform: translateY(-5px) scale(1.05);
-    }
 
     .payment-badge.jago:hover {
         border-color: #FF9100;
@@ -1523,8 +1540,15 @@ nav .container {
 }
 
 @keyframes modalSlideUp {
-    from { transform: translateY(30px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
+    from {
+        transform: translateY(30px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
 
 .modal-header {
@@ -1563,8 +1587,8 @@ nav .container {
     font-weight: 600;
 }
 
-.form-group input, 
-.form-group select, 
+.form-group input,
+.form-group select,
 .form-group textarea {
     width: 100%;
     padding: 12px 15px;
@@ -1576,8 +1600,8 @@ nav .container {
     transition: var(--transition);
 }
 
-.form-group input:focus, 
-.form-group select:focus, 
+.form-group input:focus,
+.form-group select:focus,
 .form-group textarea:focus {
     border-color: var(--primary);
     background: rgba(0, 242, 255, 0.03);
@@ -1614,9 +1638,9 @@ nav .container {
     transition: var(--transition);
 }
 
-.rating-input input:checked ~ label,
+.rating-input input:checked~label,
 .rating-input label:hover,
-.rating-input label:hover ~ label {
+.rating-input label:hover~label {
     color: #ffcc00;
 }
 
