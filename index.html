@@ -90,18 +90,18 @@
             <div class="container">
                 <div class="stats-grid">
                     <div class="stat-item">
-                        <span class="stat-number" id="stat-orders" data-target="500">500+</span>
+                        <span class="stat-number" id="stat-orders" data-target="0">0+</span>
                         <span class="stat-label">Orders Done</span>
                     </div>
                     <div class="stat-divider"></div>
                     <div class="stat-item">
-                        <span class="stat-number" id="stat-clients" data-target="150">150+</span>
+                        <span class="stat-number" id="stat-clients" data-target="0">0+</span>
                         <span class="stat-label">Happy Clients</span>
                     </div>
                     <div class="stat-divider"></div>
                     <div class="stat-item">
-                        <span class="stat-number" id="stat-manual" data-target="100">100%</span>
-                        <span class="stat-label">Manual Process</span>
+                        <span class="stat-number" id="stat-feedback" data-target="0">0+</span>
+                        <span class="stat-label">Total Feedback</span>
                     </div>
                     <div class="stat-divider"></div>
                     <div class="stat-item">
@@ -484,29 +484,7 @@
     <script src="js/security.js"></script>
     <script src="js/discord-sync.js"></script>
     <script>
-        // Update Order Status from datastatus.js
-        function updateStatus() {
-            const badge = document.getElementById('status-badge');
-            const label = document.getElementById('status-label');
-            const dot = document.getElementById('status-dot');
-
-            if (DATA_STATUS.isOpen) {
-                badge.textContent = DATA_STATUS.openBadge;
-                label.textContent = DATA_STATUS.openText;
-                dot.style.background = '#00ff88'; // Green for open
-                dot.style.boxShadow = '0 0 10px #00ff88';
-            } else {
-                badge.textContent = DATA_STATUS.closeBadge;
-                badge.style.background = 'rgba(255, 50, 50, 0.1)';
-                badge.style.color = '#ff4444';
-                badge.style.borderColor = 'rgba(255, 50, 50, 0.3)';
-                label.textContent = DATA_STATUS.closeText;
-                label.style.color = '#ff4444';
-                dot.style.background = '#ff4444'; // Red for closed
-                dot.style.boxShadow = '0 0 10px #ff4444';
-            }
-        }
-        document.addEventListener('DOMContentLoaded', updateStatus);
+        // Order Status handled by js/datastatus.js
     </script>
     <script>
         if ('serviceWorker' in navigator) {

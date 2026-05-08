@@ -9,34 +9,41 @@ async function updateDiscordStatus() {
     const countElement = document.getElementById('discord-online-count');
     if (!countElement) return;
 
+    // Set default text agar tidak terlihat "Loading..." jika fetch gagal/diskip
+    if (countElement.textContent === 'Loading...') {
+        countElement.textContent = 'Community Active 🟢';
+    }
+
+    // Skip fetch jika di localhost untuk menghindari polusi galat CORS di konsol
+    const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    if (isLocalhost) {
+        return; 
+    }
+
     try {
-        // Tambahkan timestamp agar tidak kena cache browser
         const timestamp = new Date().getTime();
         const response = await fetch(`https://discord.com/api/guilds/${DISCORD_SERVER_ID}/widget.json?t=${timestamp}`, {
             cache: 'no-store'
         });
 
-        if (!response.ok) {
-            const errorData = await response.json();
-            console.error('Discord API Error:', errorData);
-            throw new Error(errorData.message || 'Widget disabled');
-        }
+        if (!response.ok) throw new Error('Status not OK');
         
         const data = await response.json();
         const onlineCount = data.presence_count || 0;
         
-        // Update UI
         countElement.textContent = `${onlineCount} Members Online`;
-        console.log('Discord Sync Success:', onlineCount, 'online');
     } catch (error) {
-        console.warn('Discord Sync Failed:', error.message);
-        // Jika gagal, tampilkan pesan yang lebih bersahabat
-        countElement.textContent = 'Server Online 🟢';
+        // Silent fail - tetap gunakan teks fallback
+        countElement.textContent = 'Community Active 🟢';
     }
 }
 
 // Initial fetch
-document.addEventListener('DOMContentLoaded', updateDiscordStatus);
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', updateDiscordStatus);
+} else {
+    updateDiscordStatus();
+}
 
-// Optional: update every 5 minutes
+// Update every 5 minutes
 setInterval(updateDiscordStatus, 5 * 60 * 1000);

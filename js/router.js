@@ -100,9 +100,14 @@ const PageHandlers = {
                     const countTo = parseInt(target.getAttribute('data-target'));
                     if (!countTo) return;
 
-                    let count = 0;
+                    let count = parseInt(target.innerText.replace(/[^0-9]/g, '')) || 0;
                     const duration = 2000;
-                    const increment = countTo / (duration / 16);
+                    const increment = (countTo - count) / (duration / 16);
+
+                    if (count >= countTo) {
+                        target.innerText = countTo + (target.innerText.includes('%') ? '%' : '+');
+                        return;
+                    }
 
                     const updateCount = () => {
                         count += increment;
@@ -227,6 +232,14 @@ async function navigate(url, addHistory = true) {
                 el.setAttribute(attr, baseDir + val);
             }
         });
+
+        // Pre-sync stats & status in the detached document to avoid flicker
+        if (typeof syncOrderStats === 'function') {
+            syncOrderStats(doc);
+        }
+        if (typeof updateStatus === 'function') {
+            updateStatus(doc);
+        }
 
         const newContent = newMain.innerHTML;
         const newTitle = doc.title;
