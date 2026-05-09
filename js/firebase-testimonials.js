@@ -9,6 +9,9 @@ export async function syncFirebaseTestimonials() {
     }
 
     console.log("%c Firebase Global Sync: Memulai fetch data dari database... ", "background: #00f2ff; color: #000; font-weight: bold;");
+    
+    // Tampilkan skeleton loading jika fungsi tersedia (biasanya di halaman testimoni)
+    if (typeof renderSkeletons === 'function') renderSkeletons();
     try {
         const querySnapshot = await getDocs(collection(db, "testimonials"));
         

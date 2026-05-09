@@ -115,15 +115,55 @@ function switchTestiTab(tab) {
     if (tab === 'images') {
         imgContainer.style.display = 'grid';
         if (cta) cta.style.display = 'none';
-        renderTestimonials();
+        renderSkeletons(); // Show skeletons briefly
+        setTimeout(() => renderTestimonials(), 300); // Small delay to show off the effect
     } else if (tab === 'results') {
         resultsContainer.style.display = 'grid';
         if (cta) cta.style.display = 'none';
-        renderResults();
+        renderSkeletons();
+        setTimeout(() => renderResults(), 300);
     } else {
         feedbackContainer.style.display = 'grid';
         if (cta) cta.style.display = 'block';
-        renderFeedback();
+        renderSkeletons();
+        setTimeout(() => renderFeedback(), 300);
+    }
+}
+
+function renderSkeletons() {
+    const container = currentTab === 'images' ? document.getElementById('testimonial-container') : 
+                     (currentTab === 'results' ? document.getElementById('results-container') : 
+                      document.getElementById('feedback-container'));
+    
+    if (!container) return;
+    container.innerHTML = '';
+    
+    const count = itemsPerPage;
+    for (let i = 0; i < count; i++) {
+        const skeleton = document.createElement('div');
+        if (currentTab === 'feedback') {
+            skeleton.className = 'feedback-card';
+            skeleton.innerHTML = `
+                <div class="feedback-header"><div class="skeleton skeleton-badge"></div></div>
+                <div class="skeleton skeleton-text" style="width: 90%"></div>
+                <div class="skeleton skeleton-text" style="width: 80%"></div>
+                <div class="feedback-footer">
+                    <div class="skeleton skeleton-avatar"></div>
+                    <div style="flex: 1"><div class="skeleton skeleton-text" style="width: 40%"></div></div>
+                </div>
+            `;
+        } else {
+            skeleton.className = currentTab === 'images' ? 'testimonial-card' : 'result-card';
+            skeleton.innerHTML = `
+                <div class="skeleton skeleton-img"></div>
+                <div style="padding: 10px">
+                    <div class="skeleton skeleton-badge"></div>
+                    <div class="skeleton skeleton-text" style="width: 60%"></div>
+                    <div class="skeleton skeleton-text" style="width: 40%"></div>
+                </div>
+            `;
+        }
+        container.appendChild(skeleton);
     }
 }
 
@@ -176,24 +216,28 @@ function renderResults() {
     const pageItems = resultsData.slice(start, end);
 
     pageItems.forEach(item => {
+        // Build images array - handle both single image and array
+        const images = Array.isArray(item.images) && item.images.length > 0
+            ? item.images
+            : (item.image ? [item.image] : []);
+
+        // Skip items with no images to avoid broken cards
+        if (images.length === 0) return;
+
         const card = document.createElement('div');
         card.className = 'result-card';
         card.style.position = 'relative';
         
-        // Handle multiple images for preview layout
-        const images = Array.isArray(item.images) ? item.images : (item.image ? [item.image] : []);
         const hasMultiple = images.length > 1;
-        
-        // Simpler 2-column preview layout (max 2 visible slots)
         const layoutNum = Math.min(images.length, 2);
         const previewImages = images.slice(0, layoutNum);
-        const imgHTML = previewImages.map(img => `<img src="${img}" alt="${item.name}" loading="lazy">`).join('');
+        const imgHTML = previewImages.map(img =>
+            `<img src="${img}" alt="${item.name || ''}" loading="lazy" onerror="this.style.display='none'">`
+        ).join('');
         
-        // Calculate extra images: If more than 2, the overlay covers the 2nd slot, 
-        // so we show total count minus the 1st visible image.
         const moreCount = images.length > 2 ? images.length - 1 : 0;
 
-        card.onclick = () => openLightbox(images);
+        // Set innerHTML FIRST, then assign onclick - setting innerHTML after onclick wipes the event
         card.innerHTML = `
             ${hasMultiple ? `<div class="multi-image-badge"><i class="fas fa-images"></i> ${images.length}</div>` : ''}
             <div class="result-img-wrapper layout-${layoutNum}">
@@ -201,10 +245,14 @@ function renderResults() {
                 ${moreCount > 0 ? `<div class="more-overlay">+${moreCount}</div>` : ''}
             </div>
             <div class="result-info">
-                <span class="result-name">${item.name}</span>
-                <span class="result-service">${item.game} • ${item.service}</span>
+                <span class="result-name">${item.name || 'Anonymous'}</span>
+                <span class="result-service">${item.game || ''} • ${item.service || ''}</span>
             </div>
         `;
+
+        // Assign onclick AFTER innerHTML so it isn't lost
+        card.onclick = () => openLightbox(images);
+
         container.appendChild(card);
     });
     
@@ -379,8 +427,10 @@ function updatePagination() {
     // Deprecated in favor of inline logic in render functions
 }
 
-let currentGallery = [];
-let currentGalleryIndex = 0;
+if (typeof window.currentGallery === 'undefined') window.currentGallery = [];
+if (typeof window.currentGalleryIndex === 'undefined') window.currentGalleryIndex = 0;
+var currentGallery = window.currentGallery;
+var currentGalleryIndex = window.currentGalleryIndex;
 
 function openLightbox(srcOrArray) {
     const lightbox = document.getElementById('lightbox');
@@ -392,11 +442,11 @@ function openLightbox(srcOrArray) {
     if (!lightbox || !img) return;
 
     if (Array.isArray(srcOrArray)) {
-        currentGallery = srcOrArray;
-        currentGalleryIndex = 0;
+        window.currentGallery = srcOrArray;
+        window.currentGalleryIndex = 0;
     } else {
-        currentGallery = [srcOrArray];
-        currentGalleryIndex = 0;
+        window.currentGallery = [srcOrArray];
+        window.currentGalleryIndex = 0;
     }
 
     updateGalleryUI();
@@ -412,14 +462,14 @@ function updateGalleryUI() {
 
     if (!img) return;
 
-    img.src = currentGallery[currentGalleryIndex];
+    img.src = window.currentGallery[window.currentGalleryIndex];
     
-    if (currentGallery.length > 1) {
+    if (window.currentGallery.length > 1) {
         if (prevBtn) prevBtn.style.display = 'flex';
         if (nextBtn) nextBtn.style.display = 'flex';
         if (counter) {
             counter.style.display = 'block';
-            counter.textContent = `${currentGalleryIndex + 1} / ${currentGallery.length}`;
+            counter.textContent = `${window.currentGalleryIndex + 1} / ${window.currentGallery.length}`;
         }
     } else {
         if (prevBtn) prevBtn.style.display = 'none';
@@ -429,9 +479,9 @@ function updateGalleryUI() {
 }
 
 window.changeGalleryImage = function(delta) {
-    currentGalleryIndex += delta;
-    if (currentGalleryIndex < 0) currentGalleryIndex = currentGallery.length - 1;
-    if (currentGalleryIndex >= currentGallery.length) currentGalleryIndex = 0;
+    window.currentGalleryIndex += delta;
+    if (window.currentGalleryIndex < 0) window.currentGalleryIndex = window.currentGallery.length - 1;
+    if (window.currentGalleryIndex >= window.currentGallery.length) window.currentGalleryIndex = 0;
     updateGalleryUI();
 };
 

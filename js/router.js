@@ -172,8 +172,8 @@ async function navigate(url, addHistory = true) {
 
         if (isSamePage && targetHash) {
             console.log("SPA: Internal hash link");
-            // Keep URL clean and avoid reload
-            if (addHistory) history.pushState({}, '', window.location.pathname);
+            // Update URL to include the hash
+            if (addHistory) history.pushState({}, '', window.location.pathname + targetHash);
             
             const target = document.querySelector(targetHash);
             if (target) {
@@ -264,7 +264,9 @@ async function navigate(url, addHistory = true) {
                     src.includes('activity-ticker.js') ||
                     src.includes('footer.js') ||
                     src.includes('floating-buttons.js') ||
-                    src.includes('security.js')
+                    src.includes('security.js') ||
+                    src.includes('datastatus.js') ||
+                    src.includes('discord-sync.js')
                 )) {
                     return; // Skip global scripts
                 }
@@ -340,10 +342,17 @@ async function navigate(url, addHistory = true) {
 
             // Handle scroll after content swap
             if (targetHash) {
-                const target = document.querySelector(targetHash);
-                if (target) {
-                    setTimeout(() => target.scrollIntoView({ behavior: 'smooth' }), 100);
-                }
+                // Give DOM time to render before scrolling to hash
+                // Do NOT scroll to top when there's a hash target
+                const scrollToHash = () => {
+                    const target = document.querySelector(targetHash);
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth' });
+                    }
+                };
+                // Try multiple times in case content is still loading
+                setTimeout(scrollToHash, 200);
+                setTimeout(scrollToHash, 600);
             } else {
                 window.scrollTo(0, 0);
             }
@@ -363,8 +372,9 @@ document.addEventListener('click', e => {
     const hrefAttr = link.getAttribute('href');
     if (!hrefAttr) return;
 
-    // Skip external links, target=_blank, and special protocols
-    if (link.origin !== window.location.origin || link.target === '_blank' || hrefAttr.includes(':')) return;
+    // Skip external links, target=_blank, and special non-http protocols (mailto:, tel:, javascript:, etc.)
+    const specialProtocol = hrefAttr.startsWith('mailto:') || hrefAttr.startsWith('tel:') || hrefAttr.startsWith('javascript:') || hrefAttr.startsWith('data:');
+    if (link.origin !== window.location.origin || link.target === '_blank' || specialProtocol) return;
 
     // Everything else is a candidate for SPA navigation
     console.log("SPA: Intercepting click on", hrefAttr);
