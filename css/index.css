@@ -2528,10 +2528,12 @@ nav .container {
     gap: 10px;
     padding-top: 15px;
     border-top: 1px solid rgba(255, 255, 255, 0.05);
+    flex-wrap: wrap;
 }
 
 .discount-input {
     flex: 1;
+    min-width: 0;
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid var(--glass-border);
     border-radius: 8px;
@@ -2557,6 +2559,18 @@ nav .container {
     cursor: pointer;
     transition: var(--transition);
     font-size: 0.85rem;
+    white-space: nowrap;
+}
+
+@media (max-width: 400px) {
+    .btn-apply-discount {
+        padding: 10px 15px;
+        flex: 1;
+    }
+    
+    .discount-field-wrapper {
+        gap: 8px;
+    }
 }
 
 .btn-apply-discount:hover {

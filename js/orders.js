@@ -28,22 +28,16 @@ function syncOrderStats(container = document) {
     let finalClients = baseClients;
     let finalFeedback = 0;
 
-    // 1. Hitung Testimonial (Screenshot) & Feedback (Tekstual) dari Window Data (Firebase + Static)
-    const allTestData = [
-        ...(typeof testimonialData !== 'undefined' ? testimonialData : []),
-        ...(typeof feedbackData !== 'undefined' ? feedbackData : [])
-    ];
+    // 1. Hitung Testimonial (Screenshot) - Hanya Bukti Pembayaran
+    const allTestData = (typeof testimonialData !== 'undefined' ? testimonialData : []);
 
     if (allTestData.length > 0) {
         finalOrders += allTestData.length;
         const uniqueNames = new Set(allTestData.map(item => item.name));
         finalClients += uniqueNames.size;
-    } else if (window.STATIC_TESTIMONIALS || window.STATIC_FEEDBACK) {
+    } else if (window.STATIC_TESTIMONIALS) {
         // Fallback jika global data belum siap
-        const allStatic = [
-            ...(window.STATIC_TESTIMONIALS || []),
-            ...(window.STATIC_FEEDBACK || [])
-        ];
+        const allStatic = window.STATIC_TESTIMONIALS || [];
         finalOrders += allStatic.length;
         const uniqueNames = new Set(allStatic.map(item => item.name));
         finalClients += uniqueNames.size;
