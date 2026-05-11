@@ -1,0 +1,10 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Izin membaca dan menulis untuk semua koleksi (Testimonials, Stats, Visitor Logs, Promo Codes)
+    // Dibuka sementara untuk testing integrasi GitHub Pages.
+    match /{document=**} {
+      allow read, write: if true;
+    }
+  }
+}

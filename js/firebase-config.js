@@ -9,8 +9,8 @@ const firebaseConfig = {
     authDomain: "review-joki.firebaseapp.com",
     projectId: "review-joki",
     storageBucket: "review-joki.appspot.com",
-    messagingSenderId: "560413000000",
-    appId: "1:560413000000:web:xxxxxxxxxxxx"
+    messagingSenderId: "728767627299",
+    appId: "1:728767627299:web:9eaa4636d5e67f9690b196"
 };
 
 // Initialize Firebase

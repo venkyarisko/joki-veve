@@ -14,13 +14,17 @@ async function trackVisitor() {
     const sessionVisited = sessionStorage.getItem(visitedKey);
 
     try {
+        console.log("Visitor Tracker: Fetching IP...");
         // Fetch IP address
         const ipRes = await fetch('https://api.ipify.org?format=json');
         const { ip } = await ipRes.json();
+        console.log("Visitor Tracker: IP found", ip);
         
         // Log IP visit
         const ipDocRef = doc(db, 'visitor_logs', ip.replace(/\./g, '-'));
         const ipSnap = await getDoc(ipDocRef);
+        
+        console.log("Visitor Tracker: Syncing IP log to Firebase...");
         
         if (ipSnap.exists()) {
             await updateDoc(ipDocRef, {
@@ -51,6 +55,7 @@ async function trackVisitor() {
             }
             sessionStorage.setItem(visitedKey, 'true');
         }
+        console.log("Visitor Tracker: Success!");
     } catch (error) {
         console.error('Error tracking visitor:', error);
     } finally {
