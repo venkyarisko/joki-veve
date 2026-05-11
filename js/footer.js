@@ -45,6 +45,11 @@ if (!window.Footer) {
                             <i class="fas fa-handshake"></i> Partner
                         </a>
                     </div>
+                    <div style="margin-top: 20px; font-size: 0.8rem; color: var(--text-muted); display: flex; align-items: center; justify-content: center; gap: 8px; opacity: 0.8;">
+                        <span style="display: flex; align-items: center; gap: 5px; background: rgba(0, 242, 255, 0.05); padding: 4px 12px; border-radius: 100px; border: 1px solid rgba(0, 242, 255, 0.1);">
+                            <i class="fas fa-users" style="color: var(--primary);"></i> Visitors: <b id="stat-visitors" style="color: var(--primary);">0</b>
+                        </span>
+                    </div>
                 </div>
             </footer>
         `;

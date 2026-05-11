@@ -1,4 +1,4 @@
-const CACHE_NAME = 'veve-joki-v52';
+const CACHE_NAME = 'veve-joki-v53';
 const ASSETS_TO_CACHE = [
     './',
     './index.html',
@@ -12,6 +12,7 @@ const ASSETS_TO_CACHE = [
     './manifest.json',
     './css/index.css?v=1.0.9',
     './js/firebase-config.js',
+    './js/visitor-counter.js',
     './joki/wuwa/data.js',
     './joki/endfield/data.js',
     './joki/nte/data.js',
