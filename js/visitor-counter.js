@@ -1,4 +1,4 @@
-import { db, doc, updateDoc, increment, setDoc, getDoc, onSnapshot } from './firebase-config.js';
+import { db, doc, updateDoc, increment, setDoc, getDoc, onSnapshot, serverTimestamp } from './firebase-config.js';
 
 async function trackVisitor() {
     const hostname = window.location.hostname;
