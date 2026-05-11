@@ -10,28 +10,49 @@ async function trackVisitor() {
         return;
     }
 
-    // Check if we already counted this session to avoid double counting on refresh
-    if (sessionStorage.getItem('visited')) {
-        fetchAndDisplayCount();
-        return;
-    }
-
-    const visitorDocRef = doc(db, 'stats', 'visitors');
+    const visitedKey = 'visited_v2'; // Changed key to reset for testing
+    const sessionVisited = sessionStorage.getItem(visitedKey);
 
     try {
-        const docSnap = await getDoc(visitorDocRef);
-        if (docSnap.exists()) {
-            await updateDoc(visitorDocRef, {
-                count: increment(1)
+        // Fetch IP address
+        const ipRes = await fetch('https://api.ipify.org?format=json');
+        const { ip } = await ipRes.json();
+        
+        // Log IP visit
+        const ipDocRef = doc(db, 'visitor_logs', ip.replace(/\./g, '-'));
+        const ipSnap = await getDoc(ipDocRef);
+        
+        if (ipSnap.exists()) {
+            await updateDoc(ipDocRef, {
+                visit_count: increment(1),
+                last_visit: serverTimestamp()
             });
         } else {
-            await setDoc(visitorDocRef, {
-                count: 1
+            await setDoc(ipDocRef, {
+                ip: ip,
+                visit_count: 1,
+                first_visit: serverTimestamp(),
+                last_visit: serverTimestamp()
             });
         }
-        sessionStorage.setItem('visited', 'true');
+
+        // Increment total visitors (only once per session)
+        if (!sessionVisited) {
+            const visitorDocRef = doc(db, 'stats', 'visitors');
+            const docSnap = await getDoc(visitorDocRef);
+            if (docSnap.exists()) {
+                await updateDoc(visitorDocRef, {
+                    count: increment(1)
+                });
+            } else {
+                await setDoc(visitorDocRef, {
+                    count: 1
+                });
+            }
+            sessionStorage.setItem(visitedKey, 'true');
+        }
     } catch (error) {
-        console.error('Error updating visitor count:', error);
+        console.error('Error tracking visitor:', error);
     } finally {
         fetchAndDisplayCount();
     }
