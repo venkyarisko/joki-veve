@@ -840,7 +840,7 @@
             const redirectUrl = window.location.origin + (isLocal ? '' : '/joki-veve') + '/invoices';
 
             // Construct Pakasir URL
-            const pakasirUrl = `https://app.pakasir.com/pay/joki-game/${priceText}?order_id=${orderId}&qris_only=1&redirect=${redirectUrl}`;
+            const pakasirUrl = `https://app.pakasir.com/pay/veve-service/${priceText}?order_id=${orderId}&qris_only=1&redirect=${redirectUrl}`;
 
             // Open in iframe modal
             document.getElementById('payment-iframe').src = pakasirUrl;

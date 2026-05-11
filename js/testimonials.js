@@ -500,7 +500,8 @@ if (!window._testiListenersAdded) {
 
     window.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') closeLightbox();
-        if (document.getElementById('lightbox').style.display === 'flex') {
+        const lightbox = document.getElementById('lightbox');
+        if (lightbox && lightbox.style.display === 'flex') {
             if (e.key === 'ArrowLeft') window.changeGalleryImage(-1);
             if (e.key === 'ArrowRight') window.changeGalleryImage(1);
         }
