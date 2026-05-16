@@ -42,7 +42,7 @@ var jokiServices = [
         category: 'Rawat',
         title: 'Paket 1 Patch',
         description: 'Rawat Akun Full 1 Patch <br>(42 Hari) + Event + Battlepass',
-        price: 310000
+        price: 250000
     },
 
     // Kategori: Story
@@ -85,20 +85,20 @@ var jokiServices = [
         category: 'Eksplorasi',
         title: 'Eksplorasi Map (100%) Valley IV',
         description: 'Eksplorasi Seluruh Map Endfield (All Clear)',
-        price: 310000,
+        price: 300000,
         slash: true,
         normalPrice: 320000,
-        slashPrice: 310000
+        slashPrice: 300000
     },
     {
         id: 'map_100_wuling',
         category: 'Eksplorasi',
         title: 'Eksplorasi Map (100%) Wuling',
         description: 'Eksplorasi Seluruh Map Endfield (All Clear)',
-        price: 300000,
+        price: 230000,
         slash: true,
-        normalPrice: 310000,
-        slashPrice: 300000
+        normalPrice: 250000,
+        slashPrice: 230000
     },
     {
         id: 'teleport',
@@ -163,7 +163,7 @@ var jokiServices = [
         subcategory: 'Wuling',
         title: 'Eksplorasi Map (100%) Wuling City',
         description: 'Eksplorasi 100% Wilayah Wuling City',
-        price: 110000
+        price: 80000
     },
     {
         id: 'map_jingyu_valley',
@@ -171,7 +171,7 @@ var jokiServices = [
         subcategory: 'Wuling',
         title: 'Eksplorasi Map (100%) Jingyu Valley',
         description: 'Eksplorasi 100% Wilayah Jingyu Valley',
-        price: 70000
+        price: 50000
     },
     {
         id: 'map_qingbo_stockade',
@@ -179,7 +179,7 @@ var jokiServices = [
         subcategory: 'Wuling',
         title: 'Eksplorasi Map (100%) Qingbo Stockade',
         description: 'Eksplorasi 100% Wilayah Qingbo Stockade',
-        price: 60000
+        price: 50000
     },
     {
         id: 'map_marker_stone',
@@ -187,7 +187,16 @@ var jokiServices = [
         subcategory: 'Wuling',
         title: 'Marker Stone',
         description: 'Eksplorasi 100% Wilayah Marker Stone',
-        price: 70000,
+        price: 40000,
+        isNew: true
+    },
+    {
+        id: 'map_test_area',
+        category: 'Map Area',
+        subcategory: 'Wuling',
+        title: 'Test Area',
+        description: 'Eksplorasi 100% Wilayah Test Area',
+        price: 30000,
         isNew: true
     },
 

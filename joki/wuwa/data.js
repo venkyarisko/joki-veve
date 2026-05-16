@@ -87,20 +87,20 @@ var jokiServices = [
         category: 'Eksplorasi',
         title: 'Eksplorasi Map (100%) Huanglong',
         description: 'Penyelesaian 100% Untuk Satu Wilayah (All Chests, Echoes, etc)',
-        price: 425000,
+        price: 415000,
         slash: true,
-        normalPrice: 455000,
-        slashPrice: 425000
+        normalPrice: 445000,
+        slashPrice: 415000
     },
     {
         id: 'exploration_100_tethys_deep',
         category: 'Eksplorasi',
         title: "Eksplorasi Map (100%) Tethys's Deep",
         description: 'Penyelesaian 100% Untuk Satu Wilayah (All Chests, Echoes, etc)',
-        price: 95000,
+        price: 75000,
         slash: true,
-        normalPrice: 105000,
-        slashPrice: 95000
+        normalPrice: 85000,
+        slashPrice: 75000
     },
     {
         id: 'exploration_100_rinascita',
@@ -117,10 +117,10 @@ var jokiServices = [
         category: 'Eksplorasi',
         title: "Eksplorasi Map (100%) Septimont",
         description: 'Penyelesaian 100% Untuk Satu Wilayah (All Chests, Echoes, etc)',
-        price: 235000,
+        price: 215000,
         slash: true,
-        normalPrice: 255000,
-        slashPrice: 235000
+        normalPrice: 225000,
+        slashPrice: 215000
     },
     {
         id: 'exploration_100_lohai_roi',
@@ -242,7 +242,7 @@ var jokiServices = [
         subcategory: 'Huanglong',
         title: 'Mt. Firmament',
         description: 'Eksplorasi 100% Wilayah Mt. Firmament',
-        price: 80000
+        price: 70000
     },
 
     {
@@ -251,7 +251,7 @@ var jokiServices = [
         subcategory: "Tethys's Deep",
         title: 'Black Shores Archipelago',
         description: 'Eksplorasi 100% Wilayah Black Shores Archipelago',
-        price: 50000
+        price: 40000
     },
     {
         id: 'map_tethys_core',
@@ -259,7 +259,7 @@ var jokiServices = [
         subcategory: "Tethys's Deep",
         title: "Tethys's Deep",
         description: "Eksplorasi 100% Wilayah Tethys's Deep",
-        price: 55000
+        price: 45000
     },
 
     // Rinascita
@@ -367,7 +367,7 @@ var jokiServices = [
         subcategory: 'Septimont',
         title: 'Septimont',
         description: 'Eksplorasi 100% Wilayah Septimont',
-        price: 110000
+        price: 90000
     },
     {
         id: 'map_fabrication_of_the_deep',
@@ -383,7 +383,7 @@ var jokiServices = [
         subcategory: 'Septimont',
         title: 'Sanguis Plateaus',
         description: 'Eksplorasi 100% Wilayah Sanguis Plateaus',
-        price: 90000
+        price: 80000
     },
     {
         id: 'map_three_heroes_crest',
